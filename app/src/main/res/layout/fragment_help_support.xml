@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.myAccount.helpSupport.HelpSupportFrag">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clErrorView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/colorAccent">
+
+            <TextView
+                android:id="@+id/tvErrorText"
+                android:text="@string/strEnterAddrText"
+                android:layout_width="0dp"
+                android:padding="14dp"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftHelpGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.04"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightHelpGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.97"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clHelpSupport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="5dp"
+            app:layout_constraintLeft_toRightOf="@+id/leftHelpGuideline"
+            app:layout_constraintRight_toLeftOf="@+id/rightHelpGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/clErrorView">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftHelp1Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/lefCenterHelp1Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightHelp1Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0"/>
+
+            <ImageView
+                android:src="@drawable/ic_help_support"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/leftHelp1Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/lefCenterHelp1Guideline"/>
+
+            <TextView
+                android:id="@+id/tvHelpSupportTitle"
+                android:text="@string/strHelpSupport"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp1Guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvHelpSupportDescs"
+                android:text="@string/strHelpSupportDesc"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp"
+                android:textColorLink="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp1Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpSupportTitle"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpSupportDescs"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clHelpEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:padding="5dp"
+            app:layout_constraintLeft_toRightOf="@+id/leftHelpGuideline"
+            app:layout_constraintRight_toLeftOf="@+id/rightHelpGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/clHelpSupport">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftHelp2Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/lefCenterHelp2Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightHelp2Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0"/>
+
+            <ImageView
+                android:src="@drawable/ic_help_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/leftHelp2Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/lefCenterHelp2Guideline"/>
+
+            <TextView
+                android:id="@+id/tvHelpEmail"
+                android:text="@string/strEmailField"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp2Guideline"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvCustomerCareEmailDesc"
+                android:text="@string/strCustomerCareEmail"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp2Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpEmail"/>
+
+            <TextView
+                android:id="@+id/tvHelpEmailDesc"
+                android:text="@string/strHelpEmailDesc"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="14sp"
+                android:layout_marginTop="3dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp2Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvCustomerCareEmailDesc"
+                app:layout_constraintRight_toLeftOf="@+id/rightHelp2Guideline"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpEmailDesc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clHelpPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintLeft_toRightOf="@+id/leftHelpGuideline"
+            app:layout_constraintRight_toLeftOf="@+id/rightHelpGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/clHelpEmail">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftHelp3Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/lefCenterHelp3Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightHelp3Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0"/>
+
+            <ImageView
+                android:src="@drawable/ic_help_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/leftHelp3Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/lefCenterHelp3Guideline"
+                android:contentDescription="@string/strPhoneField" />
+
+            <TextView
+                android:id="@+id/tvHelpPhoneTitle"
+                android:text="@string/strPhoneField"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp3Guideline"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvHelpPhoneDescription"
+                android:text="@string/strCountryName"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp3Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpPhoneTitle"/>
+
+            <TextView
+                android:id="@+id/tvPhoneNumberHelp"
+                android:text="@string/strSupportPhoneNumber"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/tvHelpPhoneDescription"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpPhoneTitle"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumberHelp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clHelpFeedback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintLeft_toRightOf="@+id/leftHelpGuideline"
+            app:layout_constraintRight_toLeftOf="@+id/rightHelpGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/clHelpPhone">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftHelp4Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/lefCenterHelp4Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightHelp4Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0"/>
+
+            <ImageView
+                android:src="@drawable/ic_feedback_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/leftHelp4Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/lefCenterHelp4Guideline"/>
+
+            <TextView
+                android:id="@+id/tvHelpFeedbackTitle"
+                android:text="@string/strFeedback"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp4Guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvHelpFeedbackDesc"
+                android:text="@string/strFeedbackDescText"
+                android:textColor="@color/colorLightGrey"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp4Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/rightHelp4Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpFeedbackTitle"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvHelpFeedbackDesc"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clReportProblem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintLeft_toRightOf="@+id/leftHelpGuideline"
+            app:layout_constraintRight_toLeftOf="@+id/rightHelpGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/clHelpFeedback">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftHelp5Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/lefCenterHelp5Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.2"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightHelp5Guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0"/>
+
+            <ImageView
+                android:src="@drawable/ic_report_problem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/leftHelp5Guideline"
+                app:layout_constraintRight_toLeftOf="@+id/lefCenterHelp5Guideline"/>
+
+            <TextView
+                android:id="@+id/tvReportProblemTitle"
+                android:text="@string/strReportProblem"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp5Guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvReportProblemClickHere"
+                android:text="@string/strClickHere"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/lefCenterHelp5Guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tvReportProblemTitle"/>
+
+            <!--<View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvReportProblemClickHere"/>-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

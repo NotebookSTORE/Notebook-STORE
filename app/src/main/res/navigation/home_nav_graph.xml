@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/homeFrag">
+
+    <!--Dashboard fragments-->
+    <fragment
+        android:id="@+id/homeFrag"
+        android:name="com.notebook.android.ui.dashboard.home.HomeFrag"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+
+        <argument android:name="prodID"
+            app:argType="integer"/>
+
+        <action
+            android:id="@+id/action_homeFrag_to_cartFrag"
+            app:destination="@id/cartFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_orderFrag"
+            app:destination="@id/orderFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_bulkOrderQuery"
+            app:destination="@id/bulkOrderQuery" />
+        <action
+            android:id="@+id/action_homeFrag_to_subCategoryViewProductFrag"
+            app:destination="@id/subCategoryViewProductFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_searchProductFrag"
+            app:destination="@id/searchProductFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_latestProductPage"
+            app:destination="@id/latestProductPage" />
+        <action
+            android:id="@+id/action_homeFrag_to_bestSellerProductPage"
+            app:destination="@id/bestSellerProductPage" />
+        <action
+            android:id="@+id/action_homeFrag_to_categoryDetailProductFrag"
+            app:destination="@id/categoryDetailProductFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_offerViewProdLink"
+            app:destination="@id/offerViewProdLink" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFrag"
+        android:name="com.notebook.android.ui.dashboard.cart.CartFrag"
+        android:label="Cart"
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_cartFrag_to_homeFrag"
+            app:destination="@id/homeFrag"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_cartFrag_to_orderSummary"
+            app:destination="@id/orderSummary" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderFrag"
+        android:name="com.notebook.android.ui.myOrder.OrderFrag"
+        android:label="My order"
+        tools:layout="@layout/fragment_order" >
+        <action
+            android:id="@+id/action_orderFrag_to_loginFrag"
+            app:destination="@id/loginFrag"
+            app:popUpTo="@id/orderFrag"/>
+        <action
+            android:id="@+id/action_orderFrag_to_orderSummaryPage"
+            app:destination="@id/orderSummaryPage" />
+        <action
+            android:id="@+id/action_orderFrag_to_reviewProduct"
+            app:destination="@id/reviewProduct" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/myAccountFrag"
+        android:name="com.notebook.android.ui.myAccount.MyAccountFrag"
+        android:label="My Account"
+        tools:layout="@layout/fragment_my_account">
+        <action
+            android:id="@+id/action_myAccountFrag_to_addDetailFrag"
+            app:destination="@id/addDetailFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_merchantProfileFrag"
+            app:destination="@id/merchantProfileFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_merchantMainFrag"
+            app:destination="@id/merchantMainFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_walletFrag"
+            app:destination="@id/walletFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_helpSupportFrag"
+            app:destination="@id/helpSupportFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_orderFrag"
+            app:destination="@id/orderFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_savedAddressFrag"
+            app:destination="@id/savedAddressFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_loginFrag"
+            app:destination="@id/loginFrag" />
+        <action
+            android:id="@+id/action_myAccountFrag_to_wishlistFrag"
+            app:destination="@id/wishlistFrag" />
+    </fragment>
+
+    <!--Authentication fragments here....-->
+    <fragment
+        android:id="@+id/loginFrag"
+        android:name="com.notebook.android.ui.auth.frag.LoginFrag"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFrag_to_signUpFrag"
+            app:destination="@id/signUpFrag"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@animator/slide_out"
+            app:popEnterAnim="@animator/slide_up"
+            app:popExitAnim="@anim/right_to_left_sliding" />
+        <action
+            android:id="@+id/action_loginFrag_to_resetPasswordByOptionFrag"
+            app:destination="@id/resetPasswordByOptionFrag"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@animator/slide_out"
+            app:popEnterAnim="@animator/slide_up"
+            app:popExitAnim="@anim/right_to_left_sliding" />
+        <action
+            android:id="@+id/action_loginFrag_to_homeFrag"
+            app:destination="@id/homeFrag" />
+        <action
+            android:id="@+id/action_loginFrag_to_socialLoginVerify"
+            app:destination="@id/socialLoginVerify" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFrag"
+        android:name="com.notebook.android.ui.auth.frag.SignUpFrag"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signUpFrag_to_loginFrag"
+            app:destination="@id/loginFrag"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@animator/slide_out"
+            app:popEnterAnim="@animator/slide_up"
+            app:popExitAnim="@anim/right_to_left_sliding"
+            app:popUpTo="@+id/loginFrag"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPasswordWithNewPasswordFrag"
+        android:name="com.notebook.android.ui.auth.frag.ResetPasswordWithNewPasswordFrag"
+        android:label="Reset New Password"
+        tools:layout="@layout/fragment_reset_password_with_new_password">
+        <argument
+            android:name="fieldValue"
+            android:defaultValue="mobile"
+            app:argType="string" />
+        <argument
+            android:name="fieldType"
+            android:defaultValue="email"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_resetPasswordWithNewPasswordFrag_to_loginFrag"
+            app:destination="@id/loginFrag"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@animator/slide_out"
+            app:popEnterAnim="@animator/slide_up"
+            app:popExitAnim="@anim/right_to_left_sliding"
+            app:popUpTo="@+id/loginFrag"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPasswordByOptionFrag"
+        android:name="com.notebook.android.ui.auth.frag.ResetPasswordByOptionFrag"
+        android:label="Reset Password"
+        tools:layout="@layout/fragment_reset_password_by_option">
+        <action
+            android:id="@+id/action_resetPasswordByOptionFrag_to_resetPasswordWithNewPasswordFrag"
+            app:destination="@id/resetPasswordWithNewPasswordFrag"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@animator/slide_out"
+            app:popEnterAnim="@animator/slide_up"
+            app:popExitAnim="@anim/right_to_left_sliding" />
+    </fragment>
+
+    <!--Home fragment parts here..-->
+    <fragment
+        android:id="@+id/bulkOrderQuery"
+        android:name="com.notebook.android.ui.myAccount.BulkOrderQuery"
+        android:label="Bulk Query"
+        tools:layout="@layout/fragment_bulk_order_query"/>
+
+    <fragment
+        android:id="@+id/filterByProductFrag"
+        android:name="com.notebook.android.ui.filter.FilterByProductFrag"
+        android:label="Filter By"
+        tools:layout="@layout/fragment_filter_by_product"/>
+
+    <fragment
+        android:id="@+id/latestProductPage"
+        android:name="com.notebook.android.ui.category.productParts.LatestProductPage"
+        android:label="Latest Products"
+        tools:layout="@layout/fragment_latest_product_page">
+        <action
+            android:id="@+id/action_latestProductPage_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/bestSellerProductPage"
+        android:name="com.notebook.android.ui.category.productParts.BestSellerProductPage"
+        android:label="Best Seller"
+        tools:layout="@layout/fragment_best_seller_product_page">
+        <action
+            android:id="@+id/action_bestSellerProductPage_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/subCategoryViewProductFrag"
+        android:name="com.notebook.android.ui.category.subCategory.SubCategoryViewProductFrag"
+        android:label="Sub Category Product"
+        tools:layout="@layout/fragment_sub_category_view_product">
+        <argument
+            android:name="subCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_subCategoryViewProductFrag_to_filterByProductFrag"
+            app:destination="@id/filterByProductFrag" />
+        <argument
+            android:name="subCategTitle"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="home" />
+        <action
+            android:id="@+id/action_subCategoryViewProductFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchProductFrag"
+        android:name="com.notebook.android.ui.dashboard.searchProduct.SearchProductFrag"
+        android:label="Search Product"
+        tools:layout="@layout/fragment_search_product" >
+        <action
+            android:id="@+id/action_searchProductFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+
+    <!--Drawer Fragment here..-->
+
+    <fragment
+        android:id="@+id/contactUsFrag"
+        android:name="com.notebook.android.ui.drawerFrag.ContactUsFrag"
+        android:label="Contact Us"
+        tools:layout="@layout/fragment_contact_us"/>
+
+    <!--Merchant fragment here..-->
+
+    <fragment
+        android:id="@+id/merchantMainFrag"
+        android:name="com.notebook.android.ui.merchant.frag.MerchantMainFrag"
+        android:label="Merchant Details"
+        tools:layout="@layout/fragment_merchant_main">
+        <action
+            android:id="@+id/action_merchantMainFrag_to_merchantPrimeFrag"
+            app:destination="@id/merchantPrimeFrag" />
+        <action
+            android:id="@+id/action_merchantMainFrag_to_merchantRegularFrag"
+            app:destination="@id/merchantRegularFrag" />
+        <action
+            android:id="@+id/action_merchantMainFrag_to_primeMerchantFormFrag"
+            app:destination="@id/primeMerchantFormFrag" />
+        <action
+            android:id="@+id/action_merchantMainFrag_to_regularMerchantFormFrag"
+            app:destination="@id/regularMerchantFormFrag" />
+        <action
+            android:id="@+id/action_merchantMainFrag_to_notebookPdfPage"
+            app:destination="@id/notebookPdfPage" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/merchantPrimeFrag"
+        android:name="com.notebook.android.ui.merchant.frag.MerchantPrimeFrag"
+        android:label="Merchant Prime Details"
+        tools:layout="@layout/fragment_merchant_prime"/>
+
+    <fragment
+        android:id="@+id/merchantRegularFrag"
+        android:name="com.notebook.android.ui.merchant.frag.MerchantRegularFrag"
+        android:label="Merchant Regular Details"
+        tools:layout="@layout/fragment_merchant_regular"/>
+    <fragment
+        android:id="@+id/primeMerchantFormFrag"
+        android:name="com.notebook.android.ui.merchant.frag.PrimeMerchantFormFrag"
+        android:label="Prime Merchant"
+        tools:layout="@layout/fragment_prime_merchant_form">
+        <action
+            android:id="@+id/action_primeMerchantFormFrag_to_identityProofUploadFrag"
+            app:destination="@id/identityProofUploadFrag" />
+        <action
+            android:id="@+id/action_primeMerchantFormFrag_to_panCardUploadFrag"
+            app:destination="@id/panCardUploadFrag" />
+        <action
+            android:id="@+id/action_primeMerchantFormFrag_to_paymentMethodFrag"
+            app:destination="@id/paymentMethodFrag" />
+        <argument
+            android:name="identityImage"
+            app:argType="string" />
+        <argument
+            android:name="pancardImage"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_primeMerchantFormFrag_to_policyPart"
+            app:destination="@id/policyPart" />
+    </fragment>
+    <fragment
+        android:id="@+id/regularMerchantFormFrag"
+        android:name="com.notebook.android.ui.merchant.frag.RegularMerchantFormFrag"
+        android:label="Regular Merchant"
+        tools:layout="@layout/fragment_regular_merchant_form">
+        <action
+            android:id="@+id/action_regularMerchantFormFrag_to_identityProofUploadFrag"
+            app:destination="@id/identityProofUploadFrag" />
+        <action
+            android:id="@+id/action_regularMerchantFormFrag_to_panCardUploadFrag"
+            app:destination="@id/panCardUploadFrag" />
+        <argument
+            android:name="identityImage"
+            app:argType="string" />
+        <argument
+            android:name="pancardImage"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_regularMerchantFormFrag_to_policyPart"
+            app:destination="@id/policyPart" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/panCardUploadFrag"
+        android:name="com.notebook.android.ui.merchant.frag.PanCardUploadFrag"
+        android:label="Pan Card Upload"
+        tools:layout="@layout/fragment_pan_card_upload" >
+        <action
+            android:id="@+id/action_panCardUploadFrag_to_regularMerchantFormFrag"
+            app:destination="@id/regularMerchantFormFrag" />
+        <action
+            android:id="@+id/action_panCardUploadFrag_to_primeMerchantFormFrag"
+            app:destination="@id/primeMerchantFormFrag"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/identityProofUploadFrag"
+        android:name="com.notebook.android.ui.merchant.frag.IdentityProofUploadFrag"
+        android:label="Identity Proof Upload"
+        tools:layout="@layout/fragment_identity_proof_upload">
+        <action
+            android:id="@+id/action_identityProofUploadFrag_to_regularMerchantFormFrag"
+            app:destination="@id/regularMerchantFormFrag" />
+        <action
+            android:id="@+id/action_identityProofUploadFrag_to_primeMerchantFormFrag"
+            app:destination="@id/primeMerchantFormFrag"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/notebookPdfPage"
+        android:name="com.notebook.android.ui.merchant.frag.NotebookPdfPage"
+        android:label="Merchant Benefits"
+        tools:layout="@layout/fragment_notebook_pdf_page"/>
+
+
+    <!--My Account fragment part here..-->
+    <fragment
+        android:id="@+id/walletFrag"
+        android:name="com.notebook.android.ui.myAccount.wallet.WalletFrag"
+        android:label="My Wallet"
+        tools:layout="@layout/fragment_wallet">
+        <argument
+            android:name="walletAmount"
+            app:argType="string"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/action_walletFrag_to_paymentCODSuccessScreen"
+            app:destination="@id/paymentCODSuccessScreen"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/helpSupportFrag"
+        android:name="com.notebook.android.ui.myAccount.helpSupport.HelpSupportFrag"
+        android:label="Help &amp; Support"
+        tools:layout="@layout/fragment_help_support" >
+        <action
+            android:id="@+id/action_helpSupportFrag_to_faqsFrag"
+            app:destination="@id/faqsFrag" />
+        <action
+            android:id="@+id/action_helpSupportFrag_to_feedbackFrag"
+            app:destination="@id/feedbackFrag" />
+        <action
+            android:id="@+id/action_helpSupportFrag_to_reportProblemFrag"
+            app:destination="@id/reportProblemFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedAddressFrag"
+        android:name="com.notebook.android.ui.myAccount.address.SavedAddressFrag"
+        android:label="Saved Address"
+        tools:layout="@layout/fragment_saved_address">
+        <action
+            android:id="@+id/action_savedAddressFrag_to_addAddressFrag"
+            app:destination="@id/addAddressFrag" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addAddressFrag"
+        android:name="com.notebook.android.ui.myAccount.address.AddAddressFrag"
+        android:label="Add Address"
+        tools:layout="@layout/fragment_add_address">
+        <argument
+            android:name="addressData"
+            app:argType="com.notebook.android.data.db.entities.Address" />
+        <argument
+            android:name="addressType"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/merchantProfileFrag"
+        android:name="com.notebook.android.ui.myAccount.MerchantProfileFrag"
+        android:label="Merchant Profile"
+        tools:layout="@layout/fragment_merchant_profile">
+        <action
+            android:id="@+id/action_merchantProfileFrag_to_merchantViewSummaryWebViewPage"
+            app:destination="@id/merchantViewSummaryWebViewPage" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addDetailFrag"
+        android:name="com.notebook.android.ui.myAccount.profile.AddDetailFrag"
+        android:label="Add Details"
+        tools:layout="@layout/fragment_add_detail">
+        <action
+            android:id="@+id/action_addDetailFrag_to_myAccountFrag"
+            app:destination="@id/myAccountFrag"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popUpTo="@+id/myAccountFrag"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wishlistFrag"
+        android:name="com.notebook.android.ui.wishlist.WishlistFrag"
+        android:label="My Wishlist"
+        tools:layout="@layout/fragment_wishlist"/>
+
+    <!--Detail Product Part here..-->
+    <fragment
+        android:id="@+id/detailViewProductFrag"
+        android:name="com.notebook.android.ui.dashboard.frag.fragHome.DetailViewProductFrag"
+        android:label="Product Details"
+        tools:layout="@layout/fragment_detail_view_product">
+        <argument
+            android:name="productHome"
+            app:argType="com.notebook.android.data.db.entities.Product" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_bulkOrderQuery"
+            app:destination="@id/bulkOrderQuery" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_cartFrag"
+            app:destination="@id/cartFrag" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_ratingViewAll"
+            app:destination="@id/ratingViewAll" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_reviewProduct"
+            app:destination="@id/reviewProduct" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_orderSummary"
+            app:destination="@id/orderSummary" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_wishlistFrag"
+            app:destination="@id/wishlistFrag" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_similarDiscountedProdViewAll"
+            app:destination="@id/similarDiscountedProdViewAll" />
+        <action
+            android:id="@+id/action_detailViewProductFrag_to_zoomableViewFrag"
+            app:destination="@id/zoomableViewFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/faqsFrag"
+        android:name="com.notebook.android.ui.drawerFrag.FaqsFrag"
+        android:label="FAQS"
+        tools:layout="@layout/fragment_faqs" />
+
+    <fragment
+        android:id="@+id/feedbackFrag"
+        android:name="com.notebook.android.ui.myAccount.helpSupport.FeedbackFrag"
+        android:label="Feedback"
+        tools:layout="@layout/fragment_feedback"/>
+    <fragment
+        android:id="@+id/reportProblemFrag"
+        android:name="com.notebook.android.ui.myAccount.helpSupport.ReportProblemFrag"
+        android:label="Report a Problem"
+        tools:layout="@layout/fragment_report_problem" />
+    <fragment
+        android:id="@+id/netbankingCredentialFrag"
+        android:name="com.notebook.android.ui.myAccount.wallet.NetbankingCredentialFrag"
+        android:label="Select Bank"
+        tools:layout="@layout/fragment_netbanking_credential">
+        <argument
+            android:name="addAmountValue"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentMethodFrag"
+        android:name="com.notebook.android.ui.orderSummary.PaymentMethodFrag"
+        android:label="Payment Method"
+        tools:layout="@layout/fragment_payment_method">
+        <argument
+            android:name="addWalletAmount"
+            app:argType="float" />
+        <argument
+            android:name="orderSummaryDetail"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_paymentMethodFrag_to_paymentCODSuccessScreen"
+            app:destination="@id/paymentCODSuccessScreen" />
+        <action
+            android:id="@+id/action_paymentMethodFrag_to_cashFreePaymentToken"
+            app:destination="@id/cashFreePaymentToken" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentInfoCardFrag"
+        android:name="com.notebook.android.ui.myAccount.wallet.PaymentInfoCardFrag"
+        android:label="Add Card"
+        tools:layout="@layout/fragment_payment_info_card">
+        <action
+            android:id="@+id/action_paymentInfoCardFrag_to_paymentFinishFrag"
+            app:destination="@id/paymentFinishFrag" />
+        <argument
+            android:name="addWalletAmount"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentFinishFrag"
+        android:name="com.notebook.android.ui.myAccount.wallet.PaymentFinishFrag"
+        android:label="Payment"
+        tools:layout="@layout/fragment_payment_finish">
+        <argument
+            android:name="addWalletAmount"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutUsFrag"
+        android:name="com.notebook.android.ui.drawerFrag.AboutUsFrag"
+        android:label="About Us"
+        tools:layout="@layout/fragment_about_us"/>
+
+
+    <fragment
+        android:id="@+id/categoryDetailProductFrag"
+        android:name="com.notebook.android.ui.category.CategoryDetailProductFrag"
+        android:label="Category Product"
+        tools:layout="@layout/fragment_category_product">
+        <argument
+            android:name="categID"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_categoryDetailProductFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+        <action
+            android:id="@+id/action_categoryDetailProductFrag_to_filterByProductFrag"
+            app:destination="@id/filterByProductFrag" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/subSubCategoryWiseProductFrag"
+        android:name="com.notebook.android.ui.category.SubSubCategoryWiseProductFrag"
+        android:label="SubSubCategory Product"
+        tools:layout="@layout/fragment_sub_sub_category_wise_product">
+        <action
+            android:id="@+id/action_subSubCategoryWiseProductFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewProduct"
+        android:name="com.notebook.android.ui.productDetail.frag.ReviewProduct"
+        android:label="Review Product"
+        tools:layout="@layout/fragment_review_product">
+        <argument
+            android:name="productData"
+            app:argType="com.notebook.android.data.db.entities.ProductDetailEntity" />
+    </fragment>
+    <fragment
+        android:id="@+id/ratingViewAll"
+        android:name="com.notebook.android.ui.productDetail.frag.RatingViewAll"
+        android:label="Reviews"
+        tools:layout="@layout/fragment_rating_view_all">
+        <argument
+            android:name="productID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/policyPart"
+        android:name="com.notebook.android.ui.drawerFrag.PolicyPart"
+        android:label="Policy"
+        tools:layout="@layout/fragment_policy_part"/>
+    <fragment
+        android:id="@+id/socialLoginVerify"
+        android:name="com.notebook.android.ui.auth.frag.SocialLoginVerify"
+        android:label="SocialLoginVerify"
+        tools:layout="@layout/fragment_social_login_verify">
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="profileImage"
+            app:argType="string" />
+        <argument
+            android:name="userType"
+            app:argType="integer" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderSummary"
+        android:name="com.notebook.android.ui.orderSummary.OrderSummary"
+        android:label="Order Summary"
+        tools:layout="@layout/fragment_order_summary">
+        <action
+            android:id="@+id/action_orderSummary_to_applyCoupon"
+            app:destination="@id/applyCoupon" />
+        <action
+            android:id="@+id/action_orderSummary_to_savedAddressFrag"
+            app:destination="@id/savedAddressFrag" />
+        <action
+            android:id="@+id/action_orderSummary_to_paymentMethodFrag"
+            app:destination="@id/paymentMethodFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/applyCoupon"
+        android:name="com.notebook.android.ui.orderSummary.ApplyCoupon"
+        android:label="Apply Coupon"
+        tools:layout="@layout/fragment_apply_coupon">
+
+        <argument
+            android:name="productID"
+            app:argType="string" />
+        <argument
+            android:name="emailID"
+            app:argType="string" />
+        <argument
+            android:name="totalPayableAmount"
+            app:argType="float" />
+        <argument
+            android:name="userType"
+            app:argType="integer" />
+        <argument
+            android:name="registerFor"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/offerViewProdLink"
+        android:name="com.notebook.android.ui.dashboard.home.OfferViewProdLink"
+        android:label="Offer Web link"
+        tools:layout="@layout/fragment_offer_view_prod_link">
+        <argument
+            android:name="offerWebLink"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/similarDiscountedProdViewAll"
+        android:name="com.notebook.android.ui.productDetail.frag.SimilarDiscountedProdViewAll"
+        android:label="Similar Discount Product"
+        tools:layout="@layout/fragment_similar_discounted_prod_view_all">
+        <action
+            android:id="@+id/action_similarDiscountedProdViewAll_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentCODSuccessScreen"
+        android:name="com.notebook.android.ui.orderSummary.PaymentCODSuccessScreen"
+        android:label="PaymentCODSuccessScreen"
+        tools:layout="@layout/fragment_payment_c_o_d_success_screen">
+        <argument
+            android:name="orderID"
+            app:argType="string" />
+        <argument
+            android:name="orderAmount"
+            app:argType="float" />
+        <argument
+            android:name="status"
+            app:argType="integer" />
+        <argument
+            android:name="msg"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/cashFreePaymentToken"
+        android:name="com.notebook.android.ui.myAccount.cashFree.CashFreePaymentToken"
+        android:label="CashFreePaymentToken"
+        tools:layout="@layout/fragment_cash_free_payment_token">
+        <argument
+            android:name="cfTokenObject"
+            app:argType="com.notebook.android.model.cashfree.CFPaymentGenerateObj" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderSummaryPage"
+        android:name="com.notebook.android.ui.myOrder.OrderSummaryPage"
+        android:label="Order Summary"
+        tools:layout="@layout/fragment_order_summary_page">
+        <argument
+            android:name="orderHistoryData"
+            app:argType="com.notebook.android.data.db.entities.OrderHistory" />
+        <action
+            android:id="@+id/action_orderSummaryPage_to_requestReturn"
+            app:destination="@id/requestReturn" />
+    </fragment>
+    <fragment
+        android:id="@+id/merchantViewSummaryWebViewPage"
+        android:name="com.notebook.android.ui.myAccount.MerchantViewSummaryWebViewPage"
+        android:label="Merchant Analytics"
+        tools:layout="@layout/fragment_merchant_view_summary_web_view_page">
+        <argument
+            android:name="userID"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestReturn"
+        android:name="com.notebook.android.ui.myOrder.frag.RequestReturn"
+        android:label="Request Return"
+        tools:layout="@layout/fragment_request_return">
+        <argument
+            android:name="orderHistoryModal"
+            app:argType="com.notebook.android.data.db.entities.OrderHistory" />
+    </fragment>
+    <fragment
+        android:id="@+id/zoomableViewFrag"
+        android:name="com.notebook.android.ui.productDetail.frag.ZoomableViewFrag"
+        android:label="Zoomable View"
+        tools:layout="@layout/fragment_zoomable_view">
+        <argument
+            android:name="imgUrl"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

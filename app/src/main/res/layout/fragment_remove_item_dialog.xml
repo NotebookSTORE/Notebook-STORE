@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="320dp"
+        android:minHeight="160dp"
+        tools:context=".ui.popup.RemoveItemDialog">
+
+        <TextView
+            android:id="@+id/tvRemoveItemText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_14_padding"
+            android:text="Are you sure you want to remove this Item?"
+            android:textSize="@dimen/font_eighteen"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16_padding"
+            app:layout_constraintTop_toBottomOf="@+id/tvRemoveItemText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/tvRemoveNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_12_padding"
+                android:text="No"
+                android:textSize="@dimen/font_eighteen"
+                android:textColor="@color/colorBlack"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/glRemove46"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/glRemove46"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.46"/>
+
+            <View
+                android:layout_width="@dimen/_2dp"
+                android:layout_height="50dp"
+                android:background="#adadad"
+                app:layout_constraintLeft_toRightOf="@+id/glRemove46"
+                app:layout_constraintRight_toLeftOf="@+id/glRemove50"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/glRemove50"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5"/>
+
+            <TextView
+                android:id="@+id/tvRemoveYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_12_padding"
+                android:text="Yes"
+                android:textSize="@dimen/font_eighteen"
+                android:textColor="@color/colorPrimaryDark"
+                android:gravity="center"
+                app:layout_constraintLeft_toRightOf="@+id/glRemove50"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

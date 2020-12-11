@@ -1,0 +1,86 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
+    </style>
+
+    <style name="Theme.MaterialComponents.EditText" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="colorControlNormal">@color/colorWhite</item>
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorControlHighlight">@color/colorWhite</item>
+        <item name="colorOnSurface">@color/colorWhite</item>
+    </style>
+
+    <style name="Theme.MyTheme.EditText.SignUp" parent="Theme.MaterialComponents">
+        <item name="colorControlNormal">@color/colorLightGrey</item>
+        <item name="colorControlActivated">@color/colorLightGrey</item>
+        <item name="colorControlHighlight">@color/colorLightGrey</item>
+    </style>
+
+    <!--Home Navigation drawer Custom TextView Style here..-->
+    <style name="homeCustomTextView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:textColor">@color/colorLightBlack</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="homeDrawerCustomTextView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="customHomeLinearLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="customViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:background">@color/colorVLightGrey</item>
+    </style>
+
+    <style name="customDrawerViewStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:background">@color/colorVLightGrey</item>
+    </style>
+
+    <!--Prime Merchant Form Custom TextView Style here..-->
+    <style name="primeMerchantCustomTextView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <style name="MerchantProfileCustomTextView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+</resources>

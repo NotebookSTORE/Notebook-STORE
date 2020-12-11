@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1979BC</color>
+    <color name="colorPrimaryDark">#0A67A8</color>
+    <color name="colorAccent">#B91414</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorLightBlack">#404040</color>
+    <color name="colorLightGrey">#808080</color>
+    <color name="colorVLightGrey">#44adadad</color>
+    <color name="colorVVLightGrey">#22adadad</color>
+    <color name="colorRed">#E41010</color>
+
+    <color name="colorMerchantPrime">#E9C670</color>
+    <color name="colorMerchantRegular">#F1F1F1</color>
+
+    <color name="colorRedOrderCancel">#ff0000</color>
+    <color name="colorGreenOrderDelivered">#008000</color>
+
+
+    <color name="colorMakeDefault">#0EA70A</color>
+    <color name="colorMakeDefaultNot">#FF0000</color>
+</resources>

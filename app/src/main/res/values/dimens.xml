@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="_4dp">4dp</dimen>
+    <dimen name="_8dp">8dp</dimen>
+    <dimen name="_6dp">6dp</dimen>
+    <dimen name="_2dp">2dp</dimen>
+    <dimen name="_10dp">10dp</dimen>
+    <dimen name="_130dp">130dp</dimen>
+
+    <dimen name="font_fourteen">14sp</dimen>
+    <dimen name="font_tweleve">12sp</dimen>
+    <dimen name="font_sixteen">16sp</dimen>
+    <dimen name="font_eighteen">18sp</dimen>
+    <dimen name="font_seventeen">17sp</dimen>
+    <dimen name="font_twenty">20sp</dimen>
+    <dimen name="font_twentyTwo">22sp</dimen>
+    <dimen name="font_twentyFour">24sp</dimen>
+    <dimen name="font_twentyEight">28sp</dimen>
+
+
+    <dimen name="_16_padding">16dp</dimen>
+    <dimen name="_14_padding">14dp</dimen>
+    <dimen name="_12_padding">12dp</dimen>
+    <dimen name="button_height">55dp</dimen>
+    <dimen name="_20dp">20dp</dimen>
+    <dimen name="_50dp">50dp</dimen>
+</resources>

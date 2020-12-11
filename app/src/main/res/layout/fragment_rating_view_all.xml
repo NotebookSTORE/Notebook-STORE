@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+       android:id="@+id/splRatingViewAll"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:background="@color/colorWhite">
+
+      <androidx.core.widget.NestedScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+              android:id="@+id/clProductRatingReviews"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".ui.productDetail.frag.RatingViewAll">
+
+              <androidx.constraintlayout.widget.ConstraintLayout
+                  android:id="@+id/clOverallRating"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="8dp"
+                  android:padding="14dp"
+                  android:visibility="gone"
+                  android:background="@drawable/filter_unselect_bg"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  app:layout_constraintTop_toTopOf="parent">
+
+                  <TextView
+                      android:id="@+id/tvOverAllRating"
+                      android:text="@string/strOverallRatings"
+                      android:textSize="12sp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"/>
+
+                  <TextView
+                      android:id="@+id/tvRatingStarsText"
+                      android:textSize="16sp"
+                      android:textColor="@color/colorBlack"
+                      android:gravity="center"
+                      android:layout_marginTop="16dp"
+                      android:layout_marginStart="6dp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/tvOverAllRating"
+                      />
+
+                  <ImageView
+                      android:id="@+id/imgRatingStars"
+                      android:src="@drawable/ic_rating_star"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="12dp"
+                      android:layout_marginStart="10dp"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toRightOf="@+id/tvRatingStarsText"
+                      app:layout_constraintTop_toBottomOf="@+id/tvOverAllRating"/>
+
+                  <TextView
+                      android:id="@+id/tvRatingCounts"
+                      android:textSize="17sp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintRight_toRightOf="parent"/>
+
+              </androidx.constraintlayout.widget.ConstraintLayout>
+
+              <androidx.recyclerview.widget.RecyclerView
+                  android:id="@+id/recViewRatingReview"
+                  android:layout_width="0dp"
+                  android:layout_margin="5dp"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@+id/clOverallRating"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"/>
+
+              <androidx.constraintlayout.widget.ConstraintLayout
+                  android:id="@+id/clLottieAnimationView"
+                  android:layout_width="0dp"
+                  android:layout_height="0dp"
+                  android:visibility="gone"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintLeft_toLeftOf="parent"
+                  app:layout_constraintRight_toRightOf="parent"
+                  app:layout_constraintBottom_toBottomOf="parent">
+
+                  <com.airbnb.lottie.LottieAnimationView
+                      android:id="@+id/lavDataNotAvailable"
+                      android:layout_width="160dp"
+                      android:layout_height="160dp"
+                      app:lottie_autoPlay="true"
+                      app:lottie_loop="true"
+                      app:lottie_rawRes="@raw/no_data_available"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      app:layout_constraintRight_toRightOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"/>
+
+                  <TextView
+                      android:id="@+id/tvErrorMsg"
+                      android:textSize="@dimen/font_eighteen"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toBottomOf="@+id/lavDataNotAvailable"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      app:layout_constraintRight_toRightOf="parent"/>
+
+              </androidx.constraintlayout.widget.ConstraintLayout>
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+      </androidx.core.widget.NestedScrollView>
+   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

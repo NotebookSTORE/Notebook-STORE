@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clErrorView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:background="@color/colorAccent">
+
+                    <TextView
+                        android:id="@+id/tvErrorText"
+                        android:text="@string/strEnterAddrText"
+                        android:layout_width="0dp"
+                        android:padding="14dp"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:textColor="@color/colorWhite"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/top25FeedbackGuidelines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.20"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/top75FeedbackGuidelines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.80"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/bottomFeedbackGuidelines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="1.0"/>
+
+                <ImageView
+                    android:id="@+id/imgSignUpLogo"
+                    android:layout_width="260dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/notebook_login_logo"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clErrorView"/>
+
+                <TextView
+                    android:id="@+id/tvFeedbackText"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strFeedbackText"
+                    android:textColor="@color/colorBlack"
+                    android:layout_marginTop="18dp"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgSignUpLogo" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clRatingContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvFeedbackText">
+
+                    <TextView
+                        android:id="@+id/tvUsernameFeedback"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textSize="@dimen/font_eighteen"
+                        android:textColor="@color/colorLightBlack"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvRatingText"
+                        android:text="Good"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorLightBlack"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvUsernameFeedback"/>
+
+                    <!--style="?attr/ratingBarStyleIndicator"-->
+                    <androidx.appcompat.widget.AppCompatRatingBar
+                        android:id="@+id/ratingBarFeedback"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="3.5"
+                        android:stepSize="0.5"
+                        android:isIndicator="false"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
+                        android:progressTint="@android:color/holo_orange_light"
+
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tvRatingText"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                    <EditText
+                        android:id="@+id/edtWriteReviews"
+                        android:hint="Write reviews..."
+                        android:padding="15dp"
+                        android:textSize="16sp"
+                        android:ems="10"
+                        android:singleLine="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginEnd="25dp"
+                        android:backgroundTint="@color/colorLightGrey"
+                        android:textColor="@color/colorLightGrey"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        app:layout_constraintTop_toBottomOf="@+id/ratingBarFeedback"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clWritingReview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginEnd="25dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clRatingContainer">
+
+                    <TextView
+                        android:id="@+id/tvHideMyNameFeedback"
+                        android:text="Hide my name"
+                        android:textSize="17sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/scHideMyName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/btnFeedbackSubmit"
+                    android:text="@string/strSubmit"
+                    android:textAllCaps="false"
+                    android:layout_width="0dp"
+                    android:layout_height="55dp"
+                    android:textSize="20sp"
+                    android:visibility="visible"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/sign_up_btn_bg"
+                    android:layout_marginTop="45dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/clWritingReview"
+                    app:layout_constraintBottom_toTopOf="@+id/bottomFeedbackGuidelines"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           tools:context=".ui.myAccount.wallet.WalletFrag">
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/clErrorView"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:visibility="gone"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               android:background="@color/colorAccent">
+
+               <TextView
+                   android:id="@+id/tvErrorText"
+                   android:text="@string/strEnterAddrText"
+                   android:layout_width="0dp"
+                   android:padding="14dp"
+                   android:textSize="16sp"
+                   android:gravity="center"
+                   android:textColor="@color/colorWhite"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintRight_toRightOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"/>
+
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/clTopWalletDetail"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               app:layout_constraintTop_toBottomOf="@+id/clErrorView"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent">
+
+               <TextView
+                   android:id="@+id/tvAddAmountText"
+                   android:text="Add Money to Wallet"
+                   android:textColor="@color/colorBlack"
+                   android:textSize="16sp"
+                   android:layout_marginTop="24dp"
+                   android:layout_marginStart="12dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintLeft_toLeftOf="parent" />
+
+               <TextView
+                   android:id="@+id/tvAvailableBalanceText"
+                   android:textColor="@color/colorLightGrey"
+                   android:textSize="17sp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginStart="12dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toBottomOf="@+id/tvAddAmountText"/>
+
+               <ImageView
+                   android:src="@drawable/ic_wallet_add_amount"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintRight_toRightOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   android:layout_marginRight="12sp"
+                   android:layout_marginTop="24dp"/>
+
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/clEnterAmount"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="120dp"
+               android:layout_marginStart="20dp"
+               android:layout_marginEnd="20dp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/clTopWalletDetail">
+
+               <TextView
+                   android:id="@+id/tvIndianRupeeIcon"
+                   android:text="₹"
+                   android:textSize="20sp"
+                   android:padding="3dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"/>
+
+               <View
+                   android:id="@+id/viewBase"
+                   android:layout_width="0dp"
+                   android:layout_height="1dp"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:background="@color/colorPrimary"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintRight_toRightOf="parent"
+                   app:layout_constraintTop_toBottomOf="@+id/tvIndianRupeeIcon"/>
+
+               <View
+                   android:layout_width="1dp"
+                   android:layout_height="40dp"
+                   android:layout_marginStart="6dp"
+                   android:background="@color/colorPrimary"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintLeft_toRightOf="@+id/tvIndianRupeeIcon"/>
+
+               <EditText
+                   android:id="@+id/edtAddAmount"
+                   android:hint="Amount"
+                   android:padding="12sp"
+                   android:layout_marginStart="20dp"
+                   android:layout_marginEnd="12dp"
+                   android:background="@null"
+                   android:inputType="number"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintRight_toRightOf="parent"
+                   app:layout_constraintLeft_toRightOf="@+id/tvIndianRupeeIcon"
+                   app:layout_constraintTop_toTopOf="parent"/>
+
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+           <Button
+               android:id="@+id/btnProceedToAddMoney"
+               android:layout_width="wrap_content"
+               android:layout_height="55dp"
+               android:layout_marginLeft="40dp"
+               android:layout_marginTop="120dp"
+               android:layout_marginRight="40dp"
+               android:background="@drawable/sign_up_btn_bg"
+               android:paddingLeft="25dp"
+               android:paddingRight="25dp"
+               android:text="Proceed to Add Money"
+               android:textAllCaps="false"
+               android:textColor="@color/colorWhite"
+               android:textSize="18sp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/clEnterAmount" />
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="20dp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/btnProceedToAddMoney"
+               app:layout_constraintBottom_toBottomOf="parent">
+
+               <ImageView
+                   android:id="@+id/imgSafeGuard"
+                   android:src="@drawable/ic_safety_certificate_filled"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"/>
+
+               <TextView
+                   android:id="@+id/tvSafePayment"
+                   android:textSize="12sp"
+                   android:text="Safe and Secure Payments"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintTop_toTopOf="@+id/imgSafeGuard"
+                   app:layout_constraintLeft_toRightOf="@+id/imgSafeGuard"/>
+
+               <TextView
+                   android:textSize="12sp"
+                   android:text="100% Trusted"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintLeft_toRightOf="@+id/imgSafeGuard"
+                   app:layout_constraintTop_toBottomOf="@+id/tvSafePayment"
+                   />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+
+   </ScrollView>
+</layout>

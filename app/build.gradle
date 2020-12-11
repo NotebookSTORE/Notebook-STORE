@@ -1,0 +1,233 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: "androidx.navigation.safeargs"
+// Add the Firebase Crashlytics plugin.
+apply plugin: 'com.google.firebase.crashlytics'
+//apply plugin: 'io.fabric'
+
+/*ext {
+    enableCrashlytics = true
+}*/
+
+//notebook key store file and pwd :-sk24072020
+//jks file in jks_file folder
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.notebook.android"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 12
+        versionName "1.0.1"
+
+        buildConfigField "String", "SERVER_URL", "\"https://demo.mbrcables.com/notebookstore/\""
+        buildConfigField "String", "NOTEBOOK_BENEFITS_PDF_URL", "\"public/uploads/NotebookSTORE.in.pdf\""
+
+        buildConfigField "String", "CANCEL_POLICY", "\"https://demo.mbrcables.com/notebookstore/web/cancel-policy.html\""
+        buildConfigField "String", "REFUND_POLICY", "\"https://demo.mbrcables.com/notebookstore/web/refund-policy.html\""
+        buildConfigField "String", "PRIVACY_POLICY", "\"https://demo.mbrcables.com/notebookstore/web/privacy-policy.html\""
+        buildConfigField "String", "RETURN_POLICY", "\"https://demo.mbrcables.com/notebookstore/web/return-policy.html\""
+        buildConfigField "String", "TERMS_AND_CONDITION", "\"https://demo.mbrcables.com/notebookstore/web/terms-condition.html\""
+        buildConfigField "String", "FAQ_URL", "\"https://demo.mbrcables.com/notebookstore/faq?mobile=1\""
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+    }
+
+    firebaseCrashlytics {
+        nativeSymbolUploadEnabled true
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //Enabling Data-Binding
+    buildFeatures {
+        dataBinding = true
+        // for view binding :
+        // viewBinding = true
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    def paging_version = "2.1.2"
+//    def kotlin_version = "1.1.0"
+    def coroutineVersion = "1.3.7"
+    def room_version = "2.2.5"
+    def KodeinVersion = "6.5.5"
+    def retrofit_version = "2.6.2"
+    def lifecycle_version = "2.2.0"
+    def OkkHttpVersion = "4.2.2"
+    def GoogleMaterialVersion = "1.3.0-alpha03"
+    def AppCompatVersion = "1.2.0"
+    def KotlinExtensionVersion = "1.3.2"
+    def ConstraintLayoutVersion = "2.0.2"
+    def JUnitVersion = "4.13.1"
+    def JUnitTestExtensionVersion = "1.1.2"
+    def EspressoVersion = "3.3.0"
+    def nav_version = "2.3.1"
+    def GlideVersion = "4.11.0"
+    def CircularIVVersion = "3.1.0"
+    def OtpViewVersion = "2.1.0"
+    def PriceRangeSeekBar = "1.0.6"
+
+    implementation project(path: ':cashfreesdk-1.4.9.5-release')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$AppCompatVersion"
+    implementation "androidx.core:core-ktx:$KotlinExtensionVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$ConstraintLayoutVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation "junit:junit:$JUnitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$JUnitTestExtensionVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$EspressoVersion"
+
+    //Viewmodel and LiveData Related to View Lifecycle...
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    //Google Material Liberary
+    implementation "com.google.android.material:material:$GoogleMaterialVersion"
+
+    // material dialogs
+    def matieral_dialogs_version = "3.1.0"
+    implementation "com.afollestad.material-dialogs:core:$matieral_dialogs_version"
+
+    //Retrofit libs
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:okhttp:$OkkHttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$OkkHttpVersion"
+
+    //Room Library for Jetpack Support....
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    // For Kotlin use kapt instead of annotationProcessor
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //Coroutine for Android Kotlinx library...
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+
+    //Koin -> Kodein(Kotlin Dependency Injection) library injection dependency...
+    implementation "org.kodein.di:kodein-di-generic-jvm:$KodeinVersion"
+    implementation "org.kodein.di:kodein-di-framework-android-x:$KodeinVersion"
+
+    //Run time paging liberary for list item in Recyclerview....
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    // For Kotlin use paging-runtime-ktx
+
+    // jetpack navigation components
+//    def nav_version = "2.1.0-alpha06" // NEWEST VERSION DOESN'T HANDLE BACK NAV PROPERLY!!!
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-runtime:$nav_version"
+
+    //Image Loader library......
+    implementation "com.github.bumptech.glide:glide:$GlideVersion"
+    kapt "com.github.bumptech.glide:compiler:$GlideVersion"
+
+    //Circular Image Library
+    implementation "de.hdodenhof:circleimageview:$CircularIVVersion"
+
+    //Otp view
+    implementation "com.github.mukeshsolanki:android-otpview-pinview:$OtpViewVersion"
+
+    //Price Range Seek bar..
+    implementation "com.github.Innovattic:range-seek-bar:$PriceRangeSeekBar"
+
+    //Google Firebase login....
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.1.0'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-config:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.4.0'
+//    implementation 'com.firebaseui:firebase-ui-auth:4.3.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation "com.google.android.gms:play-services-auth-api-phone:17.4.0"
+    implementation 'com.google.firebase:firebase-dynamic-links:19.1.0'
+
+    // (Recommended) Add the Google Analytics dependency.
+    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+
+    //Image Crop library.....
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
+    //facebook login..
+    implementation 'com.facebook.android:facebook-android-sdk:5.13.0'
+
+    //Flexbox layout managing library...
+    implementation 'com.google.android:flexbox:2.0.1'
+
+    //Expandable recyclerview
+//    implementation 'com.thoughtbot:expandablerecyclerview:1.3'
+
+    //Multidex
+    def multidex_version = "1.0.3"
+    implementation "com.android.support:multidex:$multidex_version"
+
+    // Leak Canary
+    def leak_canary_version = "2.3"
+//    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
+
+    // Card View
+    def cardview_version = "1.0.0"
+    implementation "androidx.cardview:cardview:$cardview_version"
+
+    // Recyclerview
+    def recyclerview_version = "1.2.0-alpha06"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+
+    //lottie animation library...
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    /*// Dagger
+    def dagger_version = "2.22"
+    // Dagger2 core
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // Dagger Android
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"*/
+
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+//    debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
+//    releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+}

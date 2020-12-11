@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="couponData"
+            type="com.notebook.android.model.home.ProductCoupon.ProdCoupon" />
+    </data>
+
+   <androidx.cardview.widget.CardView
+       android:layout_width="160dp"
+       android:layout_height="wrap_content"
+       app:cardCornerRadius="8dp"
+       android:layout_margin="5dp">
+
+       <!--
+           android:background="@drawable/coupon_bg"-->
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:id="@+id/clCouponItemView"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:padding="5dp">
+
+   <!--        <TextView
+               android:id="@+id/tvUseCode"
+               android:text="@string/strUseCode"
+               android:textSize="12sp"
+               android:layout_marginStart="3dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent"/>-->
+
+           <TextView
+               android:id="@+id/tvCouponCode"
+               couponCode="@{couponData.code}"
+               android:textSize="14sp"
+               android:layout_marginStart="3dp"
+               android:layout_marginTop="2dp"
+               android:textColor="@color/colorPrimaryDark"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"/>
+
+           <androidx.constraintlayout.widget.Guideline
+               android:id="@+id/coupon30Guideline"
+               android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:orientation="vertical"
+               app:layout_constraintGuide_percent="0.85"/>
+
+          <!-- <View
+               android:id="@+id/viewCoupon"
+               android:layout_width="1.2dp"
+               android:layout_height="44dp"
+               android:background="@color/colorLightGrey"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintLeft_toRightOf="@+id/coupon30Guideline"/>
+-->
+           <TextView
+               android:id="@+id/tvCouponDesc"
+               android:text="@{couponData.description}"
+               android:textSize="12sp"
+               android:layout_marginStart="5dp"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               app:layout_constraintTop_toBottomOf="@+id/tvCouponCode"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent" />
+
+           <ImageView
+               android:id="@+id/imgCouponSelected"
+               android:layout_width="@dimen/_20dp"
+               android:layout_height="@dimen/_20dp"
+               android:visibility="gone"
+               android:src="@drawable/ic_select_coupon"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"/>
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.cardview.widget.CardView>
+
+</layout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="productOrderModel"
+            type="com.notebook.android.data.db.entities.OrderSummaryProduct" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_8dp">
+
+        <TextView
+            android:id="@+id/tvProdTitle"
+            android:text="@{productOrderModel.title}"
+            android:textSize="@dimen/font_sixteen"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="@dimen/_12_padding"
+            android:layout_marginStart="@dimen/_8dp"
+            android:layout_width="0dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/glOrderProductSummary"/>
+
+        <TextView
+            android:id="@+id/tvProdQuantity"
+            android:textSize="@dimen/font_fourteen"
+            android:textColor="@color/colorLightGrey"
+            android:layout_marginTop="@dimen/_6dp"
+            android:layout_marginStart="@dimen/_8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tvProdTitle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/glOrderProductSummary"/>
+
+        <TextView
+            android:id="@+id/tvProdAmount"
+            android:textSize="@dimen/font_twenty"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="@dimen/_16_padding"
+            android:layout_marginStart="@dimen/_8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tvProdQuantity"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/glOrderProductSummary"/>
+
+        <!-- static data -->
+        <TextView
+            android:id="@+id/tvProdDeliveryBy"
+            android:textSize="@dimen/font_tweleve"
+            android:textColor="@color/colorLightGrey"
+            android:layout_marginTop="@dimen/_6dp"
+            android:layout_marginStart="@dimen/_12_padding"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tvProdAmount"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/glOrderProductSummary"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glOrderProductSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50"/>
+
+        <ImageView
+            android:id="@+id/imgProductImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:loadImageBasePath="@{@string/productImgPath}"
+            app:imageName="@{productOrderModel.image}"
+            android:layout_marginTop="@dimen/_4dp"
+            android:src="@drawable/note_pad"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/glOrderProductSummary"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spProductQuantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="@dimen/_6dp"
+            android:background="@drawable/product_spinner_bg"
+            android:spinnerMode="dropdown"
+            app:layout_constraintTop_toBottomOf="@+id/imgProductImage"
+            app:layout_constraintLeft_toRightOf="@+id/glOrderProductSummary"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:background="@color/colorVLightGrey"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spProductQuantity"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

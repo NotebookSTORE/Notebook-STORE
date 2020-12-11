@@ -1,0 +1,4 @@
+package com.notebook.android.model.address
+
+class AddAddress {
+}

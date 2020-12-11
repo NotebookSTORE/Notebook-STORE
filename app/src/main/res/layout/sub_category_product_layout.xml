@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="subCategoryProduct"
+            type="com.notebook.android.data.db.entities.SubCategoryProduct" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:background="@drawable/filter_unselect_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clTopProductLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imgProductImage"
+                app:loadImageBasePath="@{@string/productImgPath}"
+                app:imageName="@{subCategoryProduct.image}"
+                android:src="@drawable/note_pad"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="@dimen/_4dp"
+                android:layout_marginStart="@dimen/_12_padding"
+                android:transitionName="transitionHome"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvDiscount"
+                android:text="@{String.valueOf(subCategoryProduct.discount).concat(@string/discountIcon)}"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/discount_product_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/glBestSeller70"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.7"/>
+
+            <TextView
+                android:id="@+id/tvProductTitle"
+                android:text="@{subCategoryProduct.title}"
+                android:textSize="@dimen/font_fourteen"
+                android:textColor="#404040"
+                android:layout_marginTop="5dp"
+                android:paddingStart="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/imgProductImage"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/glBestSeller70"/>
+
+            <androidx.appcompat.widget.AppCompatRatingBar
+                android:id="@+id/rbProductRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                app:layout_constraintTop_toBottomOf="@+id/tvProductTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:progressTint="#FDAA0B"
+                android:numStars="5"
+                android:scaleX="1"
+                android:scaleY="1"
+                android:rating="4"
+                android:layout_marginStart="3dp"
+                android:isIndicator="true"/>
+
+            <TextView
+                android:id="@+id/tvProdRating"
+                app:prodRating="@{subCategoryProduct.customerRating}"
+                android:textSize="12sp"
+                android:textColor="#404040"
+                android:gravity="center"
+                android:layout_marginStart="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/rbProductRating"
+                app:layout_constraintTop_toBottomOf="@+id/tvProductTitle"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/tvProductPrice"
+            android:textSize="16sp"
+            android:textColor="#404040"
+            android:padding="5dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:price="@{subCategoryProduct.price}"
+            app:discount="@{subCategoryProduct.discount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/clTopProductLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvAfterAddingPriceInDiscount"
+            android:textSize="14sp"
+            android:textColor="#404040"
+            android:padding="4dp"
+            android:gravity="center"
+            app:textStrikeThrough="@{@string/rupeeIcon.concat(String.valueOf(subCategoryProduct.price))}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/tvProductPrice"
+            app:layout_constraintTop_toBottomOf="@+id/clTopProductLayout"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <ImageView
+            android:id="@+id/imgAddToCart"
+            android:src="@drawable/ic_cart_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

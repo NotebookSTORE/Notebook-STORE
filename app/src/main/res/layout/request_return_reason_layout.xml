@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="320dp"
+        android:minHeight="160dp"
+        android:filterTouchesWhenObscured="true">
+
+        <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="#fff"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="12dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tvCancelRequest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Reason for return"
+                    android:textSize="12sp"
+                    android:padding="4dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/imgClosePopup"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_close_popup"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <View
+                    android:id="@+id/viewReturn"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_6dp"
+                    android:background="@color/colorLightGrey"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCancelRequest"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvReason1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Don’t want the product anymore "
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:textColor="@color/colorLightBlack"
+                    app:layout_constraintTop_toBottomOf="@+id/viewReturn"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvReason2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Product is missing in the package"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:textColor="@color/colorLightBlack"
+                    app:layout_constraintTop_toBottomOf="@+id/tvReason1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvReason3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Quality of the product not as expected"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:textColor="@color/colorLightBlack"
+                    app:layout_constraintTop_toBottomOf="@+id/tvReason2"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvReason4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Received a brokenn/damaged item"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:textColor="@color/colorLightBlack"
+                    app:layout_constraintTop_toBottomOf="@+id/tvReason3"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvReason5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Recieved wrong item"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:textColor="@color/colorLightBlack"
+                    app:layout_constraintTop_toBottomOf="@+id/tvReason4"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

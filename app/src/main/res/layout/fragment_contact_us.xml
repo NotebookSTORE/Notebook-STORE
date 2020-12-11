@@ -1,0 +1,307 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_main_inference"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.0" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/viewTop"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineCenter"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineTop"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottom">
+
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clImageContactUs"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@color/colorWhite">
+
+                        <ImageView
+                            android:id="@+id/imgSignUpLogo"
+                            android:src="@drawable/notebook_login_logo"
+                            android:layout_width="160dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/tvEmail"
+                        android:textSize="12sp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="12dp"
+                        android:gravity="center"
+                        android:drawablePadding="@dimen/_4dp"
+                        android:drawableLeft="@drawable/ic_outline_email"
+                        android:textColor="@color/colorWhite"
+                        android:text="@string/strEmailField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/clImageContactUs"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvContactEmail"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="16sp"
+                        android:textColor="@color/colorWhite"
+                        android:text="@string/strUserEmailFormat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="68dp"
+                        android:drawableLeft="@drawable/ic_baseline_phone_android"
+                        android:textColor="@color/colorWhite"
+                        android:text="Phone"
+                        android:drawablePadding="@dimen/_4dp"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/clImageContactUs"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvPhoneData"
+                        android:textColor="@color/colorWhite"
+                        android:text="+918920547578"
+                        android:textSize="14sp"
+                        android:layout_marginTop="@dimen/_4dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPhone"
+                        app:layout_constraintRight_toRightOf="parent"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cvContactData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvPhoneData"
+                        app:cardCornerRadius="12dp">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="14dp">
+
+                            <EditText
+                                android:id="@+id/edtFullName"
+                                android:hint="Full Name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintRight_toRightOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvFullnameValidation"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F10D0D"
+                                android:textSize="@dimen/font_tweleve"
+                                android:visibility="gone"
+                                android:text="* Please enter your full name"
+                                app:layout_constraintTop_toBottomOf="@+id/edtFullName"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"/>
+
+                            <EditText
+                                android:id="@+id/edtPhoneNumber"
+                                android:hint="Phone Number"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="phone"
+                                android:maxLength="10"
+                                android:layout_marginTop="12dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvFullnameValidation"/>
+
+                            <TextView
+                                android:id="@+id/tvPhoneNumberValidation"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F10D0D"
+                                android:textSize="@dimen/font_tweleve"
+                                android:visibility="gone"
+                                android:text="* Please enter your full name"
+                                app:layout_constraintTop_toBottomOf="@+id/edtPhoneNumber"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"/>
+
+                            <EditText
+                                android:id="@+id/edtEmailID"
+                                android:hint="Email ID"
+                                android:layout_marginTop="12dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textEmailAddress"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumberValidation"/>
+
+                            <TextView
+                                android:id="@+id/tvEmailIDValidation"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F10D0D"
+                                android:textSize="@dimen/font_tweleve"
+                                android:visibility="gone"
+                                android:text="* Please enter your full name"
+                                app:layout_constraintTop_toBottomOf="@+id/edtEmailID"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"/>
+
+                            <EditText
+                                android:id="@+id/edtWriteYourMessage"
+                                android:hint="Write your message..."
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapWords|textMultiLine"
+                                android:lines="6"
+                                android:minLines="6"
+                                android:gravity="start"
+                                android:padding="12sp"
+                                android:layout_marginTop="12dp"
+                                android:background="@drawable/filter_unselect_bg"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvEmailIDValidation"/>
+
+                            <TextView
+                                android:id="@+id/tvWriteMessageValidation"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="#F10D0D"
+                                android:textSize="@dimen/font_tweleve"
+                                android:visibility="gone"
+                                android:text="* Please enter your full name"
+                                app:layout_constraintTop_toBottomOf="@+id/edtWriteYourMessage"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clSignupContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cvContactData">
+
+                        <ImageButton
+                            android:id="@+id/imgButtonContactUs"
+                            android:src="@drawable/ic_send_contact_us"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+
+                            android:background="@drawable/send_circular_bg"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <ProgressBar
+                            android:id="@+id/pbContactUs"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/viewBottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guidelineCenter"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+            android:background="@color/colorWhite"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

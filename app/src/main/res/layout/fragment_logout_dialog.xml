@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:filterTouchesWhenObscured="true">
+
+    <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvCancelRequest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Are you sure to exit?"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:padding="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvCancelYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:textColor="@color/colorLightGrey"
+                    android:background="@drawable/filter_unselect_bg"
+                    android:textStyle="bold"
+                    android:layout_margin="8dp"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:paddingLeft="46dp"
+                    android:paddingRight="46dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp" />
+
+                <TextView
+                    android:id="@+id/tvCancelNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:layout_margin="8dp"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/filter_select_bg"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:paddingLeft="46dp"
+                    android:paddingRight="46dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

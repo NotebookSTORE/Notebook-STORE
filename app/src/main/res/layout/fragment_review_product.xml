@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="productModel"
+            type="com.notebook.android.data.db.entities.ProductDetailEntity"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.productDetail.frag.ReviewProduct">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clErrorView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:background="@color/colorAccent">
+
+                <TextView
+                    android:id="@+id/tvErrorText"
+                    android:text="@string/strEnterAddrText"
+                    android:layout_width="0dp"
+                    android:padding="14dp"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clRatingProduct"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8dp"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintTop_toBottomOf="@+id/clErrorView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:background="@drawable/filter_unselect_bg">
+
+                <ImageView
+                    android:id="@+id/imgRatingProd"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"
+                    app:loadImageBasePath="@{@string/productImgPath}"
+                    app:imageName="@{productModel.image}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/glRateProdData"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/glRateProdData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.45"/>
+
+                <TextView
+                    android:id="@+id/tvProdTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{productModel.title}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_sixteen"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/_8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/glRateProdData"/>
+
+                <TextView
+                    android:id="@+id/tvProdDeliveryBy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Delivered On: Mon, Feb 3"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_fourteen"
+                    android:layout_marginTop="@dimen/_4dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvProdTitle"
+                    app:layout_constraintLeft_toRightOf="@+id/glRateProdData"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/tvProdDeliveryBy"
+                    app:layout_constraintLeft_toRightOf="@+id/glRateProdData"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvProductOfferPrice"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorLightGrey"
+                        android:padding="6dp"
+                        app:textStrikeThrough="@{@string/rupeeIcon.concat(String.valueOf(productModel.price))}"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tvAfterAddingPriceInDiscount"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        app:price="@{productModel.price}"
+                        app:discount="@{productModel.discount}"
+                        android:layout_marginStart="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toRightOf="@+id/tvProductOfferPrice"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clRatingProductLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_12_padding"
+                app:layout_constraintTop_toBottomOf="@+id/clRatingProduct"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <TextView
+                    android:id="@+id/tvProdRate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="How would your rate this product?"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_eighteen"
+                    android:padding="@dimen/_4dp"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvProdRateDesc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Help us prepare a better product for you."
+                    android:textColor="@color/colorLightGrey"
+                    android:textSize="@dimen/font_fourteen"
+                    android:padding="@dimen/_2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@+id/tvProdRate"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatRatingBar
+                    android:id="@+id/ratingBarFeedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:rating="3.5"
+                    android:stepSize="0.5"
+                    android:isIndicator="false"
+                    style="@style/Widget.AppCompat.RatingBar.Indicator"
+                    android:progressTint="@android:color/holo_orange_light"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="@dimen/_6dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvProdRateDesc"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/viewRateProduct"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/colorVLightGrey"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clRatingProductLayout"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtReviewMsg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:background="@drawable/report_problem_bg"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:gravity="start|top"
+                android:inputType="textMultiLine|textCapWords"
+                android:lines="6"
+                android:hint="Write your review here..."
+                app:layout_constraintTop_toBottomOf="@+id/viewRateProduct"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clImageShown"
+                android:layout_width="@dimen/_130dp"
+                android:layout_height="@dimen/_130dp"
+                android:layout_marginTop="@dimen/_8dp"
+                android:visibility="gone"
+                android:background="@drawable/report_problem_bg"
+                app:layout_constraintTop_toBottomOf="@+id/edtReviewMsg"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <ImageView
+                    android:id="@+id/imgReportProblem"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/note_pad"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/imgRemovePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_coupon"
+                    app:layout_constraintTop_toTopOf="@+id/imgReportProblem"
+                    app:layout_constraintRight_toRightOf="@+id/imgReportProblem"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12_padding"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clImageShown"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/tvRateAddImage"
+                    android:text="ADD IMAGE"
+                    android:padding="12dp"
+                    android:drawablePadding="6dp"
+                    android:drawableStart="@drawable/ic_image_add"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/colorBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvRateSubmit"
+                    android:text="Submit"
+                    android:padding="12dp"
+                    android:textAllCaps="true"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/colorBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

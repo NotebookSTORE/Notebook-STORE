@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">Notebook Store</string>
+
+    <string name="stringSignIn">Sign in</string>
+    <string name="stringSignContinue">Sign in to continue</string>
+    <string name="stringSignUpAlready">Already have an account? Sign in</string>
+    <string name="stringSignUp">Sign Up</string>
+    <string name="stringConfPwd">Confirm Password</string>
+    <string name="stringPwd">Password*</string>
+    <string name="strMob">Mobile*</string>
+    <string name="stringEmail">Email*</string>
+    <string name="stringFacebook">Facebook</string>
+    <string name="stringGoogle">Google</string>
+    <string name="stringSignUsing">Sign in using</string>
+    <string name="stringOR">-OR-</string>
+    <string name="stringLoginNoAccount">Don\'t have an account? Sign up</string>
+    <string name="stringLogin">Login</string>
+    <string name="stringForgotPwd">Forgot Password?</string>
+    <string name="stringPassword">Password</string>
+    <string name="stringEmailLogin">Email</string>
+    <string name="stringResendOtpIn">Resend OTP in  :  </string>
+    <string name="stringVerify">Verify</string>
+    <string name="stringVerifyText">We will send you a PIN to continue your account</string>
+    <string name="stringVerification">Verification</string>
+
+    <string name="camera_permission_explanation">Please give CAMERA and WRITE EXTERNAL STORAGE permission to uploadimage.</string>
+    <string name="stringHomeFrag">Notebook Home View</string>
+    <string name="strHome">Home</string>
+    <string name="strWritingInstruments">Writing Instruments</string>
+    <string name="strArtsCraft"><![CDATA[Arts & Craft]]></string>
+    <string name="strOfficeStationery">Office Stationery</string>
+    <string name="strPaperProducts">Paper Products</string>
+    <string name="strSchoolStationery">School Stationery</string>
+    <string name="strDisplayBoards">Writing Display Boards</string>
+    <string name="strShareApp">Share App</string>
+    <string name="strFaqs">FAQs</string>
+    <string name="strAboutUs">About us</string>
+    <string name="strContactUs">Contact us</string>
+    <string name="strPolicies">Policies</string>
+    <string name="strLogout">Logout</string>
+    <string name="strBenefitsRegularMerchant">Benefits of Regular Merchant</string>
+    <string name="strBenefitsPrimeMerchant">Benefits of Prime Merchant</string>
+    <string name="strBenefitPrimeText">Selling online on Notebook Store is an easy and effective way to reach millions of potential buyers. Whether you have to sell a little or sell a lot, Notebook Store provides you the required tools and services to sell online successfully.</string>
+
+    <string name="strSecurePaymentTitle">Secure payments, regularly</string>
+    <string name="strSecurePaymentDesc">Funds are safely deposited directly to your bank account, even for Pay on Delivery orders, every 7 days.</string>
+
+    <string name="strShipYourOrderTitle">Ship your orders, stress-free</string>
+    <string name="strShipYourOrderDesc">Whether you choose Fulfillment by Notebook Store or Easy Ship, let us take care of delivering your products.</string>
+
+    <string name="strServicesToHelpTitle">Services to help you through every step</string>
+    <string name="strServicesToHelpDesc">Get paid support from certified third party professionals for product photography, account management.</string>
+
+    <string name="strWhySellOnNotebookTitle">Why sell on NotebookStore?</string>
+    <string name="strWhySellOnNotebookDesc">Because you can showcase your products to crores of customers &amp; businesses - 24 hours a day - on India\'s most visited shopping destination.</string>
+    <string name="strMoreDetails">For More Details Click Here</string>
+    <string name="strApplyNow">Apply Now</string>
+
+    <string name="strNameField">Name</string>
+    <string name="strUsername">Pankaj Mangal</string>
+    <string name="strDOBField">Date of Birth</string>
+    <string name="strDateFormat">DD/MM/YYYY</string>
+    <string name="strEmailField">Email</string>
+    <string name="strUserEmailFormat">abcd@gmail.com</string>
+    <string name="strPhoneField">Phone</string>
+    <string name="strUserNumber">9876543210</string>
+    <string name="strFieldsMandatory">All fields are Mandatory*</string>
+    <string name="strNoHiddenCost">No Hidden Cost</string>
+    <string name="strAnnualSubscription">Annual Subscription Charges ₹ 999/-</string>
+    <string name="strAadharID">Aadhar number/Voter Id</string>
+    <string name="strAadharFormat">7879 8774 7382</string>
+    <string name="strPanCard">Pan Card</string>
+    <string name="strPanCardFormat">ABCDE1234A</string>
+    <string name="strAddress">Address</string>
+    <string name="enter_address_here">Enter address here....</string>
+    <string name="strAccountNumber">Account Number</string>
+    <string name="strAcNumFormat">849893849384</string>
+    <string name="strBankName">Bank Name</string>
+    <string name="strIFSCCode">IFSC CODE</string>
+    <string name="strIFSCFormat">ICICI0000929</string>
+    <string name="strBankLocation">Bank Location</string>
+    <string name="strUpiId">UPI ID</string>
+    <string name="strUpiIdOptional">(Optional)</string>
+    <string name="strReferralId">Referral ID</string>
+    <string name="strReferralAny">(If any)</string>
+    <string name="strTermsCondition">Click here to indicate that you have read and agree to the terms presented in the Terms and Conditions agreement</string>
+    <string name="strExecutiveCall">Our executive will call you within 24 working hours.</string>
+    <string name="strProceedPay">Proceed To Pay</string>
+    <string name="strSubmit">Submit</string>
+    <string name="strAddNewsAddress">Add New Address</string>
+    <string name="strVerifyOtp">we will send you OTP to verify your identity</string>
+
+    <string name="productImgPath">https://demo.mbrcables.com/notebookstore/public/uploads/product/</string>
+    <string name="brandImgPath">https://demo.mbrcables.com/notebookstore/public/uploads/brands/</string>
+    <string name="categoryImgPath">https://demo.mbrcables.com/notebookstore/public/uploads/category/</string>
+    <string name="subCategoryImgPath">https://demo.mbrcables.com/notebookstore/public/uploads/subcategory/</string>
+    <string name="socialImgPath">https://demo.mbrcables.com/notebookstore/public/uploads/</string>
+    <string name="discountIcon">%\noff</string>
+    <string name="rupeeIcon">₹ </string>
+
+    <!--facebook login credentials-->
+    <string name="facebook_app_id">2906439559485376</string>
+    <string name="fb_login_protocol_scheme">fb2906439559485376</string>
+    <string name="tvOFF">off</string>
+    <string name="strEnterPincode">Enter Pincode</string>
+    <string name="strCheck">Check</string>
+    <string name="strPincodeDeliveryInfo">Use pincode to check delivery info</string>
+    <string name="strBulkQueryText">Have some query for bulk order Click Here</string>
+    <string name="strSeeMore">See More</string>
+    <string name="strDeliveryBy">Delivery by :</string>
+    <string name="strCashOnDelivery">Cash on \nDelivery</string>
+    <string name="strReplacement">10 Days\nReplacement</string>
+    <string name="strSimilarDiscountProd">Similar discounted products</string>
+    <string name="strTotalItemCart">Total items in your cart</string>
+    <string name="discPercentText">% OFF</string>
+    <string name="strSortBy">Sort By</string>
+    <string name="strPopularity">Popularity</string>
+    <string name="strNewestFirst">Newest First</string>
+    <string name="strRelevance">Relevance</string>
+    <string name="strPriceLowToHigh">Price : Low to High</string>
+    <string name="strPriceHighToLow">Price : High to Low</string>
+    <string name="strReturnPolicy">Return Policy</string>
+    <string name="strRefundPolicy">Refund Policy</string>
+    <string name="strCancelPolicy">Cancellation Policy</string>
+    <string name="strPrivacyPolicy">Privacy Policy</string>
+    <string name="strCart">Cart</string>
+    <string name="strMyAccount">My Account</string>
+    <string name="strMyOrder">Orders</string>
+    <string name="strFeedbackText">How is your experience on Notebook Store ?</string>
+    <string name="strHelpSupport">Help and Support</string>
+    <string name="strHelpSupportDesc">Do check our FAQs section once.</string>
+    <string name="strCustomerCareEmail">info@notebookstore.in</string>
+    <string name="strHelpEmailDesc">You can email us at the above mentioned id, we will revert within 1 business day.</string>
+    <string name="strCountryName">India</string>
+    <string name="strSupportPhoneNumber">+91&#8211;7900609609</string>
+    <string name="strFeedback">Feedback</string>
+    <string name="strFeedbackDescText">If you have feedback regarding our app that you would like to share, we would love to hear from you!</string>
+    <string name="strReportProblem">Report A Problem</string>
+    <string name="strClickHere">Click here</string>
+    <string name="strCommonlyFaqs">Commonly Searched FAQs</string>
+    <string name="strFinish">Finish</string>
+    <string name="strEdit">Edit</string>
+    <string name="strPaymentInfo">Payment Information</string>
+    <string name="strAboutUsBottom">Click here to see what some of our customers are saying about us.</string>
+    <string name="strLatestProducts">Latest products</string>
+    <string name="strViewAll">View All</string>
+    <string name="strRateProduct">Rate Product</string>
+    <string name="strRatingReviews"><![CDATA[Rating & Reviews]]></string>
+    <string name="strFreeDeliveryText">Free Delivery on orders over</string>
+    <string name="strUseCode">Use Code</string>
+    <string name="strBuyNow">Buy Now</string>
+    <string name="strAddToCart">Add to Cart</string>
+    <string name="strOverallRatings">Overall Ratings</string>
+    <string name="strRemoveFavText">Remove</string>
+    <string name="strInStock">In stock.</string>
+
+
+    <!--Cashfree sdk string value here.....-->
+    <string name="testAppID">140310079578525432ef90edc13041</string>
+    <string name="testSecretKey">486f657212e33b908fce9e15ec4def98adddb6b2</string>
+    <string name="strBrandPartner">Our Brand Partners</string>
+    <string name="strAvailOffers">Avail the Offers</string>
+    <string name="strBestSeller">Best Sellers</string>
+    <string name="strSearchHere">Search product here......</string>
+    <string name="strEnterAddrText">Enter Your Address</string>
+    <string name="strBuildingStreetHint">Building/Street</string>
+    <string name="strLocality">Locality</string>
+    <string name="strCityText">City</string>
+    <string name="strCountry">Country</string>
+    <string name="strPincode">Pincode</string>
+    <string name="strState">State</string>
+    <string name="strSelectCountryText">Select Country</string>
+
+    <string name="strReportProbText">Please only leave feedback about Notebook Store and our features. All reports are subject to our Term of Use.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="strApplicableCoupon">Applicable Coupons</string>
+    <string name="strCheckoutNow">Checkout Now</string>
+    <string name="strFavourites">Favourites</string>
+    <string name="strFilter">Filter</string>
+    <string name="strSort">Sort</string>
+
+    <string name="strAboutPart1">NotebookSTORE.in Introducing India\'s first online
+e-commerce platform where each and every
+individual can make a peaceful &amp; long-term
+career with it. NotebookSTORE.in is one of the
+best source of active &amp; passive income its a easy
+way for getting employment as well as can avail
+the benefits of shopping to buy needful &amp; best
+quality products of stationary, books &amp;
+educational toys. We are committed to provide
+you the best &amp; top brand products. Our online
+shopping helps in reducing the cost of products,
+so less affluent people can also afford the best
+quality products.</string>
+
+    <string name="strAboutPart2">Our responsibility with the ethical process of
+business and our moral responsibility towards our
+country is 100% Literacy &amp; 100% Employment.
+We NotebookSTORE.in believe in the power of
+recognition and empowerment leading to great
+business engagement have a mission of 100%
+Employment as well as 100% Literacy. As we have
+a mission of 100% Literacy in India which not only
+includes Academic Education but also Moral
+Education which is missing from the system &amp; is
+highly important to have in upcoming Future of
+the world. Our mission &amp; dream is to educate
+100% children. Want to serve underdeveloped
+schools by providing them school stationery,
+books educational toys for the same we are
+working effectively.</string>
+
+    <string name="strVersion">Version 1.0.1</string>
+    <string name="strViewMore">View More</string>
+    <string name="strOriginCode">Origin Code</string>
+</resources>

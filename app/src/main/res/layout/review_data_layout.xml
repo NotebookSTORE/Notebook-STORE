@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="ratingData"
+            type="com.notebook.android.data.db.entities.RatingReviews" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="@dimen/_8dp"
+        android:background="@drawable/filter_unselect_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clOverallRating">
+
+        <TextView
+            android:id="@+id/tvRatingUsername"
+            android:text="@{ratingData.email}"
+            android:textSize="15sp"
+            android:textColor="@color/colorBlack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tvReviewDate"/>
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/rbProductRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            app:layout_constraintTop_toBottomOf="@+id/tvRatingUsername"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:progressTint="#FDAA0B"
+            android:numStars="5"
+            android:rating="4"
+            android:stepSize="0.5"
+            android:isIndicator="true"/>
+
+        <!-- app:dateConverter="@{ratingData.created_at}"-->
+        <TextView
+            android:id="@+id/tvReviewDate"
+            app:dateConverter="@{ratingData.currentdate}"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/imgProdRating"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/note_pad"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/rbProductRating"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvRatingMsg"
+            android:text="@{ratingData.message}"
+            android:textSize="13sp"
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgProdRating"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
