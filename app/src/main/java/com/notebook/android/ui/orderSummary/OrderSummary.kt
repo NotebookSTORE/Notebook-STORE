@@ -68,7 +68,6 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     var discountOnApplyingCoupon = 0f
     private var isCouponCodeFromDetailPage = true
     private var deliveryCharge: Float?= null
-    private var deliveryChargeStorage: Float?= null
     private var totalAmountPayable:Float = 0f
 
     private var offerCode:String ?= null
@@ -263,317 +262,114 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             }
         })
 
-        sharedVM.productDeliveryCharge.observe(viewLifecycleOwner, Observer {
-            if(it != null){
-                deliveryCharge = it
-                deliveryChargeStorage = deliveryCharge
-                fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryCharge"
-                Log.e("deliveryCharges", " :: $deliveryCharge")
-
-            }
-        })
-
         sharedVM.productOrderList.observe(viewLifecycleOwner, Observer {
             Log.e("product list size", " :: ${it.size}")
-            prodList = ArrayList()
-            var cartQty = 0
-            var cartTotalAmount = 0f
-
-            for(orderData in it){
-                if(orderData.discount != 0){
-                    cartQty += orderData.cartQuantity
-                    val cartQuantity= orderData.cartQuantity
-                    val result = (orderData.price.times(orderData.discount)).div(100f)
-                    val finalResult = orderData.price.minus(result)
-                    cartTotalAmount += cartQuantity.times(finalResult)
-                }else{
-                    cartQty += orderData.cartQuantity
-                    cartTotalAmount += orderData.cartQuantity.times(orderData.price)
-                }
-                paymentType = orderData.isBuyNow
-                prodList.add(OrderPaymentDetail.ProductData(orderData.cartQuantity,
-                    orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
-            }
-            Log.e("cartDetails", " :: $cartQty :: $cartTotalAmount")
-
-            if(userData != null){
-                if(paymentType == 1){
-                    productID = prodList[0].id
-                    detailVM.getApplyCouponData(userData!!.id, prodList[0].id)
-                }else{
-                    detailVM.getApplyCouponData(userData!!.id, "")
-                }
-            }
-
-            Log.e("deliveryChargesAdapter", " :: $deliveryCharge")
-            //setting text value to view
-            fragOrderSummBinding.tvPriceWithItems.text = "Price(${cartQty} items)"
-            fragOrderSummBinding.tvPriceTotalAmount.text = "₹ ${df.format(cartTotalAmount)}"
-            totalAmountPayable = cartTotalAmount.plus(deliveryCharge?:0f)
-            totalAmountPayableCouponCheck = cartTotalAmount
-            fragOrderSummBinding.tvDeliverCharges.text = "₹ ${deliveryCharge?:0f}"
-            totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-            Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount")
-            fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-
-            Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount :: $freeDeliveryAmount")
-
-            if(totalAmountPayableCouponCheck>freeDeliveryAmount && freeDeliveryAmount != 0f){
-                deliveryCharge = 0f
-                fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryCharge"
-                totalAmountPayableCouponCheck = cartTotalAmount
-                totalAmountPayable = cartTotalAmount.plus(deliveryCharge?:0f)
-                totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-
-                if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
-                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else if(offerDiscountPriceInDiscount != 0){
-                    discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
-                    totalAmountPayableAfterDiscount =
-                        df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount))
-                            .div(100f))).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else if(offerDiscountPriceInAmount != 0){
-                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                    totalAmountPayableAfterDiscount =
-                        df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else{
-                    discountOnApplyingCoupon = 0f
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayable)}"
-                    Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                            "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                }
-            }else{
-                fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryChargeStorage"
-                totalAmountPayable = cartTotalAmount.plus(deliveryChargeStorage?:0f)
-                totalAmountPayableAfterDiscount = totalAmountPayable
-                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-
-                if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
-                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else if(offerDiscountPriceInDiscount != 0){
-                    discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
-                    totalAmountPayableAfterDiscount =
-                        df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount))
-                            .div(100f))).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else if(offerDiscountPriceInAmount != 0){
-                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                    totalAmountPayableAfterDiscount =
-                        df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                }else{
-                    discountOnApplyingCoupon = 0f
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                    Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                            "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                }
-            }
-
-            orderAdapter = OrderSummaryAdapter(mContext, it,
-                object : OrderSummaryAdapter.OrderPriceListener{
-                    override fun onChangeProdQuantity(orderItemPosition:Int,
-                                                      prodID:Int, orderQty:Int, orderAmount:Float) {
-                        prodList = ArrayList()
-                        var cartQtys = 0
-                        var cartTotalAmounts = 0f
-
-                        Log.e("selecteProductQuantity", " :: $prodID :: $orderQty")
-                        if(userData != null){
-                            detailVM.updateCartItem(userData!!.id, userData!!.token!!,
-                                prodID.toString(), orderQty, 1)
-                        }else{
-                            val userLoginRequestPopup = UserLogoutDialog()
-                            userLoginRequestPopup.isCancelable = false
-                            userLoginRequestPopup.setUserLoginRequestListener(this@OrderSummary)
-                            userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
-                        }
-
-                        for(orderData in it){
-                            if(orderData.discount != 0){
-                                cartQtys += orderData.cartQuantity
-                                val cartQuantity= orderData.cartQuantity
-                                val result = (orderData.price.times(orderData.discount)).div(100f)
-                                val finalResult = orderData.price.minus(result)
-                                cartTotalAmounts += cartQuantity.times(finalResult)
-                            }else{
-                                cartQtys += orderData.cartQuantity
-                                cartTotalAmounts += orderData.cartQuantity.times(orderData.price)
-                            }
-                            paymentType = orderData.isBuyNow
-                            prodList.add(OrderPaymentDetail.ProductData(orderData.cartQuantity,
-                                orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
-                        }
-
-                        if(userData != null){
-                            if(paymentType == 1){
-                                productID = prodList[0].id
-                                detailVM.getApplyCouponData(userData!!.id, prodList[0].id)
-                            }else{
-                                detailVM.getApplyCouponData(userData!!.id, "")
-                            }
-                        }
-
-                        Log.e("deliveryChargesAdapter", " :: $deliveryCharge")
-                        //setting text value to view
-                        fragOrderSummBinding.tvPriceWithItems.text = "Price(${cartQtys} items)"
-                        fragOrderSummBinding.tvPriceTotalAmount.text = "₹ ${df.format(cartTotalAmounts)}"
-                        totalAmountPayable = cartTotalAmounts.plus(deliveryCharge?:0f)
-                        totalAmountPayableCouponCheck = cartTotalAmounts
-                        fragOrderSummBinding.tvDeliverCharges.text = "₹ ${deliveryCharge?:0f}"
-                        totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-                        Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount")
-                        fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-
-                        Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount :: $freeDeliveryAmount")
-
-                        if(totalAmountPayableCouponCheck>freeDeliveryAmount && freeDeliveryAmount != 0f){
-                            deliveryCharge = 0f
-                            fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryCharge"
-                            totalAmountPayableCouponCheck = cartTotalAmounts
-                            totalAmountPayable = cartTotalAmounts.plus(deliveryCharge?:0f)
-                            totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-
-                            if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
-                                discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else if(offerDiscountPriceInDiscount != 0){
-                                discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
-                                totalAmountPayableAfterDiscount =
-                                    df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount))
-                                        .div(100f))).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else if(offerDiscountPriceInAmount != 0){
-                                discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                totalAmountPayableAfterDiscount =
-                                    df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else{
-                                discountOnApplyingCoupon = 0f
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayable)}"
-                                Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                                        "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                            }
-                        }else{
-                            fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryChargeStorage"
-                            totalAmountPayable = cartTotalAmounts.plus(deliveryChargeStorage?:0f)
-                            totalAmountPayableAfterDiscount = totalAmountPayable
-                            fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-
-                            if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
-                                discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else if(offerDiscountPriceInDiscount != 0){
-                                discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
-                                totalAmountPayableAfterDiscount =
-                                    df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount))
-                                        .div(100f))).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else if(offerDiscountPriceInAmount != 0){
-                                discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                totalAmountPayableAfterDiscount =
-                                    df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            }else{
-                                discountOnApplyingCoupon = 0f
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                                        "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                            }
-                        }
-
-                    }
-
-                    override fun onPriceCheckOnCoupon(isGreater: Boolean) {
-                        if (isGreater){
-                            fragOrderSummBinding.clCouponData.visibility = View.VISIBLE
-                            fragOrderSummBinding.tvCouponCode.text = applyCoupon?.code
-                            fragOrderSummBinding.tvApplyCouponOrder.visibility = View.GONE
-                            Log.e("amountCheck", " :: $totalAmountPayableCouponCheck :: $freeDeliveryAmount :: $deliveryCharge")
-                            if(totalAmountPayableCouponCheck>freeDeliveryAmount){
-                                deliveryCharge = 0f
-                                fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryCharge"
-                                totalAmountPayableCouponCheck = totalAmountPayable
-                                totalAmountPayable = totalAmountPayable.plus(deliveryCharge?:0f)
-                                totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-
-                                if(offerDiscountPriceInAmountStorage != 0 && offerDiscountPriceInDiscountStorage != 0){
-                                    discountOnApplyingCoupon = offerDiscountPriceInAmountStorage.toFloat()
-                                    totalAmountPayableAfterDiscount =
-                                        df.format(totalAmountPayable.minus(offerDiscountPriceInAmountStorage.toFloat())).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else if(offerDiscountPriceInDiscountStorage != 0){
-                                    discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscountStorage)).div(100f)
-                                    totalAmountPayableAfterDiscount =
-                                        df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscountStorage))
-                                            .div(100f))).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else if(offerDiscountPriceInAmountStorage != 0){
-                                    discountOnApplyingCoupon = offerDiscountPriceInAmountStorage.toFloat()
-                                    totalAmountPayableAfterDiscount =
-                                        df.format(totalAmountPayable.minus(offerDiscountPriceInAmountStorage.toFloat())).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else{
-                                    discountOnApplyingCoupon = 0f
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayable)}"
-                                    Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                                            "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                                }
-                            }else{
-
-                                fragOrderSummBinding.tvDeliverCharges.text = "₹ $deliveryChargeStorage"
-                                totalAmountPayableCouponCheck = totalAmountPayable
-                                    totalAmountPayable = totalAmountPayable.plus(deliveryChargeStorage?:0f)
-                                totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-
-                                Log.e("amountCheck", " :: $totalAmountPayableCouponCheck :: $freeDeliveryAmount :: $deliveryChargeStorage")
-                                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-
-                                if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
-                                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else if(offerDiscountPriceInDiscount != 0){
-                                    discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
-                                    totalAmountPayableAfterDiscount =
-                                        df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount))
-                                            .div(100f))).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else if(offerDiscountPriceInAmount != 0){
-                                    discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
-                                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                }else{
-                                    discountOnApplyingCoupon = 0f
-                                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                                    Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: " +
-                                            "$offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
-                                }
-                            }
-                        }else{
-                            Log.e("amountCheckGreaterElse", " :: $totalAmountPayableCouponCheck :: $freeDeliveryAmount :: $deliveryCharge")
-                            fragOrderSummBinding.clCouponData.visibility = View.GONE
-                            fragOrderSummBinding.tvApplyCouponOrder.visibility = View.VISIBLE
-                            totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-                            fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                            offerDiscountPriceInDiscount = 0
-                            offerDiscountPriceInAmount = 0
-                        }
-                    }
-
-                    override fun errorMessage(msg: String) {
-
-                    }
-                })
+            populateOrderDetails(it)
+            orderAdapter = OrderSummaryAdapter(mContext, it, getListener(it))
             fragOrderSummBinding.recViewOrderSummary.adapter = orderAdapter
         })
+    }
+
+    private fun populateOrderDetails(orderSummaryProducts: List<OrderSummaryProduct>) {
+        deliveryCharge = getDeliveryCharge(orderSummaryProducts, freeDeliveryAmount)
+        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?: 0.0f)
+        prodList = ArrayList()
+        var cartQty = 0
+        var cartTotalAmount = 0f
+
+        for(orderData in orderSummaryProducts){
+            cartQty += orderData.cartQuantity
+            cartTotalAmount += orderData.cartQuantity.times(orderData.price)
+            if(orderData.discount != 0){
+                val discountQty = orderData.cartQuantity
+                val discountAmt = (orderData.price.times(orderData.discount)).div(100f)
+                cartTotalAmount -= discountQty.times(discountAmt)
+            }
+            paymentType = orderData.isBuyNow
+            prodList.add(OrderPaymentDetail.ProductData(orderData.cartQuantity,
+                    orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
+        }
+        Log.e("cartDetails", " :: $cartQty :: $cartTotalAmount")
+
+        userData?.let { user ->
+            if(paymentType == 1){
+                productID = prodList[0].id
+                detailVM.getApplyCouponData(user.id, prodList[0].id)
+            }else{
+                detailVM.getApplyCouponData(user.id, "")
+            }
+        }
+
+        Log.e("deliveryChargesAdapter", " :: $deliveryCharge")
+        //setting text value to view
+        fragOrderSummBinding.tvPriceWithItems.text = String.format("Price(%d items)", cartQty)
+        fragOrderSummBinding.tvPriceTotalAmount.text = String.format("₹ %s", df.format(cartTotalAmount))
+        totalAmountPayable = cartTotalAmount.plus(deliveryCharge?:0f)
+        totalAmountPayableCouponCheck = cartTotalAmount
+        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?:0f)
+        totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
+        Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount")
+        fragOrderSummBinding.tvTotalAmountPayable.text = String.format("₹ %s", df.format(totalAmountPayableAfterDiscount))
+
+        Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount :: $freeDeliveryAmount")
+
+        totalAmountPayable = cartTotalAmount.plus(deliveryCharge?:0f)
+        totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
+
+        if(offerDiscountPriceInDiscount != 0 && offerDiscountPriceInAmount != 0){
+            discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
+            totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
+        }else if(offerDiscountPriceInDiscount != 0){
+            discountOnApplyingCoupon = (totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f)
+            totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus((totalAmountPayable.times(offerDiscountPriceInDiscount)).div(100f))).toFloat()
+        }else if(offerDiscountPriceInAmount != 0){
+            discountOnApplyingCoupon = offerDiscountPriceInAmount.toFloat()
+            totalAmountPayableAfterDiscount = df.format(totalAmountPayable.minus(offerDiscountPriceInAmount.toFloat())).toFloat()
+        }else{
+            discountOnApplyingCoupon = 0f
+            totalAmountPayableAfterDiscount = totalAmountPayable
+            Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
+        }
+        fragOrderSummBinding.tvTotalAmountPayable.text = String.format("₹ %s", df.format(totalAmountPayableAfterDiscount))
+
+    }
+
+    private fun getListener(orderSummaryProducts: List<OrderSummaryProduct>): OrderSummaryAdapter.OrderPriceListener {
+        return object : OrderSummaryAdapter.OrderPriceListener {
+            override fun onChangeProdQuantity(orderItemPosition: Int,
+                                              prodID: Int, orderQty: Int, orderAmount: Float) {
+                if (userData != null) {
+                    detailVM.updateCartItem(userData!!.id, userData!!.token!!,
+                            prodID.toString(), orderQty, 1)
+                } else {
+                    val userLoginRequestPopup = UserLogoutDialog()
+                    userLoginRequestPopup.isCancelable = false
+                    userLoginRequestPopup.setUserLoginRequestListener(this@OrderSummary)
+                    userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                }
+
+
+                populateOrderDetails(orderSummaryProducts)
+            }
+
+            override fun onPriceCheckOnCoupon(isGreater: Boolean) {
+                if (isGreater) {
+                    populateOrderDetails(orderSummaryProducts)
+                } else {
+                    Log.e("amountCheckGreaterElse", " :: $totalAmountPayableCouponCheck :: $freeDeliveryAmount :: $deliveryCharge")
+                    fragOrderSummBinding.clCouponData.visibility = View.GONE
+                    fragOrderSummBinding.tvApplyCouponOrder.visibility = View.VISIBLE
+                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
+                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
+                    offerDiscountPriceInDiscount = 0
+                    offerDiscountPriceInAmount = 0
+                }
+            }
+
+            override fun errorMessage(msg: String) {
+
+            }
+        }
     }
 
     override fun onClick(p0: View?) {
@@ -728,7 +524,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     override fun onSuccessFreeDeliveryData(freeDeliveryData: List<FreeDeliveryData.FreeDelivery>) {
-        for (freeDelObj in freeDeliveryData.indices){
+        /*for (freeDelObj in freeDeliveryData.indices){
             if(freeDeliveryData[freeDelObj].title.startsWith("free delivery", true)){
 //                sharedVM.setFreeDeliveryData(freeDeliveryData[freeDelObj].price)
                 Log.e("", " :: ")
@@ -736,7 +532,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 orderAdapter.notifyDataSetChanged()
                 Log.e("freeDeliveryAmount", " :: ${freeDeliveryData[freeDelObj].price}")
             }
-        }
+        }*/
     }
 
     override fun onCouponDataSuccess(couponProd: List<ProductCoupon.ProdCoupon>) {
@@ -817,5 +613,16 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 fragOrderSummBinding.tvBillOriginate.text = "Bill for :- $userNameValue"
             }
         }
+    }
+
+    private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float) : Float {
+        var deliveryCharge = 0.0f
+        orderSummaryProducts.forEach { orderSummaryProduct ->
+            if (!orderSummaryProduct.isFreeDeliveryAvailable() ||
+                    orderSummaryProduct.cartQuantity.times(orderSummaryProduct.price) < freeDeliveryAmount) {
+                    deliveryCharge += orderSummaryProduct.delivery_charges ?: 0.0f
+            }
+        }
+        return deliveryCharge
     }
 }

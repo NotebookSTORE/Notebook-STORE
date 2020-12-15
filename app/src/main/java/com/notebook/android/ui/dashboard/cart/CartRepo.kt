@@ -7,6 +7,7 @@ import com.notebook.android.data.network.SafeApiRequest
 import com.notebook.android.model.cart.CartData
 import com.notebook.android.model.cart.CartDelete
 import com.notebook.android.model.cart.CartResponseData
+import com.notebook.android.model.home.FreeDeliveryData
 
 class CartRepo(val db : NotebookDatabase,
                val notebookApi: NotebookApi) : SafeApiRequest() {
@@ -39,4 +40,7 @@ class CartRepo(val db : NotebookDatabase,
     //favourites item CRUD
     fun getAllFavouriteItems() = db.getWishlistDao().getAllWishlistProducts()
     suspend fun deleteFavItem(favID:Int) = db.getWishlistDao().deleteFavById(favID)
+    suspend fun getFreeDeliveryData() : FreeDeliveryData {
+        return apiRequest { notebookApi.getFreeDelivery() }
+    }
 }

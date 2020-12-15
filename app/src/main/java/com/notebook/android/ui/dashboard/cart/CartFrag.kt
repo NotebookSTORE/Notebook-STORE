@@ -26,6 +26,10 @@ import com.notebook.android.adapter.cart.CartProductAdapter
 import com.notebook.android.data.db.entities.*
 import com.notebook.android.data.preferences.NotebookPrefs
 import com.notebook.android.databinding.FragmentCartBinding
+import com.notebook.android.model.ActivityState
+import com.notebook.android.model.ErrorState
+import com.notebook.android.model.ProgressState
+import com.notebook.android.model.home.FreeDeliveryData
 import com.notebook.android.model.orderSummary.OrderSummaryData
 import com.notebook.android.ui.dashboard.listener.RemoveItemListener
 import com.notebook.android.ui.myOrder.OrderSummaryPage
@@ -161,10 +165,11 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
             }
         }
 
+        cartVM.loadFreeDeliveryDataState.observe(viewLifecycleOwner, freeDeliveryDataObserver)
         cartVM.getUserData().observe(viewLifecycleOwner, Observer {user ->
             if(user != null){
                 userData = user
-                cartVM.getCartData(user.id, user.token!!)
+                cartVM.getFreeDeliveryData()
             }else{
                 cartFragBinding.clCartEmpty.visibility = View.VISIBLE
                 cartFragBinding.nsvCartItemLayout.visibility = View.GONE
@@ -177,14 +182,13 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
             if(cartList.isNotEmpty()){
                 var cartItemCount = 0
                 var cartItemTotalAmount = 0F
-                var deliveryCharges = 0F
+//                var deliveryCharges = 0F
                 prodList = ArrayList()
-//                deliveryCharge = cartList.
                 Log.e("cart prodlist size", " :: ${prodList.size}")
                 for(cartItem in cartList){
                     cartItemCount += cartItem.cartquantity
                     cartItemTotalAmount += cartItem.carttotalamount!!
-                    deliveryCharges += cartItem.delivery_charges?:0f
+//                    deliveryCharges += cartItem.delivery_charges?:0f
 
                     Log.e("cartData", " :: ${cartItem.carttotalamount}")
                     if(cartItem.can_cashon?.toInt() == 1){
@@ -216,8 +220,8 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
                 }
 
                 sharedVM.setProductOrderSummaryList(prodList)
-                Log.e("deliveryChargesCart", " :: $deliveryCharges")
-                sharedVM.setDeliveryCharge(deliveryCharges)
+//                Log.e("deliveryChargesCart", " :: $deliveryCharges")
+//                sharedVM.setDeliveryCharge(deliveryCharges)
                 // set delivery charge
                 cartItemCountOrder = cartItemCount
                 cartItemTotalAmountOrder = cartItemTotalAmount
@@ -313,8 +317,34 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
         })
     }
 
+    private val freeDeliveryDataObserver = Observer<ActivityState> {
+        when (it) {
+            is ProgressState -> {
+                showLoader()
+            }
+            is CartVM.LoadFreeDeliverySuccessState -> {
+                hideLoader()
+                sharedVM.setFreeDeliveryData(it.freeDeliveryAmount)
+                loadCartData(userData)
+            }
+            is ErrorState -> {
+                hideLoader()
+                errorToastTextView.text = it.exception.message
+                errorToast.show()
+            }
+        }
+    }
+
     override fun onApiCallStarted() {
+        showLoader()
+    }
+
+    private fun showLoader() {
         cartFragBinding.srlCartFrag.isRefreshing = true
+    }
+
+    private fun hideLoader() {
+        cartFragBinding.srlCartFrag.isRefreshing = false
     }
 
     override fun onUpdateOrDeleteCartStart() {
@@ -325,7 +355,7 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
         if (prod?.isEmpty() == true){
             cartFragBinding.clCartEmpty.visibility = View.VISIBLE
             cartFragBinding.nsvCartItemLayout.visibility = View.GONE
-            cartVM.getCartData(userData!!.id!!, userData!!.token!!)
+            loadCartData(userData)
         }
     }
 
@@ -402,14 +432,18 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
     }
 
     override fun onRefresh() {
-        if(userData != null){
-            cartVM.getCartData(userData!!.id, userData!!.token!!)
-        }
+        loadCartData(userData)
     }
 
     override fun onUserAccepted(isAccept: Boolean) {
         cartVM.deleteUser()
         cartVM.clearCartTableFromDB()
         navController.navigate(R.id.loginFrag)
+    }
+
+    private fun loadCartData(user: User?) {
+        user?.token?.let {
+            cartVM.getCartData(user.id, it)
+        }
     }
 }

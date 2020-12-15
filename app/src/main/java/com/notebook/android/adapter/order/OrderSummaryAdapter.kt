@@ -52,8 +52,6 @@ class OrderSummaryAdapter(val mCtx: Context, val prodListData: ArrayList<OrderSu
             Log.e("result", " :: result -> ${result} :: finalResult -> ${finalResult} :: ${prodQty.times(finalResult)}")
 //            orderSummaryBinding.tvProdDeliveryBy.text = "Delivery by Tomorrow,Fri | ₹ ${prodData.delivery_charges}"
 
-            prodData.isFreeDeliveryAvailable = prodData.can_free_delivery?.toInt() == 1
-
             if(prodData.quantity != 0){
                 val qtyIntList = setQuantityIntegerList(prodData.quantity)
                 val qtyList = setQuantityList(prodData.quantity)

@@ -28,8 +28,9 @@ data class OrderSummaryProduct(
     var delivery_charges:Float?=null,
     var isBuyNow:Int,
     var can_free_delivery:String ?= null,
-    var isFreeDeliveryAvailable:Boolean = false
 ) : Serializable {
+
+    fun isFreeDeliveryAvailable() = can_free_delivery?.toInt() == 1
 
 }
 
