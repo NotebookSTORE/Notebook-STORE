@@ -3,11 +3,13 @@ package com.max.ecomaxgo.maxpe.view.flight.utility
 import android.app.Activity
 import android.content.Context
 import android.graphics.Paint
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -142,6 +144,11 @@ fun arrangeKeyFeature(textView: TextView, feature:List<String>?){
         }
     }
     textView.text = keyValue
+}
+
+@BindingAdapter("dataSheet")
+fun setDataSheet(webView: WebView, htmlString: String?){
+    webView.loadData(htmlString ?: "", "text/html; charset=utf-8", "UTF-8")
 }
 
 @BindingAdapter("textStrikeThrough")

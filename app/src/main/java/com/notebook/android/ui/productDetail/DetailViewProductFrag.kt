@@ -19,6 +19,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebChromeClient
+import android.webkit.WebViewClient
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
@@ -67,6 +69,7 @@ import com.notebook.android.ui.productDetail.SharedVM
 import com.notebook.android.ui.productDetail.listener.DiscountProdResponseListener
 import com.notebook.android.ui.productDetail.listener.PinCheckListener
 import com.notebook.android.utility.Constant
+import kotlinx.android.synthetic.main.fragment_detail_view_product.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -282,6 +285,15 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                 detailViewProductBinding.setVariable(BR.productModel, it)
                 detailViewProductBinding.executePendingBindings()
 
+                val dataSheet = it.data_sheet
+                if (dataSheet == null) {
+                    clDataSheet.visibility = View.GONE
+                    View2.visibility = View.GONE
+                } else {
+                    clDataSheet.visibility = View.VISIBLE
+                    View2.visibility = View.VISIBLE
+                }
+
                 if(prodModel.reviewCount == 0){
                     detailViewProductBinding.tvRatingStarText.text = "${4.0}"
                     detailViewProductBinding.tvRatingAmount.text = "(1 Review)"
@@ -451,6 +463,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.btnBuyNow.setOnClickListener(this)
         detailViewProductBinding.btnCheckPincodeNow.setOnClickListener(this)
         detailViewProductBinding.imgShareProduct.setOnClickListener(this)
+        detailViewProductBinding.wvDataSheet.setOnLongClickListener(View.OnLongClickListener {
+            return@OnLongClickListener true
+        })
+        detailViewProductBinding.wvDataSheet.isLongClickable = false
     }
 
     fun stringToProductImageList(data: String?): List<ProductDetailData.ProductImageData> {
