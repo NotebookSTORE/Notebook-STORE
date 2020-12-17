@@ -234,6 +234,10 @@
             android:name="subCategoryID"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="brandId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_subCategoryViewProductFrag_to_filterByProductFrag"
             app:destination="@id/filterByProductFrag" />

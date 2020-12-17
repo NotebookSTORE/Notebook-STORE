@@ -85,13 +85,13 @@
                 android:numStars="5"
                 android:scaleX="1"
                 android:scaleY="1"
-                android:rating="4"
+                android:rating="@{searchProduct.customerRating}"
                 android:stepSize="0.2"
                 android:layout_marginStart="3dp"
                 android:isIndicator="true"/>
 
             <TextView
-                android:text="4.0"
+                android:text="@{searchProduct.customerRating.toString()}"
                 android:textSize="12sp"
                 android:textColor="#404040"
                 android:gravity="center"
