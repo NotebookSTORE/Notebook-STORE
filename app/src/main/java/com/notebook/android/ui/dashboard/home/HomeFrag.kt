@@ -494,7 +494,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener{
                 override fun BrandId(brandID: Int, title: String) {
                     val action = HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
-                    action.subCategoryID = brandID
+                    action.brandId = brandID
+                    action.subCategoryID = 0
                     action.subCategTitle = title
                     navController.navigate(action)
                     (mActivity as MainDashboardPage).setSubCategoryTitle(title)
@@ -646,7 +647,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             brandAdapter = BrandDataAdapter(mContext, it , object : BrandDataAdapter.BrandListener{
                 override fun BrandId(brandID: Int, title: String) {
                     val action = HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
-                    action.subCategoryID = brandID
+                    action.brandId = brandID
+                    action.subCategoryID = 0
                     action.subCategTitle = title
                     navController.navigate(action)
                     (mActivity as MainDashboardPage).setSubCategoryTitle(title)

@@ -59,6 +59,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
     private lateinit var subCategoryProductBinding:FragmentSubCategoryViewProductBinding
     private lateinit var navController:NavController
     private var subCategoryID:Int ?= null
+    private var brandId:Int ?= null
     private var userData: User?= null
     private val notebookPrefs by lazy {
         NotebookPrefs(mContext)
@@ -91,7 +92,13 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
 
         val args = SubCategoryViewProductFragArgs.fromBundle(requireArguments())
         subCategoryID = args.subCategoryID
+        brandId = args.brandId
 
+        brandId?.let {
+            if (it != 0) {
+                brandIDArray = listOf(it)
+            }
+        }
         filterRawData = FilterRequestData(brandIDArray?:ArrayList(), price1, price2,
             discValueArray?:ArrayList(), colorIDArray?:ArrayList(),
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
