@@ -2,12 +2,15 @@ package com.notebook.android.ui.dashboard.searchProduct
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -68,11 +71,28 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
     private lateinit var errorToastTextView:TextView
     private lateinit var successToastTextView:TextView
 
+    private var imm:InputMethodManager? = null
+
+    private fun showKeyboard() {
+        searchProdBinding.edtSearchValue.requestFocus()
+        imm?.showSoftInput(searchProdBinding.edtSearchValue, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard() {
+        searchProdBinding.edtSearchValue.clearFocus()
+        imm?.hideSoftInputFromWindow(searchProdBinding.edtSearchValue.windowToken, 0)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        hideKeyboard()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         searchProdBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_search_product, container, false)
         searchProdBinding.lifecycleOwner = this
@@ -116,7 +136,6 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
             ContextCompat.getColor(requireContext(), android.R.color.holo_orange_dark))
         searchProdBinding.srlSearchProduct.setOnRefreshListener(this)
         setupRecyclerView()
-
         return searchProdBinding.root
     }
 
@@ -133,6 +152,7 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
         })
 
         searchProdBinding.imgBackSearch.setOnClickListener {
+            hideKeyboard()
             navController.popBackStack()
         }
 
@@ -141,6 +161,7 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
                 object : SearchProductAdapter.SearchProductListener,
                     UserLogoutDialog.UserLoginPopupListener {
                     override fun searchProductObj(searcgProd: SearchProduct) {
+                        hideKeyboard()
                         val searchprod = Product(searcgProd.id.toString(), searcgProd.keyfeature,
                             searcgProd.material, searcgProd.title, searcgProd.alias, searcgProd.image,
                             searcgProd.status, searcgProd.short_description, searcgProd.description, searcgProd.data_sheet,
@@ -152,6 +173,7 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
                     }
 
                     override fun searchAddToCart(prodID: Int, cartQty: Int) {
+                        hideKeyboard()
                         if(userData != null){
                             searchProdVM.addItemsToCart(userData!!.id!!, userData!!.token!!, prodID, cartQty, 0)
                         }else{
@@ -163,12 +185,14 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
                     }
 
                     override fun onUserAccepted(isAccept: Boolean) {
+                        hideKeyboard()
                         navController.navigate(R.id.loginFrag)
                     }
                 })
 
             searchProdBinding.recViewSearchProducts.adapter = searchProdAdapter
         })
+        showKeyboard()
     }
 
     private fun setupRecyclerView(){

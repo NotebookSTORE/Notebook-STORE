@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -19,8 +18,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
@@ -54,20 +51,16 @@ import com.notebook.android.adapter.home.PagerAdapter.ProductImageSliderAdapter
 import com.notebook.android.data.db.entities.*
 import com.notebook.android.data.preferences.NotebookPrefs
 import com.notebook.android.databinding.FragmentDetailViewProductBinding
-import com.notebook.android.model.home.BenefitProductData
 import com.notebook.android.model.home.FreeDeliveryData
 import com.notebook.android.model.home.ProductCoupon
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
-import com.notebook.android.ui.dashboard.home.HomeFragDirections
 import com.notebook.android.ui.popupDialogFrag.ConfirmationDialog
-import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.ui.productDetail.DetailProductVM
 import com.notebook.android.ui.productDetail.DetailProductVMFactory
 import com.notebook.android.ui.productDetail.SharedVM
 import com.notebook.android.ui.productDetail.listener.DiscountProdResponseListener
-import com.notebook.android.ui.productDetail.listener.PinCheckListener
 import com.notebook.android.utility.Constant
 import kotlinx.android.synthetic.main.fragment_detail_view_product.*
 import org.kodein.di.KodeinAware
@@ -302,7 +295,6 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.tvRatingAmount.text = "(${prodModel.reviewCount} Reviews)"
                 }
 
-                detailViewProductBinding.nsvProductDetail.scrollTo(0,0)
                 if(prodModel.quantity <= 0){
                     prodQty = 0
                     detailViewProductBinding.clProductQty.visibility = View.GONE
@@ -358,7 +350,8 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.tvReplacement.text = "Non\nreturnable"
                 }
 
-                val prodimageArray = stringToProductImageList(prodModel.prodImageListString)
+                val prodimageArray = stringToProductImageList(prodModel)
+
                 Log.e("prodImageArray", " :: $prodimageArray")
                 if (prodimageArray.isNullOrEmpty()){
                     detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
@@ -380,6 +373,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
                     detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(detailViewProductBinding.vpProductImageSlider)
                 }
+                detailViewProductBinding.nsvProductDetail.scrollTo(0,0)
             }
         })
 
@@ -469,12 +463,26 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.wvDataSheet.isLongClickable = false
     }
 
-    fun stringToProductImageList(data: String?): List<ProductDetailData.ProductImageData> {
-        if (data == null) {
+    private fun stringToProductImageList(product: ProductDetailEntity): List<ProductDetailData.ProductImageData> {
+        val data = product.prodImageListString
+        if ((data.isNullOrBlank() || data == "[]") && product.image.isNullOrEmpty()) {
             return Collections.emptyList()
         }
-        val listType: Type = object : TypeToken<List<ProductDetailData.ProductImageData>>() {}.getType()
-        return Gson().fromJson<List<ProductDetailData.ProductImageData>>(data, listType)
+
+        if ((data.isNullOrBlank() || data == "[]")) {
+            return mutableListOf(
+                ProductDetailData.ProductImageData(
+                    id = 0,
+                    product_id = product.id ?: 0,
+                    title = product.title ?: "",
+                    image = product.image,
+                    status = 0
+                )
+            )
+        }
+
+        val listType: Type = object : TypeToken<List<ProductDetailData.ProductImageData>>() {}.type
+        return Gson().fromJson(data, listType)
     }
 
     override fun onApiCallStarted() {
@@ -795,6 +803,11 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     errorToast.show()
                 }
             }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mActivity.currentFocus?.clearFocus()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
