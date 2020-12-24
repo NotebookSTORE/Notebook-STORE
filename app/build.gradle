@@ -24,8 +24,8 @@ android {
         applicationId "com.notebook.android"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 13
-        versionName "1.0.2"
+        versionCode 14
+        versionName "1.0.3"
 
         buildConfigField "String", "SERVER_URL", "\"https://demo.mbrcables.com/notebookstore/\""
         buildConfigField "String", "NOTEBOOK_BENEFITS_PDF_URL", "\"public/uploads/NotebookSTORE.in.pdf\""
