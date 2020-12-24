@@ -32,20 +32,22 @@ import com.notebook.android.model.orderSummary.OrderPaymentDetail
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
 import com.notebook.android.ui.dashboard.cart.CartResponseListener
+import com.notebook.android.ui.dashboard.cart.CartVM
 import com.notebook.android.ui.myOrder.OrderSummaryPage
-import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.RequiredAddressDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.ui.productDetail.DetailProductVM
 import com.notebook.android.ui.productDetail.DetailProductVMFactory
 import com.notebook.android.ui.productDetail.SharedVM
 import com.notebook.android.ui.productDetail.listener.DiscountProdResponseListener
+import com.notebook.android.utility.Constant
+import kotlinx.android.synthetic.main.fragment_order_summary.*
+import kotlinx.android.synthetic.main.fragment_order_summary.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import kotlin.math.roundToInt
 
 class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     UserLogoutDialog.UserLoginPopupListener, RequiredAddressDialog.AddressRequiredListener,
@@ -60,6 +62,10 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
 
     private val sharedVM: SharedVM by lazy {
         ViewModelProvider(mActivity).get(SharedVM::class.java)
+    }
+
+    private val cartVM: CartVM by lazy {
+        ViewModelProvider(mActivity).get(CartVM::class.java)
     }
 
     private lateinit var rdTripSelect: RadioButton
@@ -100,14 +106,14 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
 //        detailVM.getFreeDeliveryData()
         applyCoupon = null
     }
-    companion object{
-        var applyCoupon:CouponApply ?= null
-        var totalAmountPayableCouponCheck:Float = 0f
-        var couponCanApplyListData:List<CouponData.CouponCanApply> = ArrayList()
+    private var applyCoupon:CouponApply ?= null
+    private var totalAmountPayableCouponCheck:Float = 0f
+    private var userData: User?= null
+    private var productID:String ?= null
+    private lateinit var prodList:ArrayList<OrderPaymentDetail.ProductData>
 
-        var userData: User?= null
-        var productID:String ?= null
-        lateinit var prodList:ArrayList<OrderPaymentDetail.ProductData>
+    companion object{
+        var couponCanApplyListData:List<CouponData.CouponCanApply> = ArrayList()
     }
 
     override fun onCreateView(
@@ -194,9 +200,14 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
         })
 
         detailVM.couponCanApplyData.observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()){
+            hideProgress()
+            if (it != null){
                 couponCanApplyListData = it
             }
+            val productList = sharedVM.productOrderList.value?.toList() ?: listOf()
+            populateOrderDetails(productList)
+            orderAdapter = OrderSummaryAdapter(mContext, productList, getListener())
+            fragOrderSummBinding.recViewOrderSummary.adapter = orderAdapter
         })
         //set value to view....
         fragOrderSummBinding.imgCloseCoupon.setOnClickListener(this)
@@ -263,11 +274,63 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
         })
 
         sharedVM.productOrderList.observe(viewLifecycleOwner, Observer {
-            Log.e("product list size", " :: ${it.size}")
-            populateOrderDetails(it)
-            orderAdapter = OrderSummaryAdapter(mContext, it, getListener(it))
-            fragOrderSummBinding.recViewOrderSummary.adapter = orderAdapter
+            userData?.let { user ->
+                showProgress()
+                if(paymentType == 1){
+                    productID = prodList[0].id
+                    detailVM.getApplyCouponData(user.id, prodList[0].id)
+                }else{
+                    detailVM.getApplyCouponData(user.id, "")
+                }
+            }
         })
+
+        val cartItemsList = arrayListOf<OrderSummaryProduct>()
+        cartVM.getCartData().observe(viewLifecycleOwner, { cartList ->
+            if (cartList.isNotEmpty()) {
+                cartItemsList.clear()
+
+                for (cartItem in cartList) {
+                    cartItemsList.add(
+                        OrderSummaryProduct(
+                            cartItem.cartproduct_id,
+                            cartItem.cartquantity,
+                            cartItem.carttotalamount ?: 0f,
+                            cartItem.keyfeature,
+                            cartItem.material,
+                            cartItem.title,
+                            cartItem.alias,
+                            cartItem.image,
+                            cartItem.status,
+                            cartItem.short_description,
+                            cartItem.description,
+                            cartItem.data_sheet,
+                            cartItem.quantity,
+                            cartItem.price,
+                            cartItem.offer_price!!,
+                            cartItem.product_code,
+                            cartItem.product_condition,
+                            cartItem.discount!!,
+                            cartItem.latest,
+                            cartItem.best,
+                            cartItem.brandtitle,
+                            cartItem.colortitle,
+                            cartItem.delivery_charges,
+                            0,
+                            cartItem.can_free_delivery
+                        )
+                    )
+                }
+                sharedVM.setProductOrderSummaryList(cartItemsList)
+            }
+        })
+    }
+
+    private fun loadCartData(user: User?) {
+        user?.token?.let {
+            showProgress()
+            cartVM.getCartData(user.id, it)
+        }
     }
 
     private fun populateOrderDetails(orderSummaryProducts: List<OrderSummaryProduct>) {
@@ -290,15 +353,6 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                     orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
         }
         Log.e("cartDetails", " :: $cartQty :: $cartTotalAmount")
-
-        userData?.let { user ->
-            if(paymentType == 1){
-                productID = prodList[0].id
-                detailVM.getApplyCouponData(user.id, prodList[0].id)
-            }else{
-                detailVM.getApplyCouponData(user.id, "")
-            }
-        }
 
         Log.e("deliveryChargesAdapter", " :: $deliveryCharge")
         //setting text value to view
@@ -331,14 +385,15 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             Log.e("applyNormal", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount :: $totalAmountPayableAfterDiscount")
         }
         fragOrderSummBinding.tvTotalAmountPayable.text = String.format("₹ %s", df.format(totalAmountPayableAfterDiscount))
-
+        checkApplyCoupon()
     }
 
-    private fun getListener(orderSummaryProducts: List<OrderSummaryProduct>): OrderSummaryAdapter.OrderPriceListener {
+    private fun getListener(): OrderSummaryAdapter.OrderPriceListener {
         return object : OrderSummaryAdapter.OrderPriceListener {
             override fun onChangeProdQuantity(orderItemPosition: Int,
                                               prodID: Int, orderQty: Int, orderAmount: Float) {
                 if (userData != null) {
+                    showProgress()
                     detailVM.updateCartItem(userData!!.id, userData!!.token!!,
                             prodID.toString(), orderQty, 1)
                 } else {
@@ -349,26 +404,63 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 }
 
 
-                populateOrderDetails(orderSummaryProducts)
             }
 
             override fun onPriceCheckOnCoupon(isGreater: Boolean) {
-                if (isGreater) {
-                    populateOrderDetails(orderSummaryProducts)
-                } else {
-                    Log.e("amountCheckGreaterElse", " :: $totalAmountPayableCouponCheck :: $freeDeliveryAmount :: $deliveryCharge")
-                    fragOrderSummBinding.clCouponData.visibility = View.GONE
-                    fragOrderSummBinding.tvApplyCouponOrder.visibility = View.VISIBLE
-                    totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
-                    fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                    offerDiscountPriceInDiscount = 0
-                    offerDiscountPriceInAmount = 0
-                }
+
             }
 
             override fun errorMessage(msg: String) {
 
             }
+        }
+    }
+
+    private fun checkApplyCoupon() {
+        Log.e(
+            "totalAmountCheck", " :: $totalAmountPayableCouponCheck :: " +
+                    "${applyCoupon?.coupon_type}"
+        )
+        if ((applyCoupon?.coupon_type == Constant.COUPON_USER_TYPE_GENERIC_INSTITUTE.toString() ||
+                    applyCoupon?.coupon_user_type == Constant.COUPON_USER_TYPE_BULK.toString()) &&
+            userData?.registerfor != 2
+        ) {
+            Log.d("checkCoupon", "You are not registered as Institution")
+            return
+        }
+
+        if (applyCoupon?.coupon_type?.equals(
+                Constant.COUPON_USER_TYPE_PRODUCT_ONLY,
+                true
+            ) == true
+        ) {
+            if (productID.isNullOrEmpty()) {
+                val product = sharedVM.productOrderList.value?.firstOrNull { orderSummaryProduct -> applyCoupon?.product_id == orderSummaryProduct.id }
+                if (product == null) {
+                    clearCoupon()
+                    return
+                }
+            } else {
+                if (applyCoupon?.product_id.equals(productID).not()) {
+                    Log.d(
+                        "checkCoupon",
+                        "This coupon is not applicable for this product due to id mismatch"
+                    )
+                    return
+                }
+                if (applyCoupon?.product_id.equals(productID) &&
+                    applyCoupon?.coupon_user_type == Constant.COUPON_USER_TYPE_SPECIAL.toString() &&
+                    applyCoupon?.email_can_avail.isNullOrEmpty().not() &&
+                    applyCoupon?.email_can_avail.equals(userData?.email, true).not()
+                ) {
+                    Log.d("checkCoupon", "Your email id not match")
+                    return
+                }
+            }
+        }
+
+        if (totalAmountPayableCouponCheck < applyCoupon?.max_amount?.toFloat() ?: 0f) {
+            clearCoupon()
         }
     }
 
@@ -461,42 +553,62 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             }
 
             fragOrderSummBinding.tvApplyCouponOrder -> {
-                if (userData != null){
-                    if(paymentType == 1){
-                        val orderSummaryCouponDirections:OrderSummaryDirections.ActionOrderSummaryToApplyCoupon
-                                = OrderSummaryDirections.actionOrderSummaryToApplyCoupon(prodList[0].id,userData!!.email?:"",
-                            totalAmountPayableCouponCheck, userData!!.usertype!!, userData!!.registerfor?:0)
+                if (userData != null) {
+                    if (paymentType == 1) {
+                        val orderSummaryCouponDirections: OrderSummaryDirections.ActionOrderSummaryToApplyCoupon =
+                            OrderSummaryDirections.actionOrderSummaryToApplyCoupon(
+                                prodList[0].id,
+                                userData!!.email ?: "",
+                                totalAmountPayableCouponCheck,
+                                userData!!.usertype!!,
+                                userData!!.registerfor ?: 0
+                            )
                         navController.navigate(orderSummaryCouponDirections)
-                    }else{
-                        val orderSummaryCouponDirections:OrderSummaryDirections.ActionOrderSummaryToApplyCoupon
-                                = OrderSummaryDirections.actionOrderSummaryToApplyCoupon("",
-                            userData!!.email?:"", totalAmountPayableCouponCheck, userData!!.usertype!!,
-                            userData!!.registerfor?:0)
+                    } else {
+                        val orderSummaryCouponDirections: OrderSummaryDirections.ActionOrderSummaryToApplyCoupon =
+                            OrderSummaryDirections.actionOrderSummaryToApplyCoupon(
+                                "",
+                                userData!!.email ?: "",
+                                totalAmountPayableCouponCheck,
+                                userData!!.usertype!!,
+                                userData!!.registerfor ?: 0
+                            )
                         navController.navigate(orderSummaryCouponDirections)
                     }
                     isCouponCodeFromDetailPage = false
-                }else{
+                } else {
                     val userLoginRequestPopup = UserLogoutDialog()
                     userLoginRequestPopup.isCancelable = false
                     userLoginRequestPopup.setUserLoginRequestListener(this)
-                    userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                    userLoginRequestPopup.show(
+                        mActivity.supportFragmentManager,
+                        "User login request popup !!"
+                    )
                 }
             }
 
             fragOrderSummBinding.imgCloseCoupon -> {
-                fragOrderSummBinding.clCouponData.visibility = View.GONE
-                fragOrderSummBinding.tvApplyCouponOrder.visibility = View.VISIBLE
-                totalAmountPayableAfterDiscount = totalAmountPayable
-                fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
-                offerDiscountPriceInDiscount = 0
-                offerDiscountPriceInAmount = 0
-                applyCoupon = null
+                clearCoupon()
             }
 
             fragOrderSummBinding.tvEditOrAddAddress -> {
                 navController.navigate(R.id.action_orderSummary_to_savedAddressFrag)
             }
         }
+    }
+
+    private fun clearCoupon() {
+        navController.currentBackStackEntry?.savedStateHandle?.set("applyCoupon", null)
+        fragOrderSummBinding.clCouponData.visibility = View.GONE
+        fragOrderSummBinding.tvApplyCouponOrder.visibility = View.VISIBLE
+        totalAmountPayableAfterDiscount = totalAmountPayable
+        fragOrderSummBinding.tvTotalAmountPayable.text = "₹ ${df.format(totalAmountPayableAfterDiscount)}"
+        offerDiscountPriceInDiscount = 0
+        offerDiscountPriceInAmount = 0
+        offerDiscountPriceInAmountStorage = 0
+        offerDiscountPriceInDiscountStorage = 0
+        applyCoupon = null
+        offerCode = null
     }
 
     override fun onUserAccepted(isAccept: Boolean) {
@@ -536,66 +648,81 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     override fun onCouponDataSuccess(couponProd: List<ProductCoupon.ProdCoupon>) {
-
+        hideProgress()
     }
 
     override fun onUpdateOrDeleteCartStart() {
+        showProgress()
     }
 
     override fun onSuccessCart(prod: List<Cart>?) {
+        hideProgress()
     }
 
     override fun onCartEmpty(isEmpty: Boolean) {
     }
 
     override fun onCartProductItemAdded(success: String?) {
+        hideProgress()
+        loadCartData(userData)
     }
 
     override fun onCartItemDeleted(msg: String) {
+        hideProgress()
     }
 
     override fun onFailure(msg: String, isAddCart: Boolean) {
+        hideProgress()
     }
 
     override fun onApiFailure(msg: String) {
+        hideProgress()
     }
 
     override fun onFailure(msg: String) {
-
+        hideProgress()
     }
 
 
 
     override fun onNoInternetAvailable(msg: String) {
+        hideProgress()
     }
 
     override fun onCartItemAdded(success: String) {
+        hideProgress()
     }
 
     override fun onProductRatingData(it: RatingData) {
-
+        hideProgress()
     }
 
     override fun pinSuccessful(mesg: String, date: String) {
-
+        hideProgress()
     }
 
     override fun onDeliveryNotAvailable(mesg: String) {
-
+        hideProgress()
     }
 
     override fun onInvalidCredential() {
+        hideProgress()
     }
 
-    override fun onProductDetailFailure(msg: String) {}
+    override fun onProductDetailFailure(msg: String) {
+        hideProgress()
+    }
 
     override fun onFailureUpdateORDeleteCart(msg: String) {
+        hideProgress()
     }
 
     override fun onApiFailureUpdateORDeleteCart(msg: String) {
+        hideProgress()
     }
 
     override fun onNoInternetAvailableUpdateORDeleteCart(msg: String) {
+        hideProgress()
     }
 
     override fun onCheckedChanged(p0: RadioGroup?, p1: Int) {
@@ -617,12 +744,20 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
 
     private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float) : Float {
         var deliveryCharge = 0.0f
+        val cartAmount = orderSummaryProducts.sumOf { orderSummaryProduct: OrderSummaryProduct -> orderSummaryProduct.cartQuantity.times(orderSummaryProduct.price.toDouble()) }
         orderSummaryProducts.forEach { orderSummaryProduct ->
-            if (!orderSummaryProduct.isFreeDeliveryAvailable() ||
-                    orderSummaryProduct.cartQuantity.times(orderSummaryProduct.price) < freeDeliveryAmount) {
+            if (!orderSummaryProduct.isFreeDeliveryAvailable() || cartAmount < freeDeliveryAmount) {
                     deliveryCharge += orderSummaryProduct.delivery_charges ?: 0.0f
             }
         }
         return deliveryCharge
+    }
+
+    private fun showProgress() {
+        fragOrderSummBinding.progressView.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        fragOrderSummBinding.progressView.visibility = View.GONE
     }
 }
