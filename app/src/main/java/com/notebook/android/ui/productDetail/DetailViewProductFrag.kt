@@ -55,6 +55,7 @@ import com.notebook.android.model.home.FreeDeliveryData
 import com.notebook.android.model.home.ProductCoupon
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
+import com.notebook.android.ui.auth.frag.ResetPasswordByOptionFragDirections
 import com.notebook.android.ui.popupDialogFrag.ConfirmationDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.ui.productDetail.DetailProductVM
@@ -687,7 +688,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             }
 
             detailViewProductBinding.tvSimilarDiscntProdsViewAll -> {
-                navController.navigate(R.id.action_detailViewProductFrag_to_similarDiscountedProdViewAll)
+                val similarFragmentAction = DetailViewProductFragDirections
+                    .actionDetailViewProductFragToSimilarDiscountedProdViewAll(prodModel.discount)
+
+                navController.navigate(similarFragmentAction)
             }
 
             detailViewProductBinding.imgShareProduct -> {

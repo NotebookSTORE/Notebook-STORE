@@ -7,16 +7,32 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: "androidx.navigation.safeargs"
 // Add the Firebase Crashlytics plugin.
 apply plugin: 'com.google.firebase.crashlytics'
-//apply plugin: 'io.fabric'
 
-/*ext {
-    enableCrashlytics = true
-}*/
 
 //notebook key store file and pwd :-sk24072020
 //jks file in jks_file folder
 
+// Load keystore properties
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    keystoreProperties.setProperty("keyAlias", String.valueOf(System.getenv('KEY_ALIAS')))
+    keystoreProperties.setProperty("keyPassword", String.valueOf(System.getenv('KEY_PASSWORD')))
+    keystoreProperties.setProperty("storeFile", String.valueOf(System.getenv('STORE_FILE')))
+    keystoreProperties.setProperty("storePassword", String.valueOf(System.getenv('STORE_PASSWORD')))
+}
+
 android {
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyAliasPassword']
+            storeFile file(keystoreProperties['keyStore'])
+            storePassword keystoreProperties['keyStorePassword']
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
@@ -24,8 +40,8 @@ android {
         applicationId "com.notebook.android"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 14
-        versionName "1.0.3"
+        versionCode 15
+        versionName "1.0.4"
 
         buildConfigField "String", "SERVER_URL", "\"https://demo.mbrcables.com/notebookstore/\""
         buildConfigField "String", "NOTEBOOK_BENEFITS_PDF_URL", "\"public/uploads/NotebookSTORE.in.pdf\""
@@ -42,10 +58,6 @@ android {
         multiDexEnabled true
     }
 
-    firebaseCrashlytics {
-        nativeSymbolUploadEnabled true
-    }
-
     buildTypes {
         debug {
             minifyEnabled false
@@ -54,6 +66,7 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,7 +96,6 @@ android {
 
 dependencies {
     def paging_version = "2.1.2"
-//    def kotlin_version = "1.1.0"
     def coroutineVersion = "1.3.7"
     def room_version = "2.2.5"
     def KodeinVersion = "6.5.5"
@@ -150,7 +162,6 @@ dependencies {
     // For Kotlin use paging-runtime-ktx
 
     // jetpack navigation components
-//    def nav_version = "2.1.0-alpha06" // NEWEST VERSION DOESN'T HANDLE BACK NAV PROPERLY!!!
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation "androidx.navigation:navigation-runtime:$nav_version"
@@ -191,16 +202,9 @@ dependencies {
     //Flexbox layout managing library...
     implementation 'com.google.android:flexbox:2.0.1'
 
-    //Expandable recyclerview
-//    implementation 'com.thoughtbot:expandablerecyclerview:1.3'
-
     //Multidex
     def multidex_version = "1.0.3"
     implementation "com.android.support:multidex:$multidex_version"
-
-    // Leak Canary
-    def leak_canary_version = "2.3"
-//    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
 
     // Card View
     def cardview_version = "1.0.0"
@@ -214,20 +218,10 @@ dependencies {
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
-    /*// Dagger
-    def dagger_version = "2.22"
-    // Dagger2 core
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-
-    // Dagger Android
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"*/
-
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-//    debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
-//    releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

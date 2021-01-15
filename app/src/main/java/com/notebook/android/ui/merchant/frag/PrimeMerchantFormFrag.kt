@@ -516,6 +516,18 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             imageUri = null
         }
 
+        if(userData?.usertype == 1){
+            if (userData?.status == 0){
+                fragPrimeMerchantBinding.btnProceedToPay.text = "Renew Subsciption"
+            }else{
+                fragPrimeMerchantBinding.btnProceedToPay.text = "Update"
+            }
+        }else{
+            fragPrimeMerchantBinding.btnProceedToPay.visibility = View.VISIBLE
+            fragPrimeMerchantBinding.btnProceedToPay.text = "Submit"
+        }
+
+
         if(!userData?.identity_image.isNullOrEmpty()){
             if (userData?.status == 1){
                 identityImage = null
@@ -658,8 +670,6 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             fragPrimeMerchantBinding.edtReferralID.setCursorVisible(false)
 
             fragPrimeMerchantBinding.btnProceedToPay.text = "Renew Subscription"
-        }else{
-
         }
     }
 
@@ -1467,13 +1477,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 navController.popBackStack(R.id.homeFrag, false)
             }
         }else if(user.usertype == 0){
-            if(user.status == 0){
-                navController.popBackStack(R.id.homeFrag, false)
-            }else if(user.status == 1){
-                navController.navigate(primeMerchantPaymentDirections)
-            }else{
-                navController.navigate(primeMerchantPaymentDirections)
-            }
+            navController.navigate(primeMerchantPaymentDirections)
         }else{
             navController.popBackStack(R.id.homeFrag, false)
         }
@@ -1850,11 +1854,19 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                         )
                                         val identityPartUpload = RequestBody.create(
                                             MultipartBody.FORM,
-                                            jsonArrayList[0].toString()
+                                            if (jsonArrayList.length() > 0) {
+                                                jsonArrayList[0].toString()
+                                            } else {
+                                                ""
+                                            }
                                         )
                                         val identityPartUpload2 = RequestBody.create(
                                             MultipartBody.FORM,
-                                            jsonArrayList[1].toString()
+                                            if (jsonArrayList.length() > 1) {
+                                                jsonArrayList[1].toString()
+                                            } else {
+                                                ""
+                                            }
                                         )
                                         val panCardPartUpload = RequestBody.create(
                                             MultipartBody.FORM,
@@ -1893,7 +1905,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                             institutePart
                                         )
                                     }catch (exception: JSONException){
-
+                                        Log.d("as", "asafdcddsc")
                                     }
 
                                 }else{

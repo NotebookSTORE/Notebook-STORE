@@ -693,6 +693,10 @@
         android:name="com.notebook.android.ui.productDetail.frag.SimilarDiscountedProdViewAll"
         android:label="Similar Discount Product"
         tools:layout="@layout/fragment_similar_discounted_prod_view_all">
+        <argument
+            android:name="discountFilter"
+            app:nullable="false"
+            app:argType="integer"/>
         <action
             android:id="@+id/action_similarDiscountedProdViewAll_to_detailViewProductFrag"
             app:destination="@id/detailViewProductFrag" />

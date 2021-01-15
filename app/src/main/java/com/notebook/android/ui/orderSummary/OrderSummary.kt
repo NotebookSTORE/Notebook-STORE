@@ -744,7 +744,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
 
     private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float) : Float {
         var deliveryCharge = 0.0f
-        val cartAmount = orderSummaryProducts.sumOf { orderSummaryProduct: OrderSummaryProduct -> orderSummaryProduct.cartQuantity.times(orderSummaryProduct.price.toDouble()) }
+        val cartAmount = orderSummaryProducts.sumOf { orderSummaryProduct: OrderSummaryProduct -> orderSummaryProduct.cartTotalAmount.toDouble() }
         orderSummaryProducts.forEach { orderSummaryProduct ->
             if (!orderSummaryProduct.isFreeDeliveryAvailable() || cartAmount < freeDeliveryAmount) {
                     deliveryCharge += orderSummaryProduct.delivery_charges ?: 0.0f

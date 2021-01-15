@@ -1,58 +1,58 @@
 {
   "project_info": {
-    "project_number": "1027799219275",
-    "firebase_url": "https://notebook-store-82fdd.firebaseio.com",
-    "project_id": "notebook-store-82fdd",
-    "storage_bucket": "notebook-store-82fdd.appspot.com"
+    "project_number": "23556258257",
+    "firebase_url": "https://notebook-store.firebaseio.com",
+    "project_id": "notebook-store",
+    "storage_bucket": "notebook-store.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1027799219275:android:eb90ddaf0be0f98e9261ce",
+        "mobilesdk_app_id": "1:23556258257:android:9f7d2c43cc2bded76608f0",
         "android_client_info": {
           "package_name": "com.notebook.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1027799219275-gp9i0haj71ia7es4fvr8sjrhj2q3o22e.apps.googleusercontent.com",
+          "client_id": "23556258257-2nlimnnsslp3r5ghebkn9ii7u8h3h90a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.notebook.android",
-            "certificate_hash": "025f33d9a428789118d15c9b29d484c896cff895"
+            "certificate_hash": "ef1d8d65ec1421d63072565946ed78c718137f31"
           }
         },
         {
-          "client_id": "1027799219275-utugnlu2liv3dh2envqbk5uuustkhail.apps.googleusercontent.com",
+          "client_id": "23556258257-81hfle1igra4qdsvqjon5t0gpcn113ne.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.notebook.android",
-            "certificate_hash": "569426a606724cfd0ea5d4eb750dc20f66370f4b"
+            "certificate_hash": "8aedc2e4f37b2e8a7433cb324067d735002ae538"
           }
         },
         {
-          "client_id": "1027799219275-jsn47gebm8f89iahv2d4nbsgma94o193.apps.googleusercontent.com",
+          "client_id": "23556258257-vnp1f5k6mcnq9i4e90jodifksjkpuudv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.notebook.android",
-            "certificate_hash": "9fd3524c3ad246c25514bcd75be6423344c007cf"
+            "certificate_hash": "5ef0ef6c54832f9300f5e1059d0b5c587f9278ac"
           }
         },
         {
-          "client_id": "1027799219275-5ca45ql8q1rrbgvvmjcl7hq3jqe3sldb.apps.googleusercontent.com",
+          "client_id": "23556258257-br38la9vl4sdtm5kcfbtihdcln68ejeg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDRaFK1Pt5hzxETENK-2jKhKGAo3v8x8mQ"
+          "current_key": "AIzaSyCT31zrRcV7m96kxWkNQLGgyHBToR2HvqA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1027799219275-5ca45ql8q1rrbgvvmjcl7hq3jqe3sldb.apps.googleusercontent.com",
+              "client_id": "23556258257-br38la9vl4sdtm5kcfbtihdcln68ejeg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

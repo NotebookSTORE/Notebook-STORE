@@ -99,11 +99,19 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
         mContext = context
         mActivity = requireActivity()
 
+        val  args = SimilarDiscountedProdViewAllArgs.fromBundle(requireArguments())
+        if (args.discountFilter != 0) {
+            discValueArray = listOf(args.discountFilter)
+        }
         filterRawData = FilterRequestData(brandIDArray?:ArrayList(), price1, price2,
             discValueArray?:ArrayList(), colorIDArray?:ArrayList(),
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_DISCOUNTED_PRODUCT_TYPE, 0, notebookPrefs.sortedValue)
         filterCommonProductVM.getFilterData(Constant.FILTER_DISCOUNTED_PRODUCT_TYPE, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
         filterCommonProductVM.getProductFilterByWise(filterRawData!!)
     }
 
@@ -272,8 +280,6 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
         fragSimilarDiscProdBinding.srlSimilarDiscProducts.isRefreshing = false
         if(isListSizeGreater){
             fragSimilarDiscProdBinding.imgNoProdFound.visibility = View.GONE
-        }else{
-            fragSimilarDiscProdBinding.imgNoProdFound.visibility = View.VISIBLE
         }
     }
 

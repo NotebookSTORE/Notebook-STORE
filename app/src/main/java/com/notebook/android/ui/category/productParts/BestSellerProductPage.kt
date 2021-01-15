@@ -42,6 +42,7 @@ import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.SortByDialogFrag
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.utility.Constant
+import kotlinx.android.synthetic.main.fragment_best_seller_product_page.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -93,9 +94,15 @@ class BestSellerProductPage : Fragment(), KodeinAware,
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_BEST_PRODUCT_TYPE, 0, notebookPrefs.sortedValue)
         filterCommonProductVM.getFilterData(Constant.FILTER_BEST_PRODUCT_TYPE, 0)
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
 
         notebookPrefs.FilterCommonImageUrl = ""
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!srlBSProducts.isRefreshing) {
+            filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        }
     }
 
     override fun onCreateView(
