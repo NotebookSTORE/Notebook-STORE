@@ -1,10 +1,12 @@
 package com.notebook.android.ui.myAccount.profile
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
+import com.notebook.android.model.ActivityState
 import com.notebook.android.model.orderSummary.AfterPaymentRawData
 import com.notebook.android.model.orderSummary.WalletSuccess
 import com.notebook.android.model.wallet.AddWallet
@@ -12,6 +14,8 @@ import com.notebook.android.model.wallet.AddWalletResponse
 import com.notebook.android.model.wallet.WalletAmountRaw
 import com.notebook.android.ui.dashboard.listener.UserProfileUpdateListener
 import com.notebook.android.ui.myAccount.address.listener.AddWalletResponseListener
+import com.notebook.android.ui.myAccount.wallet.redeem.WalletRedeemRepo
+import com.notebook.android.ui.myAccount.wallet.redeem.WalletRedeemViewModel
 import com.notebook.android.utility.ApiException
 import com.notebook.android.utility.NoInternetException
 import kotlinx.coroutines.Dispatchers
@@ -20,12 +24,15 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class ProfileVM(
-    val profileRepo:ProfileRepo
+    val profileRepo:ProfileRepo,
+    val walletRedeemRepo: WalletRedeemRepo
 ):ViewModel() {
 
     lateinit var profileUpdateListener: UserProfileUpdateListener
     lateinit var addWalletListener: AddWalletResponseListener
     var profileImageRemoveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val _redeemWalletPointsState: MutableLiveData<ActivityState> = MutableLiveData()
+    val redeemWalletPointsState: LiveData<ActivityState> = _redeemWalletPointsState
 
     fun getUserData() = profileRepo.getUser()
     fun deleteUser(){
@@ -228,4 +235,33 @@ class ProfileVM(
             }
         }
     }
+
+    fun redeemWalletPoints(userId: Int) {
+        viewModelScope.launch {
+            try {
+                val walletRedeemResponse = walletRedeemRepo.redeemWalletPoints(userId)
+                if (walletRedeemResponse == null || walletRedeemResponse.status == 0) {
+                    _redeemWalletPointsState.value = RedeemPointsErrorState(
+                        walletRedeemResponse?.msg ?: "Please try again later"
+                    )
+                } else {
+                    _redeemWalletPointsState.value =
+                        RedeemPointsSuccessState(walletRedeemResponse.msg)
+                }
+            } catch (e: ApiException) {
+                _redeemWalletPointsState.value =
+                    RedeemPointsErrorState(
+                        e.message ?: "Please try again later"
+                    )
+            } catch (e: NoInternetException) {
+                _redeemWalletPointsState.value =
+                    RedeemPointsErrorState(
+                        e.message ?: "Please try again later"
+                    )
+            }
+        }
+    }
+
+    data class RedeemPointsSuccessState(val message: String) : ActivityState()
+    data class RedeemPointsErrorState(val message: String) : ActivityState()
 }

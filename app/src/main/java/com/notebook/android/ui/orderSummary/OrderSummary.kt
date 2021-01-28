@@ -33,6 +33,7 @@ import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
 import com.notebook.android.ui.dashboard.cart.CartResponseListener
 import com.notebook.android.ui.dashboard.cart.CartVM
+import com.notebook.android.ui.dashboard.cart.CartVMFactory
 import com.notebook.android.ui.myOrder.OrderSummaryPage
 import com.notebook.android.ui.popupDialogFrag.RequiredAddressDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
@@ -55,6 +56,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
 
     override val kodein by kodein()
     private val viewModelFactory : DetailProductVMFactory by instance()
+    private val cartVMFactory : CartVMFactory by instance()
     private lateinit var fragOrderSummBinding: FragmentOrderSummaryBinding
     private val detailVM: DetailProductVM by lazy {
         ViewModelProvider(mActivity, viewModelFactory).get(DetailProductVM::class.java)
@@ -65,7 +67,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     private val cartVM: CartVM by lazy {
-        ViewModelProvider(mActivity).get(CartVM::class.java)
+        ViewModelProvider(mActivity, cartVMFactory).get(CartVM::class.java)
     }
 
     private lateinit var rdTripSelect: RadioButton

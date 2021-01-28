@@ -46,6 +46,8 @@ import com.notebook.android.model.wallet.AddWallet
 import com.notebook.android.model.wallet.AddWalletResponse
 import com.notebook.android.model.wallet.WalletAmountRaw
 import com.notebook.android.model.wallet.WalletAmountResponse
+import com.notebook.android.model.wallet.redeem.WalletRedeemHistoryResponse
+import com.notebook.android.model.wallet.redeem.WalletRedeemResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -79,6 +81,18 @@ interface NotebookApi {
         @Field("mobile_number") mobileNumber:String,
         @Field("otp") otpValue:String
     ) : Response<UserData>
+
+    @FormUrlEncoded
+    @POST("redeemOnBankDetails")
+    suspend fun redeemWalletPoints(
+        @Field("user_id") userId:Int,
+    ) : Response<WalletRedeemResponse>
+
+    @FormUrlEncoded
+    @POST("redeemHistory")
+    suspend fun fetchRedeemHistory(
+        @Field("user_id") userId:Int,
+    ) : Response<WalletRedeemHistoryResponse>
 
     @FormUrlEncoded
     @POST("otpverify")

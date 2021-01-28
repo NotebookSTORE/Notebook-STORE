@@ -70,6 +70,34 @@
                    app:layout_constraintLeft_toLeftOf="parent"
                    app:layout_constraintTop_toBottomOf="@+id/tvAddAmountText"/>
 
+               <ImageButton
+                   android:id="@+id/btnRedeem"
+                   android:layout_width="wrap_content"
+                   android:layout_marginStart="20dp"
+                   android:layout_marginTop="20dp"
+                   android:background="@drawable/sign_up_btn_bg"
+                   android:src="@drawable/ic_redeem"
+                   android:tint="@color/colorWhite"
+                   android:padding="10dp"
+                   android:textAllCaps="false"
+                   android:textColor="@color/colorWhite"
+                   android:textSize="14sp"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toBottomOf="@+id/tvAvailableBalanceText"
+                   android:layout_height="wrap_content" />
+
+               <TextView
+                   android:id="@+id/tvRedeemHint"
+                   android:textColor="@color/colorLightGrey"
+                   android:textSize="17sp"
+                   android:layout_marginTop="30dp"
+                   android:layout_marginStart="12dp"
+                   android:layout_width="wrap_content"
+                   android:text="Click to redeem wallet amount"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintLeft_toRightOf="@id/btnRedeem"
+                   app:layout_constraintTop_toBottomOf="@+id/tvAvailableBalanceText"/>
+
                <ImageView
                    android:src="@drawable/ic_wallet_add_amount"
                    android:layout_width="wrap_content"

@@ -35,6 +35,9 @@ import com.notebook.android.ui.myAccount.helpSupport.HelpSupportRepo
 import com.notebook.android.ui.myAccount.helpSupport.HelpSupportVMFactory
 import com.notebook.android.ui.myAccount.profile.ProfileRepo
 import com.notebook.android.ui.myAccount.profile.ProfileVMFactory
+import com.notebook.android.ui.myAccount.wallet.redeem.WalletRedeemRepo
+import com.notebook.android.ui.myAccount.wallet.redeem.WalletRedeemViewModel
+import com.notebook.android.ui.myAccount.wallet.redeem.WalletRedeemViewModelFactory
 import com.notebook.android.ui.myOrder.MyOrderRepo
 import com.notebook.android.ui.myOrder.MyOrderVMFactory
 import com.notebook.android.ui.orderSummary.OrderSummaryRepo
@@ -74,6 +77,7 @@ class NoteBookApplication : Application(), KodeinAware {
         bind() from singleton { CartRepo(instance(), instance()) }
         bind() from singleton { ProfileRepo(instance(), instance()) }
         bind() from singleton { OrderSummaryRepo(instance(), instance()) }
+        bind() from singleton { WalletRedeemRepo(instance()) }
 
         bind() from provider { SplashViewModelFactory(instance()) }
         bind() from provider { AuthViewModelFactory(instance()) }
@@ -91,8 +95,9 @@ class NoteBookApplication : Application(), KodeinAware {
         bind() from provider { MyOrderVMFactory(instance()) }
         bind() from provider { FilterCommonProductVMFactory(instance()) }
         bind() from provider { CartVMFactory(instance()) }
-        bind() from provider { ProfileVMFactory(instance()) }
+        bind() from provider { ProfileVMFactory(instance(), instance()) }
         bind() from provider { OrderSummaryVMFactory(instance()) }
+        bind() from provider { WalletRedeemViewModelFactory(instance()) }
     }
 
     override fun onCreate() {
