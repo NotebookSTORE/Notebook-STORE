@@ -15,14 +15,14 @@ fun setOrderQuantityMultiple(textview: TextView, quantity:Int){
 
 @BindingAdapter(value = ["price", "discount", "cartQty"])
 fun setOrderSummaryAmount(textview: TextView, price:Float, discount:Int,  cartQty:Int){
-    val result = (price * discount) / 100f
+    val result = ((price * discount) / 100f).toInt()
     Log.e("priceCalculation", " :: ${price} :: ${discount} :: ${result} :: ${price-result}")
     textview.text = "₹ ${(price-result).times(cartQty)}"
 }
 
 @BindingAdapter(value = ["priceOrder", "discountOrder", "cartQtyOrder", "shipingChargeOrder"])
 fun setOrderTotalAmount(textview: TextView, price:Float, discount:Int,  cartQty:Int, shipCharge:Float){
-    val result = (price * discount) / 100f
+    val result = ((price * discount) / 100f).toInt()
     textview.text = "₹ ${((price-result).times(cartQty)).plus(shipCharge)}"
 }
 

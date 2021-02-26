@@ -389,6 +389,11 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                 prodQty: Int,
                                 prodPrice: Float
                             ) {
+                                if (userData == null) {
+                                    showLoginPopup()
+                                    return
+                                }
+
                                 val prodList = ArrayList<OrderSummaryProduct>()
                                 prodList.add(
                                     OrderSummaryProduct(
@@ -399,9 +404,9 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                         discProd.product_condition, discProd.discount, discProd.latest, discProd.best,
                                         discProd.brandtitle, discProd.colortitle, discProd.delivery_charges, 1)
                                 )
-                                sharedVM.setProductOrderSummaryList(prodList)
                                 sharedVM.setCodOptionForPayment(discProd.can_cashon?.toInt()?:0)
                                 sharedVM.setDeliveryCharge(discProd.delivery_charges)
+                                sharedVM.setProductOrderSummaryList(prodList)
                                 navController.navigate(R.id.action_detailViewProductFrag_to_orderSummary)
                             }
 
@@ -410,13 +415,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                     detailVM.addItemsToCart(userData!!.id, userData!!.token!!,
                                         prodID, prodQty, 0)
                                 } else {
-                                    val userLoginRequestPopup = UserLogoutDialog()
-                                    userLoginRequestPopup.isCancelable = false
-                                    userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
-                                    userLoginRequestPopup.show(
-                                        mActivity.supportFragmentManager,
-                                        "User login request popup !!"
-                                    )
+                                    showLoginPopup()
                                 }
                             }
 
@@ -519,10 +518,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     }
 
                     override fun couponForLogin(msg: String) {
-                        val userLoginRequestPopup = UserLogoutDialog()
-                        userLoginRequestPopup.isCancelable = false
-                        userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
-                        userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                        showLoginPopup()
                     }
                 })
             detailViewProductBinding.recProdCoupon.adapter = couponProdAdapter
@@ -630,10 +626,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                         errorToast.show()
                     }
                 }else{
-                    val userLoginRequestPopup = UserLogoutDialog()
-                    userLoginRequestPopup.isCancelable = false
-                    userLoginRequestPopup.setUserLoginRequestListener(this)
-                    userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                    showLoginPopup()
                 }
             }
 
@@ -662,6 +655,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             }
 
             detailViewProductBinding.btnBuyNow ->{
+                if (userData == null) {
+                    showLoginPopup()
+                    return
+                }
                 if (!notDeliverable) {
                     if (prodQty != 0) {
                         val prodList = ArrayList<OrderSummaryProduct>()
@@ -756,21 +753,21 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
     fun createProductShareDeepLink() {
         Log.e("main", "create link ")
-        val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(Uri.parse("https://demo.mbrcables.com/notebookstore/"))
+        /*val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+            .setLink(Uri.parse("http://notebookstore.in/"))
             .setDynamicLinkDomain("notebookstore.page.link") // Open links with this app on Android
             .setAndroidParameters(DynamicLink.AndroidParameters.Builder().build()) // Open links with com.example.ios on iOS
             //.setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
-            .buildDynamicLink()
+            .buildDynamicLink()*/
         //click -- link -- google play store -- inistalled/ or not  ----
-        val dynamicLinkUri: Uri = dynamicLink.getUri()
-        Log.e("main", "  Long refer " + dynamicLink.getUri())
+        //val dynamicLinkUri: Uri = dynamicLink.getUri()
+        //Log.e("main", "  Long refer " + dynamicLink.getUri())
         //   https://referearnpro.page.link?apn=blueappsoftware.referearnpro&link=https%3A%2F%2Fwww.blueappsoftware.com%2F
         // apn  ibi link
 
         // manual link
-        val sharelinktext = "https://notebookstore.page.link/?" +
-                "link=https://demo.mbrcables.com/notebookstore/myProductShare.php?productID=${prodModel.id}" +
+        val sharelinktext = "https://notebookstoreindia.page.link/?" +
+                "link=http://notebookstore.in/myProductShare.php?productID=${prodModel.id}" +
                 "&apn=" + mActivity.packageName +
                 "&st=" + "${prodModel.title}" +
                 "&sd=" + "${prodModel.short_description}" +
@@ -847,5 +844,12 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
     override fun onDeliveryNotAvailable(mesg: String) {
         checkDelivery(2, mesg)
+    }
+
+    private fun showLoginPopup() {
+        val userLoginRequestPopup = UserLogoutDialog()
+        userLoginRequestPopup.isCancelable = false
+        userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
+        userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
     }
 }

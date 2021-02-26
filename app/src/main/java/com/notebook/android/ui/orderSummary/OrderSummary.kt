@@ -201,12 +201,23 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             }
         })
 
+        paymentType = if ((sharedVM.productOrderList.value ?: arrayListOf()).any { orderSummaryProduct -> orderSummaryProduct.isBuyNow == 1}) {
+            1
+        } else {
+            0
+        }
+
         detailVM.couponCanApplyData.observe(viewLifecycleOwner, {
             hideProgress()
-            if (it != null){
-                couponCanApplyListData = it
-            }
             val productList = sharedVM.productOrderList.value?.toList() ?: listOf()
+            if (it != null){
+                couponCanApplyListData = if (paymentType == 1) {
+                    val allCoupons = detailVM.getAllCouponDataFromDB().value;
+                    allCoupons?.map { couponApply -> couponApply.getCouponCanApply() } ?: listOf()
+                } else {
+                    it
+                }
+            }
             populateOrderDetails(productList)
             orderAdapter = OrderSummaryAdapter(mContext, productList, getListener())
             fragOrderSummBinding.recViewOrderSummary.adapter = orderAdapter
@@ -273,59 +284,63 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 fragOrderSummBinding.tvAddressDetail.text = "29, Shivaji Marg, Moti Nagar, New Delhi - 110015"
                 fragOrderSummBinding.tvMobileOrder.text = "9876543210"
             }
-        })
 
-        sharedVM.productOrderList.observe(viewLifecycleOwner, Observer {
-            userData?.let { user ->
-                showProgress()
-                if(paymentType == 1){
-                    productID = prodList[0].id
-                    detailVM.getApplyCouponData(user.id, prodList[0].id)
-                }else{
-                    detailVM.getApplyCouponData(user.id, "")
+            sharedVM.productOrderList.observe(viewLifecycleOwner, Observer {
+                Log.d("userData is: ", userData?.toString() ?: "null")
+                Log.d("userData actually is: ", detailVM.getUserData().value?.toString() ?: "null")
+                userData?.let { user ->
+                    showProgress()
+                    if(paymentType == 1){
+                        productID = it.first().id
+                        detailVM.getApplyCouponData(user.id, productID ?: "")
+                    }else{
+                        detailVM.getApplyCouponData(user.id, "")
+                    }
                 }
-            }
+            })
         })
 
-        val cartItemsList = arrayListOf<OrderSummaryProduct>()
-        cartVM.getCartData().observe(viewLifecycleOwner, { cartList ->
-            if (cartList.isNotEmpty()) {
-                cartItemsList.clear()
+        if (paymentType != 1) {
+            val cartItemsList = arrayListOf<OrderSummaryProduct>()
+            cartVM.getCartData().observe(viewLifecycleOwner, { cartList ->
+                if (cartList.isNotEmpty()) {
+                    cartItemsList.clear()
 
-                for (cartItem in cartList) {
-                    cartItemsList.add(
-                        OrderSummaryProduct(
-                            cartItem.cartproduct_id,
-                            cartItem.cartquantity,
-                            cartItem.carttotalamount ?: 0f,
-                            cartItem.keyfeature,
-                            cartItem.material,
-                            cartItem.title,
-                            cartItem.alias,
-                            cartItem.image,
-                            cartItem.status,
-                            cartItem.short_description,
-                            cartItem.description,
-                            cartItem.data_sheet,
-                            cartItem.quantity,
-                            cartItem.price,
-                            cartItem.offer_price!!,
-                            cartItem.product_code,
-                            cartItem.product_condition,
-                            cartItem.discount!!,
-                            cartItem.latest,
-                            cartItem.best,
-                            cartItem.brandtitle,
-                            cartItem.colortitle,
-                            cartItem.delivery_charges,
-                            0,
-                            cartItem.can_free_delivery
+                    for (cartItem in cartList) {
+                        cartItemsList.add(
+                            OrderSummaryProduct(
+                                cartItem.cartproduct_id,
+                                cartItem.cartquantity,
+                                cartItem.carttotalamount ?: 0f,
+                                cartItem.keyfeature,
+                                cartItem.material,
+                                cartItem.title,
+                                cartItem.alias,
+                                cartItem.image,
+                                cartItem.status,
+                                cartItem.short_description,
+                                cartItem.description,
+                                cartItem.data_sheet,
+                                cartItem.quantity,
+                                cartItem.price,
+                                cartItem.offer_price!!,
+                                cartItem.product_code,
+                                cartItem.product_condition,
+                                cartItem.discount!!,
+                                cartItem.latest,
+                                cartItem.best,
+                                cartItem.brandtitle,
+                                cartItem.colortitle,
+                                cartItem.delivery_charges,
+                                0,
+                                cartItem.can_free_delivery
+                            )
                         )
-                    )
+                    }
+                    sharedVM.setProductOrderSummaryList(cartItemsList)
                 }
-                sharedVM.setProductOrderSummaryList(cartItemsList)
-            }
-        })
+            })
+        }
     }
 
     private fun loadCartData(user: User?) {
@@ -347,10 +362,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             cartTotalAmount += orderData.cartQuantity.times(orderData.price)
             if(orderData.discount != 0){
                 val discountQty = orderData.cartQuantity
-                val discountAmt = (orderData.price.times(orderData.discount)).div(100f)
+                val discountAmt = (orderData.price.times(orderData.discount)).div(100f).toInt()
                 cartTotalAmount -= discountQty.times(discountAmt)
             }
-            paymentType = orderData.isBuyNow
             prodList.add(OrderPaymentDetail.ProductData(orderData.cartQuantity,
                     orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
         }
@@ -395,9 +409,22 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             override fun onChangeProdQuantity(orderItemPosition: Int,
                                               prodID: Int, orderQty: Int, orderAmount: Float) {
                 if (userData != null) {
-                    showProgress()
-                    detailVM.updateCartItem(userData!!.id, userData!!.token!!,
-                            prodID.toString(), orderQty, 1)
+                    if (paymentType == 1) {
+                        sharedVM.productOrderList.value?.let { it ->
+                            val prod = it.firstOrNull { orderSummaryProduct -> orderSummaryProduct.id == prodID.toString() }
+                            prod?.let { product ->
+                                product.cartQuantity = orderQty
+                                product.cartTotalAmount = orderAmount
+                                sharedVM.setProductOrderSummaryList(arrayListOf(product))
+                            }
+                        }
+                    } else {
+                        showProgress()
+                        detailVM.updateCartItem(
+                            userData!!.id, userData!!.token!!,
+                            prodID.toString(), orderQty, 1
+                        )
+                    }
                 } else {
                     val userLoginRequestPopup = UserLogoutDialog()
                     userLoginRequestPopup.isCancelable = false

@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.max.ecomaxgo.maxpe.view.flight.utility.getUserImageFullPath
 import com.notebook.android.BuildConfig
 import com.notebook.android.R
@@ -103,9 +104,9 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
             .build()
         mGoogleSigninClient = GoogleSignIn.getClient(this@MainDashboardPage, gso)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            Log.e("instance token", " :: ${it.token}")
-            notebookPrefs.firebaseDeviceID = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("instance token", " :: $it")
+            notebookPrefs.firebaseDeviceID = it
         }
 
         /*Get method call here..*/

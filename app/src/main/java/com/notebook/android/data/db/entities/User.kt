@@ -38,6 +38,7 @@ data class User(
     var upi:String ?= null,
     var banklocation:String ?= null,
     var referralcode:String ?= null,
+    var origincode:String ?= null,
     var referral_id:Int ?= null,
     var status:Int ?= null, //this is merchant status
 var imageupdated:Int ?= null,

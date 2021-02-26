@@ -41,13 +41,22 @@ val applyCouponListener:ApplyCouponListener)
 
             couponItemBindig.tvApplyClick.setOnClickListener {
 
-                loop@ for (couponCanApply in OrderSummary.couponCanApplyListData) {
-                    if (couponData.code == couponCanApply.code) {
+                if (prodID.isEmpty()) {
+                    loop@ for (couponCanApply in OrderSummary.couponCanApplyListData) {
+                        if (couponData.code == couponCanApply.code) {
+                            applyCouponListener.onApplyCoupon(couponData)
+                            isProductAvailable = true
+                            break@loop
+                        } else {
+                            isProductAvailable = false
+                        }
+                    }
+                } else {
+                    isProductAvailable = if (totalAmount > (couponData.max_amount?.toFloat() ?: 0f)) {
                         applyCouponListener.onApplyCoupon(couponData)
-                        isProductAvailable = true
-                        break@loop
+                        true
                     } else {
-                        isProductAvailable = false
+                        false
                     }
                 }
 

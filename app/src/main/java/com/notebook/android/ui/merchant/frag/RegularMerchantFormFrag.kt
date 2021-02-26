@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.max.ecomaxgo.maxpe.view.flight.utility.validateEmail
 import com.notebook.android.R
@@ -289,9 +290,13 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        if(refferalPrefs.refferCode?.isNotEmpty() == true){
+
+        if(refferalPrefs.refferCode?.isNotEmpty() == true || notebookPrefs.merchantRefferalID?.isNotEmpty() == true){
             fragRegulaMerchantBinding.edtReferralID.apply {
-                setText(refferalPrefs.refferCode)
+                if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
+                    notebookPrefs.merchantRefferalID = refferalPrefs.refferCode;
+                }
+                setText(notebookPrefs.merchantRefferalID)
                 isEnabled = false
                 isFocusable = false
             }
@@ -459,17 +464,16 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         notebookPrefs.merchantRegisterFor = userData?.registerfor
         notebookPrefs.merchantKycStatus = userData?.status
 
-        if(userData != null){
-            if(userData.status == 1){
-                notebookPrefs.merchantRefferalID = userData.referralcode?:refferalPrefs.refferCode?:notebookPrefs.merchantRefferalID
-                fragRegulaMerchantBinding.edtReferralID.setText(notebookPrefs.merchantRefferalID)
+        if (userData != null) {
+            if (userData.origincode?.isNotEmpty() == true) {
+                notebookPrefs.merchantRefferalID = userData.origincode
+            } else if (refferalPrefs.refferCode != userData.referralcode) {
+                notebookPrefs.merchantRefferalID = refferalPrefs.refferCode
             }
+        } else if (refferalPrefs.refferCode?.isNotEmpty() == true) {
             notebookPrefs.merchantRefferalID = refferalPrefs.refferCode
-            fragRegulaMerchantBinding.edtReferralID.setText(refferalPrefs.refferCode)
-        }else{
-            notebookPrefs.merchantRefferalID = refferalPrefs.refferCode
-            fragRegulaMerchantBinding.edtReferralID.setText(notebookPrefs.merchantRefferalID)
         }
+        fragRegulaMerchantBinding.edtReferralID.setText(notebookPrefs.merchantRefferalID)
 
         fragRegulaMerchantBinding.edtName.setText(userData?.name ?: userData?.username ?: "")
         val sdf = SimpleDateFormat(Constant.DATE_FORMAT, Locale.US)
@@ -763,9 +767,9 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         val edtPincode:String = fragRegulaMerchantBinding.edtMerchantPincode.text.toString()
         val edtCountry:String = fragRegulaMerchantBinding.edtMerchantCountry.text.toString()
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            Log.e("instance token", " :: ${it.token}")
-            notebookPrefs.firebaseDeviceID = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("instance token", " :: $it")
+            notebookPrefs.firebaseDeviceID = it
         }
 
         if(userData != null){

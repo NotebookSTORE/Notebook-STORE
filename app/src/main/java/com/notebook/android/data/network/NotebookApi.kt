@@ -105,8 +105,16 @@ interface NotebookApi {
     @POST("postLogin")
     suspend fun postLogin(
         @Field("email") email:String,
-        @Field("password") password:String
+        @Field("password") password:String,
+        @Field("device_id") deviceId:String
     ) : Response<UserData>
+
+    @FormUrlEncoded
+    @POST("updateDeviceToken")
+    suspend fun updateDeviceToken(
+        @Field("token") password:String,
+        @Field("device_id") deviceId:String
+    ) : Response<Any>
 
     @FormUrlEncoded
     @POST("mobileloginexist")

@@ -169,11 +169,11 @@ class AuthViewModel(
         }
     }
 
-    fun login(email:String, password:String){
+    fun login(email:String, password:String, deviceId:String){
         Coroutines.main{
             try {
                 authLoginListener.onApiCallStarted()
-                val loginResponse = authRepository.login(email, password)
+                val loginResponse = authRepository.login(email, password, deviceId)
                 loginResponse.let {
                     if(it.status == 1){
                         authRepository.insertUser(it.user!!)
@@ -187,6 +187,12 @@ class AuthViewModel(
             }catch (e:NoInternetException){
                 authLoginListener.onNoInternetAvailable(e.message!!)
             }
+        }
+    }
+
+    fun updateDeviceToken(token:String, deviceId:String){
+        Coroutines.main{
+            authRepository.updateDeviceToken(token, deviceId)
         }
     }
 

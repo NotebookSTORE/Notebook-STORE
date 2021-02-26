@@ -39,8 +39,8 @@ class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<Orde
             Log.e("orderSummaryAdapter", " :: pos->${adapterPosition} :: qty->${prodData.cartQuantity}" +
                     " :: totalAmount->${prodData.cartTotalAmount} :: ${prodData.discount} :: ${prodData.price}")
             orderSummaryBinding.tvProdQuantity.text = "${prodData.cartQuantity} Pack"
-            val result = (prodData.price.times(prodData.discount)).div(100f)
-            val finalResult = prodData.price.minus(result)
+            val result = (prodData.price.times(prodData.discount)).div(100)
+            val finalResult = Math.round(prodData.price.minus(result))
             orderSummaryBinding.tvProdAmount.text = "₹ ${prodData.cartQuantity.times(finalResult)}"
             Log.e("result", " :: result -> ${result} :: finalResult -> ${finalResult} :: ${prodQty.times(finalResult)}")
 //            orderSummaryBinding.tvProdDeliveryBy.text = "Delivery by Tomorrow,Fri | ₹ ${prodData.delivery_charges}"
@@ -71,15 +71,15 @@ class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<Orde
                         prodQty = qtyIntList[p2]
 
                         orderSummaryBinding.tvProdQuantity.text = "${prodQty} Pack"
-                        val result = (prodData.price.times(prodData.discount)).div(100f)
-                        val finalResult = prodData.price.minus(result)
+                        val result = (prodData.price.times(prodData.discount)).div(100)
+                        val finalResult = Math.round(prodData.price.minus(result))
                         orderSummaryBinding.tvProdAmount.text = "₹ ${prodQty.times(finalResult)}"
 
                         Log.e("totalAmountCheckSpinner", " :: ${prodQty.times(finalResult)}")
                         prodData.cartQuantity = prodQty
                         prodData.cartTotalAmount = prodQty.times(prodData.price)
                         if (shouldFireCallback) {
-                            orderPriceListener.onChangeProdQuantity(adapterPosition, prodData.id.toInt(), prodQty, prodQty.times(finalResult))
+                            orderPriceListener.onChangeProdQuantity(adapterPosition, prodData.id.toInt(), prodQty, prodQty.times(finalResult).toFloat())
                         } else {
                             shouldFireCallback = true
                         }

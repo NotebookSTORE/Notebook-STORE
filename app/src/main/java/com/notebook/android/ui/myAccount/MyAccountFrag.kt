@@ -137,6 +137,11 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
                 } else {
                     fragmentMyAccountBinding.clRedeemHistory.visibility = View.GONE
                 }
+                if (userData?.usertype == 1 || userData?.usertype == 0) {
+                    fragmentMyAccountBinding.clSendMerchantRequest.visibility = View.VISIBLE
+                } else {
+                    fragmentMyAccountBinding.clSendMerchantRequest.visibility = View.GONE
+                }
                 fragmentMyAccountBinding.tvLogout.visibility = View.VISIBLE
                 Log.e(
                     "img url",
@@ -466,7 +471,7 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
     fun createProductShareDeepLink() {
         Log.e("main", "create link ")
         val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(Uri.parse("https://demo.mbrcables.com/notebookstore/"))
+            .setLink(Uri.parse("http://notebookstore.in/"))
             .setDynamicLinkDomain("notebookstore.page.link") // Open links with this app on Android
             .setAndroidParameters(
                 DynamicLink.AndroidParameters.Builder().build()
@@ -492,8 +497,8 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
         }
 
         // manual link
-        val sharelinktext = "https://notebookstore.page.link/?" +
-                "link=https://demo.mbrcables.com/notebookstore/myProductShare.php?reffer=$refferalCode" +
+        val sharelinktext = "https://notebookstoreindia.page.link/?" +
+                "link=http://notebookstore.in/myProductShare.php?reffer=$refferalCode" +
                 "&apn=" + mActivity.packageName +
                 "&st=" + "Notebook Store" +
                 "&sd=" + "www.notebookstore.in"

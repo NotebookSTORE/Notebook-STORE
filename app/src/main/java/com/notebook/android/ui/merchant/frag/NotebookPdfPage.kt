@@ -39,7 +39,7 @@ class NotebookPdfPage : Fragment() {
             settings.javaScriptEnabled = true
             settings.pluginState = WebSettings.PluginState.ON
             settings.builtInZoomControls = false
-            loadUrl("http://demo.mbrcables.com/notebookstore/merchantdetail/become-a--prime-merchant/1")
+            loadUrl("http://notebookstore.in/merchantdetail/become-a--prime-merchant/1")
         }
     }
 

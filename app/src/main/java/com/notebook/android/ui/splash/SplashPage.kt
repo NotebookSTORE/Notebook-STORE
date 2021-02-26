@@ -38,6 +38,10 @@ class SplashPage : AppCompatActivity(), KodeinAware, SplashResponseListener{
         ViewModelProvider(this, viewModelFactory).get(SplashVM::class.java)
     }
 
+    private val notebookPrefs: NotebookPrefs by lazy {
+        NotebookPrefs(this)
+    }
+
     private val refferalPrefs: RefferalPreferance by lazy {
         RefferalPreferance(this)
     }
@@ -76,6 +80,7 @@ class SplashPage : AppCompatActivity(), KodeinAware, SplashResponseListener{
                             "$productId :: refferalCode -> $refferalCode")
                     prodID = productId?:-1
 
+                    notebookPrefs.merchantRefferalID
                     refferalPrefs.refferCode = refferalCode?:""
                 }
             }.addOnFailureListener(this) {

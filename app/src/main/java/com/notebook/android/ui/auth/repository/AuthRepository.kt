@@ -25,8 +25,12 @@ class AuthRepository(
         return apiRequest { notebookApi.otpVerificationWithEmail(email, otp) }
     }
 
-    suspend fun login(email:String, password:String): UserData {
-        return apiRequest { notebookApi.postLogin(email, password) }
+    suspend fun login(email:String, password:String, deviceId:String): UserData {
+        return apiRequest { notebookApi.postLogin(email, password, deviceId) }
+    }
+
+    suspend fun updateDeviceToken(token:String, deviceId:String): Any {
+        return apiRequest { notebookApi.updateDeviceToken(token, deviceId) }
     }
 
     suspend fun socialMobileLogin(username: String, email: String, mobNumber: String,

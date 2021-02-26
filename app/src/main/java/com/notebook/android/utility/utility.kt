@@ -108,7 +108,7 @@ fun getUserImageFullPath(img:String) : String{
 
 @BindingAdapter(value = ["loadImageBasePath", "imageName"])
 fun loadAllTypeImage(imgView: ImageView, loadImageBasePath:String, imageName:String?){
-//    val imgBasePah = "https://demo.mbrcables.com/stationarykingdom/public/uploads/product/"
+//    val imgBasePah = "http://notebookstore.in/stationarykingdom/public/uploads/product/"
     if(!imageName.isNullOrEmpty()){
         Glide.with(imgView.context).load("$loadImageBasePath$imageName").into(imgView)
     }else{
@@ -123,7 +123,7 @@ fun setOrderIDText(textView: TextView, orderID:String){
 
 @BindingAdapter(value = ["price", "discount"])
 fun getPercentageOfAmount(textView:TextView, price:Float, discount:Int){
-    val result = (price.times(discount)).div(100f)
+    val result = (price.times(discount)).div(100f).toInt()
     Log.e("priceCalculation", " :: ${price} :: ${discount} :: ${result} :: ${price-result}")
     textView.text = "₹${(price-result)}"
 }

@@ -1,91 +1,115 @@
 package com.notebook.android.service
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
 import android.media.RingtoneManager
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.notebook.android.R
 import com.notebook.android.data.preferences.NotebookPrefs
-import com.notebook.android.ui.dashboard.MainDashboardPage
+import com.notebook.android.ui.auth.factory.AuthViewModelFactory
+import com.notebook.android.ui.auth.viewmodel.AuthViewModel
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+import java.util.*
 
-class FirebaseMessagingService : FirebaseMessagingService() {
+class FirebaseMessagingService : FirebaseMessagingService(), KodeinAware {
 
     private val notebookPrefs: NotebookPrefs by lazy {
         NotebookPrefs(applicationContext)
+    }
+    override val kodein by kodein()
+    private val viewModelFactory : AuthViewModelFactory by instance<AuthViewModelFactory>()
+    private val authViewModel: AuthViewModel by lazy {
+        AuthViewModel(viewModelFactory.authRepository)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        val title = remoteMessage.notification?.title
-        val message = remoteMessage.notification?.body
-        val topic = remoteMessage.notification?.tag
         val data = remoteMessage.data
+        val title = data.get("title")
+        val message = data.get("body")
+        val topic = remoteMessage.notification?.tag
 //        val clickAction = remoteMessage.notification?.clickAction
+//        Log.e("FirebaseMsgService", "onMessageReceived: Message Received: \n" +
+//                "Title: " + title + "\n" +
+//                "Message: " + message)
+//        Log.e("notification data", " :: ${data.get("description")}")
+
         Log.e("FirebaseMsgService", "onMessageReceived: Message Received: \n" +
-                "Title: " + title + "\n" +
-                "Message: " + message)
+                "Title: " + data.get("title") + "\n" +
+                "Message: " + data.get("body"))
         Log.e("notification data", " :: ${data.get("description")}")
 
-//        sendNotification(title?:"", message?:"", topic?:"", clickAction?:"")
+        showNotification(title?:"", message?:"")
     }
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         notebookPrefs.firebaseDeviceID = token
-        Log.e("firebaseMsgSeice token", " :: ${token}")
-//        sendTokenToServer(token)
+        sendTokenToServer(token)
 //        sendNotification(title?:"", message?:"")
     }
 
-    private var notID = 0
-    private fun sendNotification(title: String, messageBody: String, topic:String, clickAction:String) {
+    private fun sendTokenToServer(token: String) {
+        notebookPrefs.userToken?.let {
+            authViewModel.updateDeviceToken(it, token)
+        }
+    }
 
-        var intent: Intent?= null
-        var pendingIntent: PendingIntent?= null
-        if(topic.equals("quiz", true)){
-            intent = Intent(this@FirebaseMessagingService, MainDashboardPage::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("fromPage", "QuizFBService")
-            intent.putExtra("offerUrl", "")
-            pendingIntent = PendingIntent.getActivity(this@FirebaseMessagingService, 0,
-                intent, PendingIntent.FLAG_ONE_SHOT)
-        }else  if(topic.equals("recharge", true)){
-            Log.e("topic", " :: $topic")
-            intent = Intent(this@FirebaseMessagingService, MainDashboardPage::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("fromPage", "QuizFBService")
-            intent.putExtra("offerUrl", "")
-            pendingIntent = PendingIntent.getActivity(this@FirebaseMessagingService, 0,
-                intent, PendingIntent.FLAG_ONE_SHOT)
-        }else{
-            intent = Intent(this@FirebaseMessagingService, MainDashboardPage::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("fromPage", "QuizFBService")
-            intent.putExtra("offerUrl", "")
-            pendingIntent = PendingIntent.getActivity(this@FirebaseMessagingService, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    private fun showNotification(title: String, messageBody: String) {
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+        val notificationCompatBuilder = createNotificationCompatBuilder(
+            title, messageBody, getString(R.string.notification_channel_id)
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val CHANNEL_ID = getString(R.string.notification_channel_id)
+            val name = "Notebook Channel"
+            val descriptionText = "Notebook notification"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            notificationManager.createNotificationChannel(channel)
         }
 
-        /* Important Link to set click event...
+        val id = ((Date().time / 1000L) % Integer.MAX_VALUE).toInt()
 
-        https://stackoverflow.com/questions/1198558/how-to-send-parameters-from-a-notification-click-to-an-activity*/
+        notificationCompatBuilder.let {
+            notificationManager.notify(id, it.build())
+        }
+    }
+
+    private fun createNotificationCompatBuilder(
+        title: String, messageBody: String,
+        channelId: String
+    ): NotificationCompat.Builder {
+
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(title)
-            .setPriority(2)
-            .setContentText(messageBody)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notID++, notificationBuilder.build())
+        return NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setColor(Color.argb(100,25,121,188))
+            .setContentTitle(title)
+            .setContentText(messageBody)
+            .setSound(defaultSoundUri)
+            .setAutoCancel(true)
     }
 }
