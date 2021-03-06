@@ -531,7 +531,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.recViewProdBenefits.adapter = benefitAdapter
 
         for (freeDelObj in freeDeliveryData.indices){
-            if(freeDeliveryData[freeDelObj].title.startsWith("free delivery", true)){
+            if(freeDeliveryData[freeDelObj].title.contains("free delivery", true)){
                 sharedVM.setFreeDeliveryData(freeDeliveryData[freeDelObj].price)
                 Log.e("freeDeliveryAmount", " :: ${freeDeliveryData[freeDelObj].price}")
 //                prodModel.delivery_charges
@@ -670,7 +670,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                 prodModel.image, prodModel.status, prodModel.short_description, prodModel.description,
                                 prodModel.data_sheet, prodModel.quantity, prodModel.price, prodModel.offer_price,
                                 prodModel.product_code, prodModel.product_condition, prodModel.discount, prodModel.latest,
-                                prodModel.best, prodModel.brandtitle, prodModel.colortitle, prodModel.delivery_charges, 1)
+                                prodModel.best, prodModel.brandtitle, prodModel.colortitle, prodModel.delivery_charges, 1, prodModel.can_free_delivery)
                         )
                         sharedVM.setProductOrderSummaryList(prodList)
                         sharedVM.setDeliveryCharge(prodModel.delivery_charges?:0f)
