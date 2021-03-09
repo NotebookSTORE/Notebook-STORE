@@ -39,8 +39,9 @@ import com.notebook.android.listener.GetSelectIntentListener
 import com.notebook.android.model.merchant.AadharData
 import com.notebook.android.ui.bottomSheet.TakePhotoFromCamORGallerySheet
 import com.notebook.android.ui.myAccount.profile.AddDetailFrag
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
+import com.notebook.android.utility.getAppFilePath
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -238,7 +239,7 @@ class IdentityProofUploadFrag : Fragment(), View.OnClickListener, GetSelectInten
                     val result = CropImage.getActivityResult(data)
                     Log.e("kdfjdl", ":: fdfdkj")
                     if (resultCode == Activity.RESULT_OK) {
-                        val resultUri = result.uri
+                        val resultUri = result?.uri
                         if(isFrontImageSelected){
                             imageUriFront = resultUri
                             fragIdentityProofBinding.clUploadFrontImageLayout.visibility = View.GONE
@@ -253,7 +254,7 @@ class IdentityProofUploadFrag : Fragment(), View.OnClickListener, GetSelectInten
                             Log.e("imageUri", " :: $imageUriBack")
                         }
                         try {
-                            imageFile = File(resultUri.path.toString())
+                            imageFile = File(resultUri?.getAppFilePath(mContext).toString())
 
                         } catch (e: java.lang.NullPointerException) {
                             Toast.makeText(mActivity, "Image not found",
@@ -261,7 +262,7 @@ class IdentityProofUploadFrag : Fragment(), View.OnClickListener, GetSelectInten
                                 .show()
                         }
                     } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        val error = result.error
+                        val error = result?.error
                         showErrorView(error.toString())
                         Log.e("crop error :: ", "$error")
                     }

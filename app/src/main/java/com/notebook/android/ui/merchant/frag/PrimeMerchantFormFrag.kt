@@ -66,8 +66,9 @@ import com.notebook.android.ui.popupDialogFrag.RegisterForDialog
 import com.notebook.android.ui.popupDialogFrag.VerificationPopupDialog
 import com.notebook.android.utility.Constant
 import com.notebook.android.utility.CustomTextWatcher
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
+import com.notebook.android.utility.getAppFilePath
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -384,6 +385,13 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 isFocusable = true
             }
         }
+        if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
+            fragPrimeMerchantBinding.edtReferralID.apply {
+                isEnabled = false
+                isFocusable = false
+                isCursorVisible = false
+            }
+        }
 
         merchantVM.getUserData().observe(viewLifecycleOwner, {
             if (it != null) {
@@ -500,6 +508,13 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         fragPrimeMerchantBinding.edtMerchantState.setText(notebookPrefs.merchantAddressState)
         fragPrimeMerchantBinding.edtMerchantPincode.setText(notebookPrefs.merchantAddressPincode)
         fragPrimeMerchantBinding.edtReferralID.setText(notebookPrefs.merchantRefferalID)
+        if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
+            fragPrimeMerchantBinding.edtReferralID.apply {
+                isEnabled = false
+                isFocusable = false
+                isCursorVisible = false
+            }
+        }
         fragPrimeMerchantBinding.edtAccountNumber.setText(notebookPrefs.merchantAccountNumber)
         fragPrimeMerchantBinding.edtBankName.setText(notebookPrefs.merchantBankName)
         fragPrimeMerchantBinding.edtIFSCCode.setText(notebookPrefs.merchantIfscCode)
@@ -1012,6 +1027,13 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             notebookPrefs.merchantRefferalID = refferalPrefs.refferCode
         }
         fragPrimeMerchantBinding.edtReferralID.setText(notebookPrefs.merchantRefferalID)
+        if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
+            fragPrimeMerchantBinding.edtReferralID.apply {
+                isEnabled = false
+                isFocusable = false
+                isCursorVisible = false
+            }
+        }
     }
     private val startFromTerms = 82
     private val endToTerms = 102
@@ -1216,7 +1238,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     val result = CropImage.getActivityResult(data)
                     Log.e("kdfjdl", ":: fdfdkj")
                     if (resultCode == Activity.RESULT_OK) {
-                        val resultUri = result.uri
+                        val resultUri = result?.uri
                         imageUri = resultUri
                         cancelledChequeImage = imageUri.toString()
                         notebookPrefs.cancelledChequeImage = resultUri.toString()
@@ -1225,7 +1247,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         Glide.with(mActivity).load(imageUri).into(fragPrimeMerchantBinding.imgReportProblem)
                         Log.e("imageUri", " :: $imageUri")
                         try {
-                            imageFile = File(resultUri.path.toString())
+                            imageFile = File(resultUri?.getAppFilePath(mContext).toString())
 
                         } catch (e: java.lang.NullPointerException) {
                             Toast.makeText(
@@ -1235,7 +1257,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                 .show()
                         }
                     } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        val error = result.error
+                        val error = result?.error
                         errorToastTextView.text = error.toString()
                         errorToast.show()
                         Log.e("crop error :: ", "$error")
@@ -1649,7 +1671,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
                         val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                         val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
-                        val imgFileCancelCheque = File(imageUri?.path!!)
+                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                         val requestFileCancelCheque = imgFileCancelCheque
                             .asRequestBody("image/*".toMediaTypeOrNull())
                         val cancelCheque = MultipartBody.Part.createFormData(
@@ -1993,12 +2015,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                         val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                        val imgFilePan = File(pancardImage!!.toUri().path!!)
-                        val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                        val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                        val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                        val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                        val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                         val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                        val imgFileCancelCheque = File(imageUri?.path!!)
+                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                         val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                         val identityPart = MultipartBody.Part.createFormData(
@@ -2166,12 +2188,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                         val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                        val imgFilePan = File(pancardImage!!.toUri().path!!)
-                        val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                        val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                        val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                        val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                        val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                         val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                        val imgFileCancelCheque = File(imageUri?.path!!)
+                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                         val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                         val identityPart = MultipartBody.Part.createFormData(
@@ -2440,12 +2462,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                     val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                    val imgFilePan = File(pancardImage!!.toUri().path!!)
-                    val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                    val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                    val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                    val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                    val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                     val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
                     val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                    val imgFileCancelCheque = File(imageUri?.path!!)
+                    val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                     val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                     val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                     val identityPart = MultipartBody.Part.createFormData(
@@ -2593,12 +2615,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                 val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                val imgFilePan = File(pancardImage!!.toUri().path!!)
-                val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                 val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
                 val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                val imgFileCancelCheque = File(imageUri?.path!!)
+                val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                 val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                 val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                 val identityPart = MultipartBody.Part.createFormData(

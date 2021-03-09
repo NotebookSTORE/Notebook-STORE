@@ -62,7 +62,9 @@ class FirebaseMessagingService : FirebaseMessagingService(), KodeinAware {
 
     private fun sendTokenToServer(token: String) {
         notebookPrefs.userToken?.let {
-            authViewModel.updateDeviceToken(it, token)
+            if (it.isNotEmpty()) {
+                authViewModel.updateDeviceToken(it, token)
+            }
         }
     }
 

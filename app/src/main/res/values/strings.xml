@@ -90,11 +90,11 @@
     <string name="strAddNewsAddress">Add New Address</string>
     <string name="strVerifyOtp">we will send you OTP to verify your identity</string>
 
-    <string name="productImgPath">http://notebookstore.in/public/uploads/product/</string>
-    <string name="brandImgPath">http://notebookstore.in/public/uploads/brands/</string>
-    <string name="categoryImgPath">http://notebookstore.in/public/uploads/category/</string>
-    <string name="subCategoryImgPath">http://notebookstore.in/public/uploads/subcategory/</string>
-    <string name="socialImgPath">http://notebookstore.in/public/uploads/</string>
+    <string name="productImgPath">https://notebookstore.in/public/uploads/product/</string>
+    <string name="brandImgPath">https://notebookstore.in/public/uploads/brands/</string>
+    <string name="categoryImgPath">https://notebookstore.in/public/uploads/category/</string>
+    <string name="subCategoryImgPath">https://notebookstore.in/public/uploads/subcategory/</string>
+    <string name="socialImgPath">https://notebookstore.in/public/uploads/</string>
     <string name="discountIcon">%\noff</string>
     <string name="rupeeIcon">₹ </string>
 

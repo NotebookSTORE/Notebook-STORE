@@ -754,7 +754,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
     fun createProductShareDeepLink() {
         Log.e("main", "create link ")
         /*val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(Uri.parse("http://notebookstore.in/"))
+            .setLink(Uri.parse("https://notebookstore.in/"))
             .setDynamicLinkDomain("notebookstore.page.link") // Open links with this app on Android
             .setAndroidParameters(DynamicLink.AndroidParameters.Builder().build()) // Open links with com.example.ios on iOS
             //.setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
@@ -767,7 +767,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
         // manual link
         val sharelinktext = "https://notebookstoreindia.page.link/?" +
-                "link=http://notebookstore.in/myProductShare.php?productID=${prodModel.id}" +
+                "link=https://notebookstore.in/myProductShare.php?productID=${prodModel.id}" +
                 "&apn=" + mActivity.packageName +
                 "&st=" + "${prodModel.title}" +
                 "&sd=" + "${prodModel.short_description}" +

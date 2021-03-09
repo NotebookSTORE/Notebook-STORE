@@ -220,6 +220,9 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
                     Log.e("cartData", " :: ${cartItem.cartquantity} :: ${cartItem.carttotalamount}")
                 }
 
+                cartList.forEach {ab->
+                    Log.d("testing cart:", "${ab.carttotalamount}")
+                }
                 sharedVM.setProductOrderSummaryList(prodList)
 //                Log.e("deliveryChargesCart", " :: $deliveryCharges")
 //                sharedVM.setDeliveryCharge(deliveryCharges)

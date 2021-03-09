@@ -471,7 +471,7 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
     fun createProductShareDeepLink() {
         Log.e("main", "create link ")
         val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(Uri.parse("http://notebookstore.in/"))
+            .setLink(Uri.parse("https://notebookstore.in/"))
             .setDynamicLinkDomain("notebookstore.page.link") // Open links with this app on Android
             .setAndroidParameters(
                 DynamicLink.AndroidParameters.Builder().build()
@@ -498,7 +498,7 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
 
         // manual link
         val sharelinktext = "https://notebookstoreindia.page.link/?" +
-                "link=http://notebookstore.in/myProductShare.php?reffer=$refferalCode" +
+                "link=https://notebookstore.in/myProductShare.php?reffer=$refferalCode" +
                 "&apn=" + mActivity.packageName +
                 "&st=" + "Notebook Store" +
                 "&sd=" + "www.notebookstore.in"

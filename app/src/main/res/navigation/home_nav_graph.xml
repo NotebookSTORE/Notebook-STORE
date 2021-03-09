@@ -56,7 +56,7 @@
         <action
             android:id="@+id/action_cartFrag_to_homeFrag"
             app:destination="@id/homeFrag"
-            app:enterAnim="@anim/fragment_open_enter"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@android:anim/fade_out"
             app:popUpToInclusive="true" />
         <action
@@ -474,8 +474,8 @@
         <action
             android:id="@+id/action_addDetailFrag_to_myAccountFrag"
             app:destination="@id/myAccountFrag"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@+id/myAccountFrag"
             app:popUpToInclusive="true" />
     </fragment>

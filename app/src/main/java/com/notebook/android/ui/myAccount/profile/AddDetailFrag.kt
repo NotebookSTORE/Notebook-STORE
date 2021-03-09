@@ -54,8 +54,10 @@ import com.notebook.android.utility.Constant
 import com.notebook.android.utility.Constant.DATE_FORMAT
 import com.notebook.android.utility.Constant.DATE_FORMAT_SERVER
 import com.notebook.android.utility.Constant.MERCHANT_IMAGE_PATH
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
+import com.notebook.android.application.NoteBookApplication
+import com.notebook.android.utility.getAppFilePath
 import kotlinx.android.synthetic.main.fragment_add_detail.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -356,11 +358,13 @@ class AddDetailFrag : Fragment(), KodeinAware, View.OnClickListener, GetSelectIn
                     val result = CropImage.getActivityResult(data)
                     Log.e("kdfjdl", ":: fdfdkj")
                     if (resultCode == RESULT_OK) {
-                        val resultUri = result.uri
+                        val resultUri = result?.uri
                         imageUri = resultUri
                         Glide.with(mActivity).load(imageUri).into(addDetailBinding.imgUserProfile)
                         try {
-                            imageFile = File(resultUri.path.toString())
+                            context?.let {
+                                imageFile = File(resultUri?.getAppFilePath(it) ?: "")
+                            }
 
                         } catch (e: java.lang.NullPointerException) {
                             Toast.makeText(mActivity, "Image not found",
@@ -368,7 +372,7 @@ class AddDetailFrag : Fragment(), KodeinAware, View.OnClickListener, GetSelectIn
                                 .show()
                         }
                     } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        val error = result.error
+                        val error = result?.error
                         errorToastTextView.text = error.toString()
                         errorToast.show()
                         Log.e("crop error :: ", "$error")
@@ -473,7 +477,7 @@ class AddDetailFrag : Fragment(), KodeinAware, View.OnClickListener, GetSelectIn
 
                     if(userData.phone != addDetailBinding.edtMobileNumber.text.toString()){
                         if(imageUri != null){
-                            imgFile = File(imageUri?.path!!)
+                            imgFile = File(imageUri?.getAppFilePath(mContext)!!)
                             notebookPrefs.loginType = Constant.WITHOUT_SOCIAL_LOGIN
                             val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imgFile!!)
                             val body:MultipartBody.Part = MultipartBody.Part.createFormData("profile_image",
@@ -494,7 +498,7 @@ class AddDetailFrag : Fragment(), KodeinAware, View.OnClickListener, GetSelectIn
                             profileVM.verifyOtp(addDetailBinding.edtMobileNumber.text.toString(), userData.otp!!)
                         }else{
                             if(imageUri != null){
-                                imgFile = File(imageUri?.path!!)
+                                imgFile = File(imageUri?.getAppFilePath(mContext)!!)
                                 notebookPrefs.loginType = Constant.WITHOUT_SOCIAL_LOGIN
                                 val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imgFile!!)
                                 val body:MultipartBody.Part = MultipartBody.Part.createFormData("profile_image",
@@ -651,7 +655,7 @@ class AddDetailFrag : Fragment(), KodeinAware, View.OnClickListener, GetSelectIn
             val userIDPart:RequestBody = RequestBody.create(MultipartBody.FORM, userData.id.toString())
 
             if(imageUri != null){
-                imgFile = File(imageUri?.path!!)
+                imgFile = File(imageUri?.getAppFilePath(mContext)!!)
                 notebookPrefs.loginType = Constant.WITHOUT_SOCIAL_LOGIN
                 val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imgFile!!)
                 val body:MultipartBody.Part = MultipartBody.Part.createFormData("profile_image",

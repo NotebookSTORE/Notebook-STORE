@@ -44,7 +44,7 @@ class MerchantViewSummaryWebViewPage : Fragment() {
             settings.javaScriptEnabled = true
             settings.builtInZoomControls = false
             Log.e("userId", " :: $userID")
-            loadUrl("http://notebookstore.in/api/merchantanalytic/${userID}")
+            loadUrl("https://notebookstore.in/api/merchantanalytic/${userID}")
         }
     }
 

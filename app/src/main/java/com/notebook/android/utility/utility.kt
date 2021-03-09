@@ -108,7 +108,7 @@ fun getUserImageFullPath(img:String) : String{
 
 @BindingAdapter(value = ["loadImageBasePath", "imageName"])
 fun loadAllTypeImage(imgView: ImageView, loadImageBasePath:String, imageName:String?){
-//    val imgBasePah = "http://notebookstore.in/stationarykingdom/public/uploads/product/"
+//    val imgBasePah = "https://notebookstore.in/stationarykingdom/public/uploads/product/"
     if(!imageName.isNullOrEmpty()){
         Glide.with(imgView.context).load("$loadImageBasePath$imageName").into(imgView)
     }else{

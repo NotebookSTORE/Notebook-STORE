@@ -50,6 +50,7 @@ import com.notebook.android.ui.popupDialogFrag.RegisterForDialog
 import com.notebook.android.ui.popupDialogFrag.VerificationPopupDialog
 import com.notebook.android.utility.Constant
 import com.notebook.android.utility.CustomTextWatcher
+import com.notebook.android.utility.getAppFilePath
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -845,9 +846,9 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                 MultipartBody.FORM,
                                 isRegisterType.toString()
                             )
-                            val imgFilePan = File(pancardImage!!.toUri().path!!)
-                            val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                            val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                            val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                            val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                            val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                             val requestFileAadhar =
                                 RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
                             val requestFileAadhar2 = RequestBody.create(
@@ -968,9 +969,9 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         MultipartBody.FORM,
                         isRegisterType.toString()
                     )
-                    val imgFilePan = File(pancardImage!!.toUri().path!!)
-                    val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                    val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                    val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                    val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                    val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                     val requestFileAadhar =
                         RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
                     val requestFileAadhar2 = RequestBody.create(
@@ -1091,9 +1092,9 @@ class RegularMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     MultipartBody.FORM,
                     isRegisterType.toString()
                 )
-                val imgFilePan = File(pancardImage!!.toUri().path!!)
-                val imgFileAadhar = File(identityImage!!.toUri().path!!)
-                val imgFileAadhar2 = File(identityImage2!!.toUri().path!!)
+                val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
                 val requestFileAadhar =
                     RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
                 val requestFileAadhar2 = RequestBody.create(

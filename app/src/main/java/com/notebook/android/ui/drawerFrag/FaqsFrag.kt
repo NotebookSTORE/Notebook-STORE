@@ -53,7 +53,7 @@ class FaqsFrag : Fragment()/*, KodeinAware, FaqDataListener*/ {
         Log.e("faqUrl", " :: $faqUrl")
     }
 
-    private var faqUrl:String ?= null  //"http://notebookstore.in/faq"
+    private var faqUrl:String ?= null  //"https://notebookstore.in/faq"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

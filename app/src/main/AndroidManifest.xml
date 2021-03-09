@@ -36,6 +36,7 @@
         android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".ui.dashboard.MainDashboardPage"/>
@@ -56,7 +57,7 @@
         </activity>
 
         <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:name="com.canhub.cropper.CropImageActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/Base.Theme.AppCompat" />
 

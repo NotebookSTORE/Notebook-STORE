@@ -194,6 +194,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 }
             })
 
+        freeDeliveryAmount = (sharedVM.freeDeliveryAmountLiveData.value ?: 0).toFloat()
         sharedVM.freeDeliveryAmountLiveData.observe(viewLifecycleOwner, {
             if(it != null){
                 freeDeliveryAmount = it.toFloat()
@@ -217,6 +218,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                 } else {
                     it
                 }
+            }
+            productList.forEach {ab->
+                Log.d("testing coup:", "${ab.cartTotalAmount}")
             }
             populateOrderDetails(productList)
             orderAdapter = OrderSummaryAdapter(mContext, productList, getListener())
@@ -288,6 +292,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             sharedVM.productOrderList.observe(viewLifecycleOwner, Observer {
                 Log.d("userData is: ", userData?.toString() ?: "null")
                 Log.d("userData actually is: ", detailVM.getUserData().value?.toString() ?: "null")
+                it.forEach {ab->
+                    Log.d("testing vm subs:", "${ab.cartTotalAmount}")
+                }
                 userData?.let { user ->
                     showProgress()
                     if(paymentType == 1){
@@ -337,6 +344,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                             )
                         )
                     }
+                    cartList.forEach {ab->
+                        Log.d("testing os:", "${ab.carttotalamount}")
+                    }
                     sharedVM.setProductOrderSummaryList(cartItemsList)
                 }
             })
@@ -351,8 +361,6 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     private fun populateOrderDetails(orderSummaryProducts: List<OrderSummaryProduct>) {
-        deliveryCharge = getDeliveryCharge(orderSummaryProducts, freeDeliveryAmount)
-        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?: 0.0f)
         prodList = ArrayList()
         var cartQty = 0
         var cartTotalAmount = 0f
@@ -368,6 +376,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
             prodList.add(OrderPaymentDetail.ProductData(orderData.cartQuantity,
                     orderData.price, orderData.price, orderData.id, orderData.cartTotalAmount))
         }
+        deliveryCharge = getDeliveryCharge(orderSummaryProducts, freeDeliveryAmount, cartTotalAmount)
+        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?: 0.0f)
+
         Log.e("cartDetails", " :: $cartQty :: $cartTotalAmount")
 
         Log.e("deliveryChargesAdapter", " :: $deliveryCharge")
@@ -376,7 +387,7 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
         fragOrderSummBinding.tvPriceTotalAmount.text = String.format("₹ %s", df.format(cartTotalAmount))
         totalAmountPayable = cartTotalAmount.plus(deliveryCharge?:0f)
         totalAmountPayableCouponCheck = cartTotalAmount
-        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?:0f)
+        fragOrderSummBinding.tvDeliverCharges.text = String.format("₹ %.2f", deliveryCharge?: 0.0f)
         totalAmountPayableAfterDiscount = df.format(totalAmountPayable).toFloat()
         Log.e("apply coupon", " :: $offerDiscountPriceInDiscount :: $offerDiscountPriceInAmount")
         fragOrderSummBinding.tvTotalAmountPayable.text = String.format("₹ %s", df.format(totalAmountPayableAfterDiscount))
@@ -771,9 +782,8 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
         }
     }
 
-    private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float) : Float {
+    private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float, cartAmount: Float) : Float {
         var deliveryCharge = 0.0f
-        val cartAmount = orderSummaryProducts.sumOf { orderSummaryProduct: OrderSummaryProduct -> orderSummaryProduct.cartTotalAmount.toDouble() }
         orderSummaryProducts.forEach { orderSummaryProduct ->
             if (!orderSummaryProduct.isFreeDeliveryAvailable() || cartAmount < freeDeliveryAmount) {
                     deliveryCharge += orderSummaryProduct.delivery_charges ?: 0.0f
