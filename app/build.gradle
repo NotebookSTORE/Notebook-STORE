@@ -33,15 +33,15 @@ android {
             storePassword keystoreProperties['keyStorePassword']
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.notebook.android"
         minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 18
-        versionName "1.0.7"
+        targetSdkVersion 30
+        versionCode 19
+        versionName "1.0.8"
 
         buildConfigField "String", "SERVER_URL", "\"https://notebookstore.in/\""
         buildConfigField "String", "NOTEBOOK_BENEFITS_PDF_URL", "\"public/uploads/NotebookSTORE.in.pdf\""
