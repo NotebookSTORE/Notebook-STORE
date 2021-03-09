@@ -191,11 +191,12 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
 //                    deliveryCharges += cartItem.delivery_charges?:0f
 
                     Log.e("cartData", " :: ${cartItem.carttotalamount}")
-                    if(cartItem.can_cashon?.toInt() == 1){
-                        cashOnAvailable = 1
-                    }else{
-                        cashOnAvailable = 0
-                    }
+                }
+
+                cashOnAvailable = if (cartList.firstOrNull { cart -> cart.can_cashon?.toInt() == 0 } == null) {
+                    1
+                } else {
+                    0
                 }
 
                 var cartID:String ?= null
@@ -219,6 +220,9 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
                     Log.e("cartData", " :: ${cartItem.cartquantity} :: ${cartItem.carttotalamount}")
                 }
 
+                cartList.forEach {ab->
+                    Log.d("testing cart:", "${ab.carttotalamount}")
+                }
                 sharedVM.setProductOrderSummaryList(prodList)
 //                Log.e("deliveryChargesCart", " :: $deliveryCharges")
 //                sharedVM.setDeliveryCharge(deliveryCharges)

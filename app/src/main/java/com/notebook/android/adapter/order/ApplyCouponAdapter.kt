@@ -11,9 +11,6 @@ import com.notebook.android.R
 import com.notebook.android.data.db.entities.CouponApply
 import com.notebook.android.databinding.ApplyCouponLayoutBinding
 import com.notebook.android.ui.orderSummary.OrderSummary
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.couponCanApplyListData
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.prodList
-import com.notebook.android.utility.Constant
 
 class ApplyCouponAdapter(val mCtx: Context, var prodID:String, var emailID:String, var registerFor:Int,
                          var userType:Int, var totalAmount:Float, val couponListData: List<CouponApply>,
@@ -44,13 +41,22 @@ val applyCouponListener:ApplyCouponListener)
 
             couponItemBindig.tvApplyClick.setOnClickListener {
 
-                loop@ for (couponCanApply in couponCanApplyListData) {
-                    if (couponData.code == couponCanApply.code) {
+                if (prodID.isEmpty()) {
+                    loop@ for (couponCanApply in OrderSummary.couponCanApplyListData) {
+                        if (couponData.code == couponCanApply.code) {
+                            applyCouponListener.onApplyCoupon(couponData)
+                            isProductAvailable = true
+                            break@loop
+                        } else {
+                            isProductAvailable = false
+                        }
+                    }
+                } else {
+                    isProductAvailable = if (totalAmount > (couponData.max_amount?.toFloat() ?: 0f)) {
                         applyCouponListener.onApplyCoupon(couponData)
-                        isProductAvailable = true
-                        break@loop
+                        true
                     } else {
-                        isProductAvailable = false
+                        false
                     }
                 }
 

@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.max.ecomaxgo.maxpe.view.flight.utility.showSnackBar
 import com.max.ecomaxgo.maxpe.view.flight.utility.toastShow
 import com.max.ecomaxgo.maxpe.view.flight.utility.validateEmail
@@ -138,9 +139,9 @@ class LoginFrag : Fragment(), KodeinAware,
         errorToast.setDuration(Toast.LENGTH_SHORT)
         errorToast.setGravity(OrderSummaryPage.GRAVITY_BOTTOM, 0, 80)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            Log.e("instance token", " :: ${it.token}")
-            notebookPrefs.firebaseDeviceID = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("instance token", " :: $it")
+            notebookPrefs.firebaseDeviceID = it
         }
 
         loginBinding.edtEmailAddr.addTextChangedListener(object : TextWatcher{
@@ -254,6 +255,7 @@ class LoginFrag : Fragment(), KodeinAware,
                 val password = loginBinding.edtPassword.text.toString()
 
                 Log.e("isEmail", " :: ${isEmail}")
+                val deviceId = notebookPrefs.firebaseDeviceID ?: ""
                 if(isEmail){
                     if(TextUtils.isEmpty(email)){
                         loginBinding.tilEmailAddr.error = "Please enter email address"
@@ -268,7 +270,7 @@ class LoginFrag : Fragment(), KodeinAware,
                     }else{
                         loginBinding.tilEmailAddr.error = ""
                         loginBinding.tilPassword.error = ""
-                        authViewModel.login(email, password)
+                        authViewModel.login(email, password, deviceId)
                     }
                 }else{
                     if(TextUtils.isEmpty(email)){
@@ -284,7 +286,7 @@ class LoginFrag : Fragment(), KodeinAware,
                     }else{
                         loginBinding.tilEmailAddr.error = ""
                         loginBinding.tilPassword.error = ""
-                        authViewModel.login(email, password)
+                        authViewModel.login(email, password, deviceId)
                     }
                 }
             }
@@ -331,9 +333,9 @@ class LoginFrag : Fragment(), KodeinAware,
                         user = mAuth.currentUser!!
                         Log.e("user data", " :: ${user.displayName} :: ${user.email} :: ${user.photoUrl}" +
                                 " :: ${user.phoneNumber} :: ${accountData.idToken}")
-                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                            Log.e("instance token", " :: ${it.token}")
-                            notebookPrefs.firebaseDeviceID = it.token
+                        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                            Log.e("instance token", " :: $it")
+                            notebookPrefs.firebaseDeviceID = it
                         }
 
                         authViewModel.socialMobileLoginServer(user.displayName?:"",
@@ -396,9 +398,9 @@ class LoginFrag : Fragment(), KodeinAware,
                 }
                 Log.e("fbData", " :: $email :: $firstName :: $lastName :: $profileURL :: $idToken")
                 val username = "$firstName $lastName"
-                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                    Log.e("instance token", " :: ${it.token}")
-                    notebookPrefs.firebaseDeviceID = it.token
+                FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                    Log.e("instance token", " :: $it")
+                    notebookPrefs.firebaseDeviceID = it
                 }
 
                 authViewModel.socialMobileLoginServer("$firstName $lastName",

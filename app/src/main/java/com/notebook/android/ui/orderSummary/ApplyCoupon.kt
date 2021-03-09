@@ -131,7 +131,7 @@ class ApplyCoupon : Fragment(), KodeinAware {
                 val bundle = Bundle()
                 bundle.putString("displayTitle", msg)
                 userLoginRequestPopup.arguments = bundle
-                userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                userLoginRequestPopup.show(mActivity.supportFragmentManager, "Coupon error dialog !!")
 //                errorToastTextView.text = msg
 //                errorToast.show()
             }

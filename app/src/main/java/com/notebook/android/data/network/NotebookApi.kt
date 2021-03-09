@@ -46,6 +46,8 @@ import com.notebook.android.model.wallet.AddWallet
 import com.notebook.android.model.wallet.AddWalletResponse
 import com.notebook.android.model.wallet.WalletAmountRaw
 import com.notebook.android.model.wallet.WalletAmountResponse
+import com.notebook.android.model.wallet.redeem.WalletRedeemHistoryResponse
+import com.notebook.android.model.wallet.redeem.WalletRedeemResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -81,6 +83,18 @@ interface NotebookApi {
     ) : Response<UserData>
 
     @FormUrlEncoded
+    @POST("redeemOnBankDetails")
+    suspend fun redeemWalletPoints(
+        @Field("user_id") userId:Int,
+    ) : Response<WalletRedeemResponse>
+
+    @FormUrlEncoded
+    @POST("redeemHistory")
+    suspend fun fetchRedeemHistory(
+        @Field("user_id") userId:Int,
+    ) : Response<WalletRedeemHistoryResponse>
+
+    @FormUrlEncoded
     @POST("otpverify")
     suspend fun otpVerificationWithEmail(
         @Field("email") email:String,
@@ -91,8 +105,16 @@ interface NotebookApi {
     @POST("postLogin")
     suspend fun postLogin(
         @Field("email") email:String,
-        @Field("password") password:String
+        @Field("password") password:String,
+        @Field("device_id") deviceId:String
     ) : Response<UserData>
+
+    @FormUrlEncoded
+    @POST("updateDeviceToken")
+    suspend fun updateDeviceToken(
+        @Field("token") password:String,
+        @Field("device_id") deviceId:String
+    ) : Response<Any>
 
     @FormUrlEncoded
     @POST("mobileloginexist")

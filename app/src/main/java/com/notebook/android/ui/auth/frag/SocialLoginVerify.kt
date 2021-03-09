@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.max.ecomaxgo.maxpe.view.flight.utility.validateEmail
 
 import com.notebook.android.R
@@ -134,9 +135,9 @@ class SocialLoginVerify : Fragment(), KodeinAware, AuthResponseListener,
                 showErrorView("Please enter valid mobile number")
             }else{
                 fragSocialMobileBinding.tilMobile.isErrorEnabled = false
-                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                    Log.e("instance token", " :: ${it.token}")
-                    notebookPrefs.firebaseDeviceID = it.token
+                FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                    Log.e("instance token", " :: $it")
+                    notebookPrefs.firebaseDeviceID = it
                 }
                 Log.e("deviceID", " :: ${notebookPrefs.firebaseDeviceID}")
                 authViewModel.socialMobileLogin(username, email, notebookPrefs.firebaseDeviceID?:"",

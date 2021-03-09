@@ -17,7 +17,7 @@ import com.notebook.android.data.db.typeConverter.Converters
         SubSubCategory::class, DrawerCategory::class, DrawerSubCategory::class, DrawerSubSubCategory::class, CategoryProduct::class,
         HomeSubSubCategoryProduct::class, CouponApply::class, FaqExpandable::class, Wishlist::class, RatingReviews::class,
         Country::class, Address::class, OrderHistory::class, ProductDetailEntity::class, MerchantBenefit::class],
-    version = 3, exportSchema = false)
+    version = 4, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class NotebookDatabase : RoomDatabase() {
@@ -123,10 +123,20 @@ abstract class NotebookDatabase : RoomDatabase() {
         database.execSQL("ALTER TABLE $TABLE_NAME_TEMP RENAME TO $TABLE_NAME")*/
             }
         }
+        //    For version from 1 to 2
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+
+                database.execSQL(
+                    "ALTER TABLE 'User' ADD COLUMN 'origincode' TEXT default \"null\""
+                )
+            }
+        }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context.applicationContext,
             NotebookDatabase::class.java, "notebookStoreDB.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3) //Only update the schema much recomonded
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4) //Only update the schema much recomonded
             .fallbackToDestructiveMigration() //will delete all existing data from device and update new schema
             .build()
     }

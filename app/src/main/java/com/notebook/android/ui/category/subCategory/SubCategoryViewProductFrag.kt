@@ -225,7 +225,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
                             val userLoginRequestPopup = UserLogoutDialog()
                             userLoginRequestPopup.isCancelable = false
                             userLoginRequestPopup.setUserLoginRequestListener(this)
-                            userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                            userLoginRequestPopup.show(childFragmentManager, "User login request popup !!")
                         }
                     }
 
@@ -261,7 +261,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
     }
 
     override fun onApiCartCallStarted() {
-        loadingDialog.show(mActivity.supportFragmentManager, "Loading dialog show")
+        loadingDialog.show(childFragmentManager, "Loading dialog show")
     }
 
     override fun onSuccess(isListSizeGreater:Boolean) {
@@ -340,7 +340,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
             subCategoryProductBinding.tvSortByProducts -> {
                 val sortingDialog = SortByDialogFrag()
                 sortingDialog.setSortingListener(this)
-                sortingDialog.show(mActivity.supportFragmentManager, "Sorting Dialog")
+                sortingDialog.show(childFragmentManager, "Sorting Dialog")
             }
         }
     }

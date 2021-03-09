@@ -54,6 +54,14 @@ class FilterCommonProductAdapter(val mCtx: Context, val fcProductList:ArrayList<
                 filterProdItemBinding.imgAddToCart.isEnabled = true
             }
 
+            if (filterProd.discount == 0) {
+                filterProdItemBinding.tvAfterAddingPriceInDiscount.visibility = View.INVISIBLE
+                filterProdItemBinding.tvDiscount.visibility = View.INVISIBLE
+            } else {
+                filterProdItemBinding.tvAfterAddingPriceInDiscount.visibility = View.VISIBLE
+                filterProdItemBinding.tvDiscount.visibility = View.VISIBLE
+            }
+
             filterProdItemBinding.clTopProductLayout.setOnClickListener {
                 if(filterProd.quantity <= 0){
                     fcProductListener.fcCartEmptyError("Product is Out of Stock")

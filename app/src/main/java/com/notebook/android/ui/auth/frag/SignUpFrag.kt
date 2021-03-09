@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.max.ecomaxgo.maxpe.view.flight.utility.showSnackBar
 import com.max.ecomaxgo.maxpe.view.flight.utility.toastShow
 import com.max.ecomaxgo.maxpe.view.flight.utility.validateEmail
@@ -137,9 +138,9 @@ class SignUpFrag : Fragment(), KodeinAware, AuthResponseListener, OtpVerificatio
         signUpBinding.tvAlreadyHaveAccount.movementMethod = LinkMovementMethod.getInstance()
         signUpBinding.tvAlreadyHaveAccount.text = ssRegNow
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            Log.e("instance token", " :: ${it.token}")
-            notebookPrefs.firebaseDeviceID = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("instance token", " :: $it")
+            notebookPrefs.firebaseDeviceID = it
         }
         Log.e("deviceID", " :: ${notebookPrefs.firebaseDeviceID}")
         return signUpBinding.root
@@ -148,9 +149,12 @@ class SignUpFrag : Fragment(), KodeinAware, AuthResponseListener, OtpVerificatio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(refferalPrefs.refferCode?.isNotEmpty() == true){
-            signUpBinding.edtRefferalCode.setText(refferalPrefs.refferCode)
+        if(refferalPrefs.refferCode?.isNotEmpty() == true || notebookPrefs.merchantRefferalID?.isNotEmpty() == true){
             signUpBinding.edtRefferalCode.apply {
+                if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
+                    notebookPrefs.merchantRefferalID = refferalPrefs.refferCode;
+                }
+                setText(notebookPrefs.merchantRefferalID)
                 isEnabled = false
                 isFocusable = false
             }
@@ -189,9 +193,9 @@ class SignUpFrag : Fragment(), KodeinAware, AuthResponseListener, OtpVerificatio
             }else if(!password.equals(confPassword)){
                 showErrorView("Your password not match, please check it again")
             }else{
-                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                    Log.e("instance token", " :: ${it.token}")
-                    notebookPrefs.firebaseDeviceID = it.token
+                FirebaseMessaging.getInstance().token.addOnSuccessListener {
+                    Log.e("instance token", " :: $it")
+                    notebookPrefs.firebaseDeviceID = it
                 }
                 Log.e("deviceID", " :: ${notebookPrefs.firebaseDeviceID}")
                 authViewModel.userSignUpCall(fullname, email, mobNumber, password,

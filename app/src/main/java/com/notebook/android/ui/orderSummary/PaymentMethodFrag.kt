@@ -309,7 +309,7 @@ class PaymentMethodFrag : Fragment(), View.OnClickListener, KodeinAware, OrderRe
             PAYMENT_METHOD_COD -> {
                 val afterPaymentRawData = AfterPaymentRawData(1, paymentType,
                     addressData.token, addressData.userID, it.orderid,
-                    addressData.amountafterdiscount, addressData.paymentType, it.msg?:"", 0)
+                    addressData.amountafterdiscount, addressData.paymentType, it.msg?:"", addressData.primeUpdated)
                 afterPaymentData.value = afterPaymentRawData
               /*  val paymentData = PaymentData(it.orderid, it.Amountafterdiscount, it.msg, 1)
                 paymentLiveData.value = paymentData*/
@@ -317,7 +317,7 @@ class PaymentMethodFrag : Fragment(), View.OnClickListener, KodeinAware, OrderRe
             else -> {
                 val afterPaymentRawData = AfterPaymentRawData(1, paymentType,
                     addressData.token, addressData.userID, it.orderid, addressData.amountafterdiscount,
-                    addressData.paymentType, it.msg?:"", 0)
+                    addressData.paymentType, it.msg?:"", addressData.primeUpdated)
                 afterPaymentData.value = afterPaymentRawData
                 val paymentData = PaymentData(it.orderid, it.Amountafterdiscount, it.msg, 1)
                 paymentLiveData.value = paymentData

@@ -9,10 +9,9 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.notebook.android.R
-import com.notebook.android.data.db.entities.Banner
 import com.notebook.android.model.productDetail.ProductDetailData
-import com.notebook.android.utility.Constant.BANNER_IMAGE_PATH
 import com.notebook.android.utility.Constant.PRODUCTIMAGE_IMAGE_PATH
+import com.notebook.android.utility.Constant.PRODUCT_IMAGE_PATH
 
 class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<ProductDetailData.ProductImageData>,
                                 private val prodImageSliderListener: ProductImageSliderListener) : PagerAdapter() {
@@ -30,13 +29,23 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
         val view = inflater.inflate(R.layout.product_detail_item_slider_layout, null)
 
         val imgSlider:ImageView = view.findViewById(R.id.imgSlider)
-        Glide.with(mCtx).load("${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+        if (imgList[position].id == 0) {
+            Glide.with(mCtx).load("${PRODUCT_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+        } else {
+            Glide.with(mCtx).load("${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+        }
 
         val viewPager = container as ViewPager
         viewPager.addView(view, 0)
 
         view.setOnClickListener {
-            prodImageSliderListener.onSliderClick("${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}")
+            prodImageSliderListener.onSliderClick(
+                if (imgList[position].id == 0) {
+                    "${PRODUCT_IMAGE_PATH}${imgList[position].image}"
+                } else {
+                    "${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}"
+                }
+            )
         }
 
         return view

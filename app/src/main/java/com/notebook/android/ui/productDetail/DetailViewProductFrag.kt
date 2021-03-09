@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -19,8 +18,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
@@ -54,20 +51,17 @@ import com.notebook.android.adapter.home.PagerAdapter.ProductImageSliderAdapter
 import com.notebook.android.data.db.entities.*
 import com.notebook.android.data.preferences.NotebookPrefs
 import com.notebook.android.databinding.FragmentDetailViewProductBinding
-import com.notebook.android.model.home.BenefitProductData
 import com.notebook.android.model.home.FreeDeliveryData
 import com.notebook.android.model.home.ProductCoupon
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
-import com.notebook.android.ui.dashboard.home.HomeFragDirections
+import com.notebook.android.ui.auth.frag.ResetPasswordByOptionFragDirections
 import com.notebook.android.ui.popupDialogFrag.ConfirmationDialog
-import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.ui.productDetail.DetailProductVM
 import com.notebook.android.ui.productDetail.DetailProductVMFactory
 import com.notebook.android.ui.productDetail.SharedVM
 import com.notebook.android.ui.productDetail.listener.DiscountProdResponseListener
-import com.notebook.android.ui.productDetail.listener.PinCheckListener
 import com.notebook.android.utility.Constant
 import kotlinx.android.synthetic.main.fragment_detail_view_product.*
 import org.kodein.di.KodeinAware
@@ -302,7 +296,6 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.tvRatingAmount.text = "(${prodModel.reviewCount} Reviews)"
                 }
 
-                detailViewProductBinding.nsvProductDetail.scrollTo(0,0)
                 if(prodModel.quantity <= 0){
                     prodQty = 0
                     detailViewProductBinding.clProductQty.visibility = View.GONE
@@ -358,7 +351,8 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.tvReplacement.text = "Non\nreturnable"
                 }
 
-                val prodimageArray = stringToProductImageList(prodModel.prodImageListString)
+                val prodimageArray = stringToProductImageList(prodModel)
+
                 Log.e("prodImageArray", " :: $prodimageArray")
                 if (prodimageArray.isNullOrEmpty()){
                     detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
@@ -380,6 +374,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
                     detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(detailViewProductBinding.vpProductImageSlider)
                 }
+                detailViewProductBinding.nsvProductDetail.scrollTo(0,0)
             }
         })
 
@@ -394,6 +389,11 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                 prodQty: Int,
                                 prodPrice: Float
                             ) {
+                                if (userData == null) {
+                                    showLoginPopup()
+                                    return
+                                }
+
                                 val prodList = ArrayList<OrderSummaryProduct>()
                                 prodList.add(
                                     OrderSummaryProduct(
@@ -404,9 +404,9 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                         discProd.product_condition, discProd.discount, discProd.latest, discProd.best,
                                         discProd.brandtitle, discProd.colortitle, discProd.delivery_charges, 1)
                                 )
-                                sharedVM.setProductOrderSummaryList(prodList)
                                 sharedVM.setCodOptionForPayment(discProd.can_cashon?.toInt()?:0)
                                 sharedVM.setDeliveryCharge(discProd.delivery_charges)
+                                sharedVM.setProductOrderSummaryList(prodList)
                                 navController.navigate(R.id.action_detailViewProductFrag_to_orderSummary)
                             }
 
@@ -415,13 +415,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                     detailVM.addItemsToCart(userData!!.id, userData!!.token!!,
                                         prodID, prodQty, 0)
                                 } else {
-                                    val userLoginRequestPopup = UserLogoutDialog()
-                                    userLoginRequestPopup.isCancelable = false
-                                    userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
-                                    userLoginRequestPopup.show(
-                                        mActivity.supportFragmentManager,
-                                        "User login request popup !!"
-                                    )
+                                    showLoginPopup()
                                 }
                             }
 
@@ -469,12 +463,26 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.wvDataSheet.isLongClickable = false
     }
 
-    fun stringToProductImageList(data: String?): List<ProductDetailData.ProductImageData> {
-        if (data == null) {
+    private fun stringToProductImageList(product: ProductDetailEntity): List<ProductDetailData.ProductImageData> {
+        val data = product.prodImageListString
+        if ((data.isNullOrBlank() || data == "[]") && product.image.isNullOrEmpty()) {
             return Collections.emptyList()
         }
-        val listType: Type = object : TypeToken<List<ProductDetailData.ProductImageData>>() {}.getType()
-        return Gson().fromJson<List<ProductDetailData.ProductImageData>>(data, listType)
+
+        if ((data.isNullOrBlank() || data == "[]")) {
+            return mutableListOf(
+                ProductDetailData.ProductImageData(
+                    id = 0,
+                    product_id = product.id ?: 0,
+                    title = product.title ?: "",
+                    image = product.image,
+                    status = 0
+                )
+            )
+        }
+
+        val listType: Type = object : TypeToken<List<ProductDetailData.ProductImageData>>() {}.type
+        return Gson().fromJson(data, listType)
     }
 
     override fun onApiCallStarted() {
@@ -510,10 +518,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     }
 
                     override fun couponForLogin(msg: String) {
-                        val userLoginRequestPopup = UserLogoutDialog()
-                        userLoginRequestPopup.isCancelable = false
-                        userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
-                        userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                        showLoginPopup()
                     }
                 })
             detailViewProductBinding.recProdCoupon.adapter = couponProdAdapter
@@ -526,7 +531,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.recViewProdBenefits.adapter = benefitAdapter
 
         for (freeDelObj in freeDeliveryData.indices){
-            if(freeDeliveryData[freeDelObj].title.startsWith("free delivery", true)){
+            if(freeDeliveryData[freeDelObj].title.contains("free delivery", true)){
                 sharedVM.setFreeDeliveryData(freeDeliveryData[freeDelObj].price)
                 Log.e("freeDeliveryAmount", " :: ${freeDeliveryData[freeDelObj].price}")
 //                prodModel.delivery_charges
@@ -621,10 +626,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                         errorToast.show()
                     }
                 }else{
-                    val userLoginRequestPopup = UserLogoutDialog()
-                    userLoginRequestPopup.isCancelable = false
-                    userLoginRequestPopup.setUserLoginRequestListener(this)
-                    userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                    showLoginPopup()
                 }
             }
 
@@ -653,6 +655,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             }
 
             detailViewProductBinding.btnBuyNow ->{
+                if (userData == null) {
+                    showLoginPopup()
+                    return
+                }
                 if (!notDeliverable) {
                     if (prodQty != 0) {
                         val prodList = ArrayList<OrderSummaryProduct>()
@@ -664,7 +670,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                 prodModel.image, prodModel.status, prodModel.short_description, prodModel.description,
                                 prodModel.data_sheet, prodModel.quantity, prodModel.price, prodModel.offer_price,
                                 prodModel.product_code, prodModel.product_condition, prodModel.discount, prodModel.latest,
-                                prodModel.best, prodModel.brandtitle, prodModel.colortitle, prodModel.delivery_charges, 1)
+                                prodModel.best, prodModel.brandtitle, prodModel.colortitle, prodModel.delivery_charges, 1, prodModel.can_free_delivery)
                         )
                         sharedVM.setProductOrderSummaryList(prodList)
                         sharedVM.setDeliveryCharge(prodModel.delivery_charges?:0f)
@@ -679,7 +685,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             }
 
             detailViewProductBinding.tvSimilarDiscntProdsViewAll -> {
-                navController.navigate(R.id.action_detailViewProductFrag_to_similarDiscountedProdViewAll)
+                val similarFragmentAction = DetailViewProductFragDirections
+                    .actionDetailViewProductFragToSimilarDiscountedProdViewAll(prodModel.discount)
+
+                navController.navigate(similarFragmentAction)
             }
 
             detailViewProductBinding.imgShareProduct -> {
@@ -744,21 +753,21 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
     fun createProductShareDeepLink() {
         Log.e("main", "create link ")
-        val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(Uri.parse("https://demo.mbrcables.com/notebookstore/"))
+        /*val dynamicLink: DynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
+            .setLink(Uri.parse("https://notebookstore.in/"))
             .setDynamicLinkDomain("notebookstore.page.link") // Open links with this app on Android
             .setAndroidParameters(DynamicLink.AndroidParameters.Builder().build()) // Open links with com.example.ios on iOS
             //.setIosParameters(new DynamicLink.IosParameters.Builder("com.example.ios").build())
-            .buildDynamicLink()
+            .buildDynamicLink()*/
         //click -- link -- google play store -- inistalled/ or not  ----
-        val dynamicLinkUri: Uri = dynamicLink.getUri()
-        Log.e("main", "  Long refer " + dynamicLink.getUri())
+        //val dynamicLinkUri: Uri = dynamicLink.getUri()
+        //Log.e("main", "  Long refer " + dynamicLink.getUri())
         //   https://referearnpro.page.link?apn=blueappsoftware.referearnpro&link=https%3A%2F%2Fwww.blueappsoftware.com%2F
         // apn  ibi link
 
         // manual link
-        val sharelinktext = "https://notebookstore.page.link/?" +
-                "link=https://demo.mbrcables.com/notebookstore/myProductShare.php?productID=${prodModel.id}" +
+        val sharelinktext = "https://notebookstoreindia.page.link/?" +
+                "link=https://notebookstore.in/myProductShare.php?productID=${prodModel.id}" +
                 "&apn=" + mActivity.packageName +
                 "&st=" + "${prodModel.title}" +
                 "&sd=" + "${prodModel.short_description}" +
@@ -797,6 +806,11 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             }
     }
 
+    override fun onPause() {
+        super.onPause()
+        mActivity.currentFocus?.clearFocus()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putIntArray(
@@ -830,5 +844,12 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
     override fun onDeliveryNotAvailable(mesg: String) {
         checkDelivery(2, mesg)
+    }
+
+    private fun showLoginPopup() {
+        val userLoginRequestPopup = UserLogoutDialog()
+        userLoginRequestPopup.isCancelable = false
+        userLoginRequestPopup.setUserLoginRequestListener(this@DetailViewProductFrag)
+        userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
     }
 }

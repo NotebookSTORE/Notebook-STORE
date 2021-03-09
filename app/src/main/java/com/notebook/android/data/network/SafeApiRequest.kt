@@ -24,7 +24,9 @@ abstract class SafeApiRequest {
                 }
             }
 
-            message.append("Error Code : ${response.code()}")
+            message.append("Error Code : ${response.raw().request.url}")
+            message.append("\nError Code : ${response.body()}")
+            message.append("\nError Code : ${response.code()}")
             throw ApiException(message.toString())
         }
     }

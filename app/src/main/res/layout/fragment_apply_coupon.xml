@@ -39,6 +39,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_8dp"
+            tools:listitem="@layout/apply_coupon_layout"
+            tools:itemCount="5"
             app:layout_constraintTop_toBottomOf="@+id/tvApplyCouponText"
             app:layout_constraintLeft_toRightOf="@+id/gl3ApplyCoupon"
             app:layout_constraintRight_toLeftOf="@+id/gl97ApplyCoupon"

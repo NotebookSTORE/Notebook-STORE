@@ -11,17 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.notebook.android.BR
 import com.notebook.android.R
 import com.notebook.android.adapter.DetailProduct.DetailProductSpinnerAdpater
-import com.notebook.android.data.db.entities.CouponApply
 import com.notebook.android.data.db.entities.OrderSummaryProduct
 import com.notebook.android.databinding.OrderSummaryProductLayoutBinding
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.applyCoupon
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.productID
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.totalAmountPayableCouponCheck
-import com.notebook.android.ui.orderSummary.OrderSummary.Companion.userData
-import com.notebook.android.utility.Constant
-import kotlin.math.roundToInt
 
-class OrderSummaryAdapter(val mCtx: Context, val prodListData: ArrayList<OrderSummaryProduct>,
+class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<OrderSummaryProduct>,
                           private val orderPriceListener: OrderPriceListener)
 : RecyclerView.Adapter<OrderSummaryAdapter.OrderSummaryVH>() {
 
@@ -46,8 +39,8 @@ class OrderSummaryAdapter(val mCtx: Context, val prodListData: ArrayList<OrderSu
             Log.e("orderSummaryAdapter", " :: pos->${adapterPosition} :: qty->${prodData.cartQuantity}" +
                     " :: totalAmount->${prodData.cartTotalAmount} :: ${prodData.discount} :: ${prodData.price}")
             orderSummaryBinding.tvProdQuantity.text = "${prodData.cartQuantity} Pack"
-            val result = (prodData.price.times(prodData.discount)).div(100f)
-            val finalResult = prodData.price.minus(result)
+            val result = (prodData.price.times(prodData.discount)).div(100)
+            val finalResult = Math.round(prodData.price.minus(result))
             orderSummaryBinding.tvProdAmount.text = "₹ ${prodData.cartQuantity.times(finalResult)}"
             Log.e("result", " :: result -> ${result} :: finalResult -> ${finalResult} :: ${prodQty.times(finalResult)}")
 //            orderSummaryBinding.tvProdDeliveryBy.text = "Delivery by Tomorrow,Fri | ₹ ${prodData.delivery_charges}"
@@ -66,104 +59,35 @@ class OrderSummaryAdapter(val mCtx: Context, val prodListData: ArrayList<OrderSu
                         Log.e("loopPos", " :: $pos")
                     }
                 }
-                orderSummaryBinding.spProductQuantity.setSelection(cartQtyPosition, true)
+
+                var shouldFireCallback = false
+                orderSummaryBinding.spProductQuantity.setSelection(cartQtyPosition)
 
                 orderSummaryBinding.spProductQuantity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                     override fun onNothingSelected(p0: AdapterView<*>?) {}
 
                     override fun onItemSelected(parent: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+
                         prodQty = qtyIntList[p2]
 
                         orderSummaryBinding.tvProdQuantity.text = "${prodQty} Pack"
-                        val result = (prodData.price.times(prodData.discount)).div(100f)
-                        val finalResult = prodData.price.minus(result)
+                        val result = (prodData.price.times(prodData.discount)).div(100)
+                        val finalResult = Math.round(prodData.price.minus(result))
                         orderSummaryBinding.tvProdAmount.text = "₹ ${prodQty.times(finalResult)}"
 
                         Log.e("totalAmountCheckSpinner", " :: ${prodQty.times(finalResult)}")
                         prodData.cartQuantity = prodQty
                         prodData.cartTotalAmount = prodQty.times(prodData.price)
-                        orderPriceListener.onChangeProdQuantity(adapterPosition, prodData.id.toInt(), prodQty, prodQty.times(finalResult))
-                        checkApplyCoupon()
+                        if (shouldFireCallback) {
+                            orderPriceListener.onChangeProdQuantity(adapterPosition, prodData.id.toInt(), prodQty, prodQty.times(finalResult).toFloat())
+                        } else {
+                            shouldFireCallback = true
+                        }
                     }
                 }
             }
         }
 
-        private fun checkApplyCoupon() {
-            Log.e("totalAmountCheck", " :: $totalAmountPayableCouponCheck :: " +
-                    "${applyCoupon?.coupon_type}")
-            if(applyCoupon?.coupon_type?.equals(Constant.COUPON_USER_TYPE_PRODUCT_ONLY, true) == true){
-
-                if(!productID.isNullOrEmpty()){
-                    if (applyCoupon?.product_id.equals(productID)){
-                        if(applyCoupon?.coupon_user_type?.toInt() == Constant.REGULAR_MERCHANT_TYPE
-                            || applyCoupon?.coupon_user_type?.toInt() == Constant.NORMAL_MERCHANT_TYPE){
-                            if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                                orderPriceListener.onPriceCheckOnCoupon(true)
-                            }else{
-                                orderPriceListener.onPriceCheckOnCoupon(false)
-                            }
-                        }else if(applyCoupon?.coupon_user_type?.toInt() == Constant.PRIME_MERCHANT_TYPE){
-                            if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                                orderPriceListener.onPriceCheckOnCoupon(true)
-                            }else{
-                                orderPriceListener.onPriceCheckOnCoupon(false)
-                            }
-                        }else if(applyCoupon?.coupon_user_type?.toInt() == Constant.COUPON_USER_TYPE_SPECIAL){
-                            if(applyCoupon?.email_can_avail.isNullOrEmpty()){
-                                if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                                    orderPriceListener.onPriceCheckOnCoupon(true)
-                                }else{
-                                    orderPriceListener.onPriceCheckOnCoupon(false)
-                                }
-                            }else{
-                                if(applyCoupon?.email_can_avail.equals(userData?.email, true)){
-                                    if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                                    orderPriceListener.onPriceCheckOnCoupon(true)
-                                }else{
-                                    orderPriceListener.onPriceCheckOnCoupon(false)
-                                }
-                                }else{
-                                    orderPriceListener.errorMessage("Your email id not match")
-                                }
-                            }
-
-                        }else if(applyCoupon?.coupon_user_type?.toInt() == Constant.COUPON_USER_TYPE_BULK){
-                            if(userData?.registerfor == 2){
-                                if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                                    orderPriceListener.onPriceCheckOnCoupon(true)
-                                }else{
-                                    orderPriceListener.onPriceCheckOnCoupon(false)
-                                }
-                            }else{
-                                orderPriceListener.errorMessage("You are not registered as Institution")
-                            }
-                        }
-                    }else{
-                        orderPriceListener.errorMessage("This coupon is not applicable for this product due to id mismatch")
-                    }
-                }
-
-            } else{
-                if (applyCoupon?.coupon_type?.toInt() == Constant.COUPON_USER_TYPE_NORMAL_GENERIC){
-                    if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                        orderPriceListener.onPriceCheckOnCoupon(true)
-                    }else{
-                        orderPriceListener.onPriceCheckOnCoupon(false)
-                    }
-                }else if (applyCoupon?.coupon_type?.toInt() == Constant.COUPON_USER_TYPE_GENERIC_INSTITUTE){
-                    if(userData?.registerfor == 2){
-                        if(totalAmountPayableCouponCheck >= applyCoupon?.max_amount?.toFloat()?:0f){
-                            orderPriceListener.onPriceCheckOnCoupon(true)
-                        }else{
-                            orderPriceListener.onPriceCheckOnCoupon(false)
-                        }
-                    }else{
-                        orderPriceListener.errorMessage("You are not registered as Institution")
-                    }
-                }
-            }
-        }
         private fun setQuantityList(qty:Int) : ArrayList<String> {
             val qtyArray = ArrayList<String>()
             for(i in 0 until qty){

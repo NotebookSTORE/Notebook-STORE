@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.max.ecomaxgo.maxpe.view.flight.utility.getUserImageFullPath
 import com.notebook.android.BuildConfig
 import com.notebook.android.R
@@ -103,9 +104,9 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
             .build()
         mGoogleSigninClient = GoogleSignIn.getClient(this@MainDashboardPage, gso)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            Log.e("instance token", " :: ${it.token}")
-            notebookPrefs.firebaseDeviceID = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            Log.e("instance token", " :: $it")
+            notebookPrefs.firebaseDeviceID = it
         }
 
         /*Get method call here..*/
@@ -204,80 +205,13 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
         })
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-
-           val titleValue =  when(destination.id){
-
-               /*Dashboard frag ids here...*/
-                R.id.homeFrag -> destination.label
-               R.id.cartFrag -> destination.label
-               R.id.orderFrag -> destination.label
-               R.id.myAccountFrag -> destination.label
-
-               /*Authentication frag ids here...*/
-               R.id.loginFrag -> destination.label
-               R.id.signUpFrag -> destination.label
-               R.id.resetPasswordWithNewPasswordFrag -> destination.label
-               R.id.resetPasswordByOptionFrag -> destination.label
-               R.id.socialLoginVerify -> destination.label
-
-               /*Home Fragment part ids here...*/
-               R.id.subCategoryViewProductFrag -> destination.label
-               R.id.bulkOrderQuery -> destination.label
-               R.id.filterByProductFrag -> destination.label
-               R.id.latestProductPage -> destination.label
-               R.id.bestSellerProductPage -> destination.label
-               R.id.searchProductFrag -> destination.label
-               R.id.categoryDetailProductFrag -> destination.label
-               R.id.subSubCategoryWiseProductFrag -> destination.label
-               R.id.offerViewProdLink -> destination.label
-
-               /*My Account fragment part here...*/
-               R.id.addDetailFrag -> destination.label
-               R.id.merchantProfileFrag -> destination.label
-               R.id.walletFrag -> destination.label
-               R.id.helpSupportFrag -> destination.label
-               R.id.savedAddressFrag -> destination.label
-               R.id.addAddressFrag -> destination.label
-               R.id.wishlistFrag -> destination.label
-               R.id.orderSummaryPage -> destination.label
-               R.id.requestReturn -> destination.label
-
-               /*Merchant Fragment Parts id here...*/
-               R.id.merchantMainFrag -> destination.label
-               R.id.merchantPrimeFrag -> destination.label
-               R.id.merchantRegularFrag -> destination.label
-               R.id.primeMerchantFormFrag -> destination.label
-               R.id.regularMerchantFormFrag -> destination.label
-               R.id.notebookPdfPage -> destination.label
-               R.id.panCardUploadFrag -> destination.label
-               R.id.identityProofUploadFrag -> destination.label
-               R.id.merchantViewSummaryWebViewPage -> destination.label
-
-               /*Product detail fragment part ids here..*/
-               R.id.detailViewProductFrag -> destination.label
-               R.id.reviewProduct -> destination.label
-               R.id.ratingViewAll -> destination.label
-               R.id.orderSummary -> destination.label
-               R.id.applyCoupon -> destination.label
-               R.id.similarDiscountedProdViewAll -> destination.label
-               R.id.paymentCODSuccessScreen -> destination.label
-               R.id.zoomableViewFrag -> destination.label
-
-               /*Drawer Home Fragment part ids here..*/
-               R.id.contactUsFrag -> destination.label
-               R.id.aboutUsFrag -> destination.label
-               R.id.faqsFrag -> destination.label
-               R.id.feedbackFrag -> destination.label
-               R.id.reportProblemFrag -> destination.label
-               R.id.netbankingCredentialFrag -> destination.label
-               R.id.paymentMethodFrag -> destination.label
-               R.id.paymentInfoCardFrag -> destination.label
-               R.id.paymentFinishFrag -> destination.label
-               R.id.policyPart -> destination.label
-               else -> "Home"
+            val title = if (destination.label.isNullOrEmpty()) {
+                "Home"
+            } else {
+                destination.label
             }
-            Log.e("Title Of Fragment", " :: $titleValue")
-            setupToolbarTitle(titleValue.toString())
+            Log.e("Title Of Fragment", " :: $title")
+            setupToolbarTitle(title.toString())
         }
 
         dashboardVM.getDrawerDataFromDB().observe(this, Observer {
@@ -407,6 +341,8 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
         }else if (title.equals("Add Details", true)){
             lightToolbarWithTitle(title)
         }else if (title.equals("My Wallet", true)){
+            lightToolbarWithTitle(title)
+        }else if (title.equals("Redeem History", true)){
             lightToolbarWithTitle(title)
         }else if (title.equals("Select Bank", true)){
             lightToolbarWithTitle(title)
@@ -681,6 +617,7 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
         mainDashboardBinding.homeBottomNavView.visibility = View.VISIBLE
         mainDashboardBinding.tvCustomTitle.text = title
         mainDashboardBinding.clCustomHomeToolbar.setBackgroundColor(resources.getColor(R.color.colorWhite))
+        mainDashboardBinding.clCustomHomeToolbar
         mainDashboardBinding.tvCustomTitle.setTextColor(resources.getColor(R.color.colorLightBlack))
         mainDashboardBinding.imgBackToPrevious.setColorFilter(
             ContextCompat.getColor(this, R.color.colorLightBlack))

@@ -53,8 +53,9 @@ import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.ui.productDetail.DetailProductVM
 import com.notebook.android.ui.productDetail.DetailProductVMFactory
 import com.notebook.android.ui.productDetail.listener.RateProdListener
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
+import com.notebook.android.utility.getAppFilePath
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -197,7 +198,7 @@ class ReviewProduct : Fragment(), KodeinAware, View.OnClickListener,
                             val ratingValue: RequestBody = RequestBody.create(MultipartBody.FORM, rating.toString())
                             val msgValue: RequestBody = RequestBody.create(MultipartBody.FORM, msg)
 
-                            val imgReviewProd = File(imageUri!!.path!!)
+                            val imgReviewProd = File(imageUri!!.getAppFilePath(mContext)!!)
                             val requestImage = RequestBody.create("image/*".toMediaTypeOrNull(), imgReviewProd)
                             val reviewProdImagePart = MultipartBody.Part.createFormData("image", imgReviewProd.name, requestImage)
                             prodDetailVM.rateProduct(userID, token,
@@ -325,14 +326,14 @@ class ReviewProduct : Fragment(), KodeinAware, View.OnClickListener,
                     val result = CropImage.getActivityResult(data)
                     Log.e("kdfjdl", ":: fdfdkj")
                     if (resultCode == Activity.RESULT_OK) {
-                        val resultUri = result.uri
+                        val resultUri = result?.uri
                         imageUri = resultUri
                         fragRateProductBinding.tvRateAddImage.visibility = View.GONE
                         fragRateProductBinding.clImageShown.visibility = View.VISIBLE
                         Glide.with(mActivity).load(imageUri).into(fragRateProductBinding.imgReportProblem)
                         Log.e("imageUri", " :: $imageUri")
                         try {
-                            imageFile = File(resultUri.path.toString())
+                            imageFile = File(resultUri?.getAppFilePath(mContext).toString())
 
                         } catch (e: java.lang.NullPointerException) {
                             Toast.makeText(mActivity, "Image not found",
@@ -340,7 +341,7 @@ class ReviewProduct : Fragment(), KodeinAware, View.OnClickListener,
                                 .show()
                         }
                     } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        val error = result.error
+                        val error = result?.error
                         showErrorView(error.toString())
                         Log.e("crop error :: ", "$error")
                     }

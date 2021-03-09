@@ -1,9 +1,9 @@
 package com.notebook.android.ui.productDetail
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.notebook.android.data.db.entities.OrderSummaryProduct
-import com.notebook.android.model.home.ProductCoupon
 
 class SharedVM : ViewModel() {
 
@@ -14,7 +14,13 @@ class SharedVM : ViewModel() {
     var freeDeliveryAmountLiveData : MutableLiveData<Int> = MutableLiveData()
 
     fun setProductOrderSummaryList(prodList:ArrayList<OrderSummaryProduct>){
+        productOrderList.value?.forEach {ab->
+            Log.d("testing vm b:", "${ab.cartTotalAmount}")
+        }
         productOrderList.value = prodList
+        productOrderList.value?.forEach {ab->
+            Log.d("testing vm a:", "${ab.cartTotalAmount}")
+        }
     }
 
     fun setDeliveryCharge(delCharges: Float) {

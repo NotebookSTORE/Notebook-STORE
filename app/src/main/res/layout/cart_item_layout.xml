@@ -94,7 +94,7 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:text="@{@string/rupeeIcon.concat(String.valueOf(cardDataModel.cartprice))}"
+                        android:text="@{@string/rupeeIcon.concat(String.valueOf(Math.round(cardDataModel.cartprice)))}"
                         android:layout_marginStart="@dimen/_10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

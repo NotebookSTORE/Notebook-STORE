@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.messaging.FirebaseMessaging
 import com.notebook.android.R
 import com.notebook.android.adapter.home.*
 import com.notebook.android.adapter.home.PagerAdapter.HomeTopSliderAdapter
@@ -120,7 +121,6 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         super.onAttach(context)
         mContext = context
         mActivity = requireActivity()
-        dashboardVM.getBannerData(BANNER_TYPE_HOME)
 
        if(arguments != null){
            prodID = requireArguments().getInt("prodID")
@@ -133,6 +133,11 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     private lateinit var successToast:Toast
     private lateinit var errorToastTextView:TextView
     private lateinit var successToastTextView:TextView
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dashboardVM.getBannerData(BANNER_TYPE_HOME)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
