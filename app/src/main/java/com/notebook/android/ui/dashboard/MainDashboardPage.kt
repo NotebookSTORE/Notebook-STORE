@@ -587,7 +587,16 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Notebook Store")
-            var shareMessage = "\nHey. I found out a cool App where we can buy Stationary product\n\n"
+            var shareMessage = "Notebook STORE Presenting One of the Best E-Commerce Platform " +
+                    "of India where you can get Best Quality Products of Stationary, Books & " +
+                    "Educational Toys. As well as have a Bright Opportunity to Make Your Career " +
+                    "With Notebook STORE  By Generating Active & Passive Income with its Unique " +
+                    "Referral Model.\n" +
+                    "\n" +
+                    "Click for More Detail \n" +
+                    "http://bit.ly/2VfxSMi\n" +
+                    "\n" +
+                    "Download The App Now\n\n"
             shareMessage = "${shareMessage}https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "Share with..."))
