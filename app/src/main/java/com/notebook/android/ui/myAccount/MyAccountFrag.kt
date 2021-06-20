@@ -251,18 +251,18 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
                 if (notebookPrefs.loginType.equals(Constant.GOOGLE_LOGIN, true)) {
                     Glide.with(this)
                         .load(user.profile_image ?: "")
-                        .placeholder(R.drawable.my_account_profile)
+                        .placeholder(R.drawable.ic_user_profile)
                         .into(fragmentMyAccountBinding.imgUserProfile)
                 } else if (notebookPrefs.loginType.equals(Constant.FACEBOOK_LOGIN, true)) {
                     Glide.with(this)
                         .load(user.profile_image ?: "")
-                        .placeholder(R.drawable.my_account_profile)
+                        .placeholder(R.drawable.ic_user_profile)
                         .into(fragmentMyAccountBinding.imgUserProfile)
                 } else {
                     if (!user.profile_image.isNullOrEmpty()) {
                         Glide.with(this)
                             .load(getUserImageFullPath(user.profile_image ?: ""))
-                            .placeholder(R.drawable.my_account_profile)
+                            .placeholder(R.drawable.ic_user_profile)
                             .into(fragmentMyAccountBinding.imgUserProfile)
                     }
                 }
