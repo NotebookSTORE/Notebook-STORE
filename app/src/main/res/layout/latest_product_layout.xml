@@ -26,8 +26,6 @@
 
             <ImageView
                 android:id="@+id/imgProductImage"
-                app:loadImageBasePath="@{@string/productImgPath}"
-                app:imageName="@{latestProduct.image}"
                 android:src="@drawable/note_pad"
                 android:layout_width="80dp"
                 android:layout_height="80dp"

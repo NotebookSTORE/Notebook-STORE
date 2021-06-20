@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImage
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImageWithSize
 import com.notebook.android.BR
 import com.notebook.android.R
 import com.notebook.android.data.db.entities.BestSellerHome
@@ -38,6 +40,8 @@ class BestSellerHomeProductAdapter(val mCtx: Context, val bestSellerList:ArrayLi
             bestSellerBinding.rbProductRating.rating = bestSeller.customerRating?:4f
             bestSellerBinding.setVariable(BR.bestSellerProduct, bestSeller)
             bestSellerBinding.executePendingBindings()
+
+            loadAllTypeImageWithSize(bestSellerBinding.imgProductImage,"https://notebookstore.in/public/uploads/product/",bestSeller.image,200,200)
 
             if(bestSeller.quantity <= 0){
                 bestSellerBinding.imgAddToCart.visibility = View.GONE

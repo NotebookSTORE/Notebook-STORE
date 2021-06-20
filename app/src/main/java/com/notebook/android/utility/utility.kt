@@ -106,13 +106,22 @@ fun getUserImageFullPath(img:String) : String{
     return "$MERCHANT_IMAGE_PATH$img"
 }
 
+fun loadAllTypeImageWithSize(imgView: ImageView, loadImageBasePath:String, imageName:String?,width:Int? = 600,height:Int?=600){
+//    val imgBasePah = "https://notebookstore.in/stationarykingdom/public/uploads/product/"
+    if(!imageName.isNullOrEmpty()){
+        Glide.with(imgView.context).load("$loadImageBasePath$imageName").override(width?:600,height?:600).into(imgView)
+    }else{
+        Glide.with(imgView.context).load(R.drawable.note_pad).override(width?:600,height?:600).into(imgView)
+    }
+}
+
 @BindingAdapter(value = ["loadImageBasePath", "imageName"])
 fun loadAllTypeImage(imgView: ImageView, loadImageBasePath:String, imageName:String?){
 //    val imgBasePah = "https://notebookstore.in/stationarykingdom/public/uploads/product/"
     if(!imageName.isNullOrEmpty()){
-        Glide.with(imgView.context).load("$loadImageBasePath$imageName").into(imgView)
+        Glide.with(imgView.context).load("$loadImageBasePath$imageName").override(600,600).into(imgView)
     }else{
-        Glide.with(imgView.context).load(R.drawable.note_pad).into(imgView)
+        Glide.with(imgView.context).load(R.drawable.note_pad).encodeQuality(70).into(imgView)
     }
 }
 

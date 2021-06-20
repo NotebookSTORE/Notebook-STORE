@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImage
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImageWithSize
 import com.notebook.android.R
 import com.notebook.android.data.db.entities.Banner
 import com.notebook.android.utility.Constant.BANNER_IMAGE_PATH
 
-class HomeTopSliderAdapter(val mCtx: Context, val imgList:ArrayList<Banner>,
-                           val bannerSliderListener: BannerSliderListener) : PagerAdapter() {
+class HomeTopSliderAdapter(
+    val mCtx: Context, val imgList: ArrayList<Banner>,
+    val bannerSliderListener: BannerSliderListener
+) : PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
@@ -27,8 +30,9 @@ class HomeTopSliderAdapter(val mCtx: Context, val imgList:ArrayList<Banner>,
         val inflater = mCtx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.item_slider, null)
 
-        val imgSlider:ImageView = view.findViewById(R.id.imgSlider)
-        Glide.with(mCtx).load("${BANNER_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+        val imgSlider: ImageView = view.findViewById(R.id.imgSlider)
+        loadAllTypeImageWithSize(imgSlider, BANNER_IMAGE_PATH, imgList[position].image,1080,1000)
+//        Glide.with(mCtx).load("${BANNER_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
 //        imgSlider.setImageResource(imgList[position])
 
         val viewPager = container as ViewPager
@@ -45,7 +49,7 @@ class HomeTopSliderAdapter(val mCtx: Context, val imgList:ArrayList<Banner>,
         container.removeView(`object` as View)
     }
 
-    interface BannerSliderListener{
-        fun onSliderClick(bannerData:Banner)
+    interface BannerSliderListener {
+        fun onSliderClick(bannerData: Banner)
     }
 }

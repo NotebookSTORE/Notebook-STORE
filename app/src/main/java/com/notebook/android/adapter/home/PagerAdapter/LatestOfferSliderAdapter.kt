@@ -8,6 +8,8 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImage
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImageWithSize
 import com.notebook.android.R
 import com.notebook.android.data.db.entities.Banner
 import com.notebook.android.data.db.entities.LatestOffer
@@ -30,7 +32,8 @@ val latestOfferSliderListener: LatestOfferSliderListener) : PagerAdapter() {
         val view = inflater.inflate(R.layout.item_slider, null)
 
         val imgSlider:ImageView = view.findViewById(R.id.imgSlider)
-        Glide.with(mCtx).load("${LATEST_OFFER_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+        loadAllTypeImageWithSize(imgSlider, LATEST_OFFER_IMAGE_PATH, imgList[position].image,1080,1000)
+//        Glide.with(mCtx).load("${LATEST_OFFER_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
         val viewPager = container as ViewPager
         viewPager.addView(view, 0)
 

@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImage
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImageWithSize
 import com.notebook.android.BR
 import com.notebook.android.R
 import com.notebook.android.data.db.entities.LatestProduct
@@ -27,20 +29,23 @@ class LatestProductAdapter (val mCtx: Context, val latestProductList:ArrayList<L
     inner class LatestViewHolder(val latestProdBinding: LatestProductLayoutBinding)
         : RecyclerView.ViewHolder(latestProdBinding.root) {
 
-        fun bind(Prod: LatestProduct){
+        fun bind(prod: LatestProduct){
             latestProdBinding.tvAfterAddingPriceInDiscount.paintFlags = latestProdBinding
                 .tvAfterAddingPriceInDiscount.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            latestProdBinding.rbProductRating.rating = Prod.customerRating?:4f
+            latestProdBinding.rbProductRating.rating = prod.customerRating?:4f
 
-            latestProdBinding.setVariable(BR.latestProduct, Prod)
+            loadAllTypeImageWithSize(latestProdBinding.imgProductImage,"https://notebookstore.in/public/uploads/product/",prod.image,200,200)
+
+
+            latestProdBinding.setVariable(BR.latestProduct, prod)
             latestProdBinding.executePendingBindings()
 
             latestProdBinding.clTopProductLayout.setOnClickListener {
-                latestProductListen.latestProductCallback(Prod)
+                latestProductListen.latestProductCallback(prod)
             }
 
             latestProdBinding.imgAddToCart.setOnClickListener {
-                latestProductListen.latestAddToCart(Prod.id!!, 1)
+                latestProductListen.latestAddToCart(prod.id!!, 1)
             }
 
         }

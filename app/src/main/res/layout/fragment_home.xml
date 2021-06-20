@@ -164,9 +164,13 @@
                         android:id="@+id/recViewCategory"
                         android:layout_width="0dp"
                         android:padding="4dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:layout_height="wrap_content"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
+                        tools:listitem="@layout/category_section_home_layout"
+                        tools:itemCount="2"
                         app:layout_constraintTop_toBottomOf="@+id/recViewSubCategory"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -218,6 +222,9 @@
                             android:id="@+id/recViewBestSellers"
                             android:layout_width="0dp"
                             android:padding="4dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/best_seller_product_home_layout"
+                            android:orientation="horizontal"
                             android:layout_height="match_parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
