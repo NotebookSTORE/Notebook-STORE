@@ -402,7 +402,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                                         discProd.short_description, discProd.description, discProd.data_sheet,
                                         discProd.quantity, discProd.price, discProd.offer_price, discProd.product_code,
                                         discProd.product_condition, discProd.discount, discProd.latest, discProd.best,
-                                        discProd.brandtitle, discProd.colortitle, discProd.delivery_charges, 1)
+                                        discProd.brandtitle, discProd.colortitle, discProd.delivery_charges, 1,discProd.can_free_delivery)
                                 )
                                 sharedVM.setCodOptionForPayment(discProd.can_cashon?.toInt()?:0)
                                 sharedVM.setDeliveryCharge(discProd.delivery_charges)

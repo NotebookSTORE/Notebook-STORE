@@ -783,6 +783,10 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     private fun getDeliveryCharge(orderSummaryProducts: List<OrderSummaryProduct>, freeDeliveryAmount: Float, cartAmount: Float) : Float {
+        Log.d(
+            "order summary",
+            "getDeliveryCharge() called with: orderSummaryProducts = $orderSummaryProducts, freeDeliveryAmount = $freeDeliveryAmount, cartAmount = $cartAmount"
+        )
         var deliveryCharge = 0.0f
         orderSummaryProducts.forEach { orderSummaryProduct ->
             if (!orderSummaryProduct.isFreeDeliveryAvailable() || cartAmount < freeDeliveryAmount) {

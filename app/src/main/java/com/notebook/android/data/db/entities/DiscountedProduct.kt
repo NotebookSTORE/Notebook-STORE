@@ -31,6 +31,7 @@ data class DiscountedProduct(
     var customerRating: Float ?= null,
     var reviewCount:Int ?= null,
     var delivery_charges:Float,
-    var can_cashon:String ?= null
+    var can_cashon:String ?= null,
+    var can_free_delivery:String?=null
 ) : Serializable {
 }

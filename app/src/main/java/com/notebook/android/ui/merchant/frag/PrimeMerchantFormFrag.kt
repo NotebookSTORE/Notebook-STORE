@@ -1710,6 +1710,8 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                             val panCardPartUpload = userData?.pancardimage!!.toRequestBody(MultipartBody.FORM)
                                             val cancelChequeUpload = userData?.cancled_cheque_image!!.toRequestBody(MultipartBody.FORM)
 
+                                            //todo: crash on updating the merchant registration
+
                                             merchantVM.registerPrimeUpdateUsingDetails(
                                                 namePart,
                                                 emailPart,
