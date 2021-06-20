@@ -164,7 +164,10 @@ class PanCardUploadFrag : Fragment(), View.OnClickListener, GetSelectIntentListe
                     ) or ActivityCompat.shouldShowRequestPermissionRationale(
                         mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) -> mContext.showPermissionExplaination(
+                    ) or ActivityCompat.shouldShowRequestPermissionRationale(
+                        mActivity,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        ) -> mContext.showPermissionExplaination(
                         getString(
                             R.string.camera_permission_explanation
                         )
@@ -172,6 +175,7 @@ class PanCardUploadFrag : Fragment(), View.OnClickListener, GetSelectIntentListe
                         requestPermissions(
                             arrayOf(
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.CAMERA
                             ),
                             CAMERA_REQUEST_CODE
@@ -180,6 +184,7 @@ class PanCardUploadFrag : Fragment(), View.OnClickListener, GetSelectIntentListe
                     else -> requestPermissions(
                         arrayOf(
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.CAMERA
                         ),
                         CAMERA_REQUEST_CODE

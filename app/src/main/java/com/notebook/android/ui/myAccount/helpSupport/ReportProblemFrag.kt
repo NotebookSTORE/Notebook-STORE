@@ -204,7 +204,6 @@ class ReportProblemFrag : Fragment(), KodeinAware, HelpSupportListener, View.OnC
                         Manifest.permission.CAMERA
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         openCropImage()
-
                     }
                     ActivityCompat.shouldShowRequestPermissionRationale(
                         mActivity,
@@ -212,7 +211,10 @@ class ReportProblemFrag : Fragment(), KodeinAware, HelpSupportListener, View.OnC
                     ) or ActivityCompat.shouldShowRequestPermissionRationale(
                         mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) -> mContext.showPermissionExplaination(
+                    )or ActivityCompat.shouldShowRequestPermissionRationale(
+                        mActivity,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        ) -> mContext.showPermissionExplaination(
                         getString(
                             R.string.camera_permission_explanation
                         )
@@ -220,6 +222,7 @@ class ReportProblemFrag : Fragment(), KodeinAware, HelpSupportListener, View.OnC
                         requestPermissions(
                             arrayOf(
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.CAMERA
                             ),
                             CAMERA_REQUEST_CODE
@@ -228,6 +231,7 @@ class ReportProblemFrag : Fragment(), KodeinAware, HelpSupportListener, View.OnC
                     else -> requestPermissions(
                         arrayOf(
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.CAMERA
                         ),
                         CAMERA_REQUEST_CODE
