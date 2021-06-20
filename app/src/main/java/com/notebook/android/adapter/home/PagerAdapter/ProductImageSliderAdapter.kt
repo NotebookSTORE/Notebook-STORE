@@ -8,8 +8,10 @@ import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.max.ecomaxgo.maxpe.view.flight.utility.loadAllTypeImageWithSize
 import com.notebook.android.R
 import com.notebook.android.model.productDetail.ProductDetailData
+import com.notebook.android.utility.Constant
 import com.notebook.android.utility.Constant.PRODUCTIMAGE_IMAGE_PATH
 import com.notebook.android.utility.Constant.PRODUCT_IMAGE_PATH
 
@@ -30,9 +32,9 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
 
         val imgSlider:ImageView = view.findViewById(R.id.imgSlider)
         if (imgList[position].id == 0) {
-            Glide.with(mCtx).load("${PRODUCT_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+            loadAllTypeImageWithSize(imgSlider,PRODUCT_IMAGE_PATH, imgList[position].image,1080,1000)
         } else {
-            Glide.with(mCtx).load("${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}").into(imgSlider)
+            loadAllTypeImageWithSize(imgSlider,PRODUCT_IMAGE_PATH, imgList[position].image,1080,1000)
         }
 
         val viewPager = container as ViewPager
