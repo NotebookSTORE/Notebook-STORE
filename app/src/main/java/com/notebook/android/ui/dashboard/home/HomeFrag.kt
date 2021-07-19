@@ -27,7 +27,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.firebase.messaging.FirebaseMessaging
 import com.notebook.android.R
 import com.notebook.android.adapter.home.*
 import com.notebook.android.adapter.home.PagerAdapter.HomeTopSliderAdapter
@@ -49,7 +48,6 @@ import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.utility.Constant.BANNER_TYPE_BULK_QUERY
 import com.notebook.android.utility.Constant.BANNER_TYPE_HOME
-import org.kodein.di.Constant
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -61,15 +59,15 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     UserLogoutDialog.UserLoginPopupListener {
 
     //initialize binding or viewmodel views initialize here......
-    private lateinit var homeFragBinding:FragmentHomeBinding
-    private lateinit var navController:NavController
+    private lateinit var homeFragBinding: FragmentHomeBinding
+    private lateinit var navController: NavController
     override val kodein by kodein()
-    private val viewModelFactory : DashboardViewModelFactory by instance()
-    private val dashboardVM:DashboardViewModel by lazy{
+    private val viewModelFactory: DashboardViewModelFactory by instance()
+    private val dashboardVM: DashboardViewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(DashboardViewModel::class.java)
     }
 
-    private val loadingDialog: LoadingDialog by lazy{
+    private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog()
     }
 
@@ -88,10 +86,10 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             val isNetworkAvailable = intent.getBooleanExtra("checkNetwork", false)
             Log.e("broadcast check network", " :: ${message} :: ${isNetworkAvailable}")
 
-            if(isNetworkAvailable){
-               successToastTextView.text = "Internet is available"
+            if (isNetworkAvailable) {
+                successToastTextView.text = "Internet is available"
                 successToast.show()
-            }else{
+            } else {
                 errorToastTextView.text = "No internet available"
                 errorToast.show()
             }
@@ -99,40 +97,40 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     //initialize adapter views here.....
-    private lateinit var subCategoryAdapter:HomeSubCategoryAdapter
-    private lateinit var brandAdapter:BrandDataAdapter
-    private var brandDataList:ArrayList<Brand> ?= null
-    private var categroyDataList:ArrayList<SubCategory> ?= null
+    private lateinit var subCategoryAdapter: HomeSubCategoryAdapter
+    private lateinit var brandAdapter: BrandDataAdapter
+    private var brandDataList: ArrayList<Brand>? = null
+    private var categroyDataList: ArrayList<SubCategory>? = null
     private var scrollCount = 0
     private var scrollCountForCategory = 0
 
-    private var userData:User ?= null
-    private lateinit var  timer:Timer
-    private lateinit var timer1:Timer
-    private lateinit var timer2:Timer
-    private lateinit var timer3:Timer
+    private var userData: User? = null
+    private lateinit var timer: Timer
+    private lateinit var timer1: Timer
+    private lateinit var timer2: Timer
+    private lateinit var timer3: Timer
     private val DELAY_MS: Long = 4000 //delay in milliseconds before task is to be executed
     private val PERIOD_MS: Long = 6000 // time in milliseconds between successive task executions.
 
-    private var prodID:Int = -1
-    private lateinit var mContext:Context
+    private var prodID: Int = -1
+    private lateinit var mContext: Context
     private lateinit var mActivity: FragmentActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
         mActivity = requireActivity()
 
-       if(arguments != null){
-           prodID = requireArguments().getInt("prodID")
-           Log.e("productID", " :: $prodID")
-       }
+        if (arguments != null) {
+            prodID = requireArguments().getInt("prodID")
+            Log.e("productID", " :: $prodID")
+        }
     }
 
     private lateinit var myToast: Toast
-    private lateinit var errorToast:Toast
-    private lateinit var successToast:Toast
-    private lateinit var errorToastTextView:TextView
-    private lateinit var successToastTextView:TextView
+    private lateinit var errorToast: Toast
+    private lateinit var successToast: Toast
+    private lateinit var errorToastTextView: TextView
+    private lateinit var successToastTextView: TextView
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -144,17 +142,22 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         savedInstanceState: Bundle?
     ): View? {
         mActivity.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-        homeFragBinding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_home, container, false)
+        homeFragBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_home, container, false
+        )
         homeFragBinding.lifecycleOwner = this
         dashboardVM.dashboardApiListener = this
 
         dashboardVM.getBulkQueryData(BANNER_TYPE_BULK_QUERY)
         dashboardVM.getDrawerCategoryData()
         //custom toast initialize view here....
-        val layouttoast = inflater.inflate(R.layout.custom_toast_layout,
-            homeFragBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup)
-        (layouttoast.findViewById(R.id.custom_toast_message) as TextView).text = "Item added successfully !!"
+        val layouttoast = inflater.inflate(
+            R.layout.custom_toast_layout,
+            homeFragBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
+        )
+        (layouttoast.findViewById(R.id.custom_toast_message) as TextView).text =
+            "Item added successfully !!"
         val GRAVITY_CENTER = 17
         myToast = Toast(mContext)
         myToast.setView(layouttoast)
@@ -164,29 +167,35 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         Log.e("refferalData", " :: ${refferalPrefs.refferCode}")
 
         //success toast layout initialization here....
-        val successToastLayout:View = inflater.inflate(R.layout.custom_toast_layout,
-            homeFragBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup)
-        successToastTextView= (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
+        val successToastLayout: View = inflater.inflate(
+            R.layout.custom_toast_layout,
+            homeFragBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
+        )
+        successToastTextView =
+            (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
         successToast = Toast(mContext)
         successToast.setView(successToastLayout)
         successToast.setDuration(Toast.LENGTH_SHORT)
         successToast.setGravity(OrderSummaryPage.GRAVITY_BOTTOM, 0, 80)
 
         //error toast layout here....
-        val errorToastLayout:View = inflater.inflate(R.layout.error_custom_toast_layout,
-            homeFragBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup)
-        errorToastTextView = (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
+        val errorToastLayout: View = inflater.inflate(
+            R.layout.error_custom_toast_layout,
+            homeFragBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup
+        )
+        errorToastTextView =
+            (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
         errorToast = Toast(mContext)
         errorToast.setView(errorToastLayout)
         errorToast.setDuration(Toast.LENGTH_SHORT)
         errorToast.setGravity(OrderSummaryPage.GRAVITY_BOTTOM, 0, 80)
 
-        homeFragBinding.srlHomeFrag.
-        setColorSchemeColors(
+        homeFragBinding.srlHomeFrag.setColorSchemeColors(
             ContextCompat.getColor(mContext, android.R.color.holo_green_dark),
             ContextCompat.getColor(mContext, android.R.color.holo_red_dark),
             ContextCompat.getColor(mContext, android.R.color.holo_blue_dark),
-            ContextCompat.getColor(mContext, android.R.color.holo_orange_dark))
+            ContextCompat.getColor(mContext, android.R.color.holo_orange_dark)
+        )
         homeFragBinding.srlHomeFrag.setOnRefreshListener(this)
 
         setUpRecyclerView()
@@ -213,29 +222,31 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        if(prodID > 0){
-            val prod = Product(prodID.toString(), ArrayList(),
+        if (prodID > 0) {
+            val prod = Product(
+                prodID.toString(), ArrayList(),
                 "", "", "", "",
                 0, "", "", "",
                 0, 0f, 0,
                 "", "", 0,
-                0, 0, "", "", 0f, 0, 0f)
-            val homeToDetailViewFrag:HomeFragDirections.ActionHomeFragToDetailViewProductFrag
-                    = HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
+                0, 0, "", "", 0f, 0, 0f
+            )
+            val homeToDetailViewFrag: HomeFragDirections.ActionHomeFragToDetailViewProductFrag =
+                HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
             navController.navigate(homeToDetailViewFrag)
             prodID = -1
         }
 
         dashboardVM.getUserData().observe(viewLifecycleOwner, Observer {
-            if(it != null){
+            if (it != null) {
                 userData = it
-            }else{
+            } else {
                 userData = null
             }
         })
 
 
-        if(!notebookPrefs.userToken.isNullOrEmpty()){
+        if (!notebookPrefs.userToken.isNullOrEmpty()) {
             dashboardVM.getUserDataFromServer(notebookPrefs.userID, notebookPrefs.userToken!!)
             dashboardVM.getCartData(notebookPrefs.userID, notebookPrefs.userToken!!)
         }
@@ -272,25 +283,27 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
 
     private fun setUpRecyclerView() {
         //sub category recycler view layout manager...
-        val layoutManagerSubCategory = object : LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false) {
-            override fun smoothScrollToPosition(
-                recyclerView: RecyclerView?,
-                state: RecyclerView.State?,
-                position: Int) {
-                val smoothScroller = object : LinearSmoothScroller(mContext) {
-                    val SPEED = 6600f
-                    override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
-                        return SPEED / displayMetrics!!.densityDpi
+        val layoutManagerSubCategory =
+            object : LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false) {
+                override fun smoothScrollToPosition(
+                    recyclerView: RecyclerView?,
+                    state: RecyclerView.State?,
+                    position: Int
+                ) {
+                    val smoothScroller = object : LinearSmoothScroller(mContext) {
+                        val SPEED = 6600f
+                        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+                            return SPEED / displayMetrics!!.densityDpi
+                        }
                     }
+                    smoothScroller.targetPosition = position
+                    startSmoothScroll(smoothScroller)
                 }
-                smoothScroller.targetPosition = position
-                startSmoothScroll(smoothScroller)
-            }
 
-            override fun canScrollHorizontally(): Boolean {
-                return true
+                override fun canScrollHorizontally(): Boolean {
+                    return true
+                }
             }
-        }
 
         homeFragBinding.recViewSubCategory.apply {
             layoutManager = layoutManagerSubCategory
@@ -301,11 +314,13 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         }
 
         //Recycler view
-        val layoutManagerMainCategory = GridLayoutManager(mContext,
-            3, RecyclerView.VERTICAL, false)
-            homeFragBinding.recViewCategory.apply {
+        val layoutManagerMainCategory = GridLayoutManager(
+            mContext,
+            3, RecyclerView.VERTICAL, false
+        )
+        homeFragBinding.recViewCategory.apply {
             layoutManager = layoutManagerMainCategory
-            addItemDecoration(GridItemDecoration(5,3))
+            addItemDecoration(GridItemDecoration(5, 3))
             itemAnimator = DefaultItemAnimator()
             hasFixedSize()
         }
@@ -354,10 +369,10 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         }
     }
 
-    private fun autoScrollAnother(){
+    private fun autoScrollAnother() {
 //        brandDataList = ArrayList()
         scrollCount = 0
-        val handler =  Handler()
+        val handler = Handler()
         val runnable = object : Runnable {
             override fun run() {
                 homeFragBinding.recViewBrands.smoothScrollToPosition((scrollCount++))
@@ -371,10 +386,10 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         handler.postDelayed(runnable, 2000)
     }
 
-//    private lateinit var handler:Handler
-    private fun autoScrollForCategory(){
+    //    private lateinit var handler:Handler
+    private fun autoScrollForCategory() {
         scrollCountForCategory = 0
-        val handler =  Handler()
+        val handler = Handler()
         val runnable = object : Runnable {
             override fun run() {
                 homeFragBinding.recViewSubCategory.smoothScrollToPosition((scrollCountForCategory++))
@@ -407,65 +422,86 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         mHandler.postDelayed(runnable, speedScroll.toLong())
     }
 
-    private lateinit var bannerList:ArrayList<Banner>
-    private lateinit var latestOfferList:ArrayList<LatestOffer>
-    private lateinit var merchantBannerList:ArrayList<MerchantBanner>
-    private lateinit var bulkOrderBannerList:ArrayList<Banner>
-    private fun setBannerOrCategoryData(){
+    private lateinit var bannerList: ArrayList<Banner>
+    private lateinit var latestOfferList: ArrayList<LatestOffer>
+    private lateinit var merchantBannerList: ArrayList<MerchantBanner>
+    private lateinit var bulkOrderBannerList: ArrayList<Banner>
+    private fun setBannerOrCategoryData() {
         bannerList = ArrayList()
         latestOfferList = ArrayList()
         merchantBannerList = ArrayList()
         bulkOrderBannerList = ArrayList()
         dashboardVM.getAllCategoryDataFromDB().observe(viewLifecycleOwner, Observer {
 
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 homeFragBinding.srlHomeFrag.isRefreshing = false
                 homeFragBinding.clHomeAllViews.visibility = View.VISIBLE
-            }else{
+            } else {
                 homeFragBinding.srlHomeFrag.isRefreshing = true
                 homeFragBinding.clHomeAllViews.visibility = View.GONE
             }
             val prodCategoryAdapter = HomeProductSectionAdapter(mContext, it as ArrayList<Category>,
-            object : HomeProductSectionAdapter.CategoryProductListener{
-                override fun getCategProdID(categID: Int, title:String) {
-                    val homeFragDirections:HomeFragDirections.ActionHomeFragToCategoryDetailProductFrag =
-                        HomeFragDirections.actionHomeFragToCategoryDetailProductFrag(categID)
-                    navController.navigate(homeFragDirections)
-                    (mActivity as MainDashboardPage).setSubCategoryTitle(title)
-                }
-            })
+                object : HomeProductSectionAdapter.CategoryProductListener {
+                    override fun getCategProdID(categID: Int, title: String) {
+                        val homeFragDirections: HomeFragDirections.ActionHomeFragToCategoryDetailProductFrag =
+                            HomeFragDirections.actionHomeFragToCategoryDetailProductFrag(categID)
+                        navController.navigate(homeFragDirections)
+                        (mActivity as MainDashboardPage).setSubCategoryTitle(title)
+                    }
+                })
             homeFragBinding.recViewCategory.adapter = prodCategoryAdapter
         })
 
         dashboardVM.getAllBannerData().observe(viewLifecycleOwner, Observer {
-           bannerList = ArrayList()
+            bannerList = ArrayList()
             val sliderAdapter =
                 HomeTopSliderAdapter(
-                   mContext,
+                    mContext,
                     it as ArrayList<Banner>,
-                    object : HomeTopSliderAdapter.BannerSliderListener{
-                        override fun onSliderClick(bannerData:Banner) {
-                            val homeDirections:HomeFragDirections.ActionHomeFragToOfferViewProdLink =
-                                HomeFragDirections.actionHomeFragToOfferViewProdLink(bannerData.url?:"")
+                    object : HomeTopSliderAdapter.BannerSliderListener {
+                        override fun onSliderClick(bannerData: Banner) {
+                            Log.d(
+                                "Home top banner",
+                                "onSliderClick() called with: bannerData = $bannerData"
+                            )
 
-                            if(bannerData.banner_use_for == 1){
+                            bannerData.brand_id?.let {
+                                val action =
+                                    HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
+                                action.brandId = it
+                                action.subCategoryID = 0
+                                action.subCategTitle = ""
+                                navController.navigate(action)
+                                (mActivity as MainDashboardPage).setSubCategoryTitle("")
+                            }
+
+                            val homeDirections: HomeFragDirections.ActionHomeFragToOfferViewProdLink =
+                                HomeFragDirections.actionHomeFragToOfferViewProdLink(
+                                    bannerData.url ?: ""
+                                )
+
+                            if (bannerData.banner_use_for == 1) {
                                 Log.e("offerProductID", " :: ${bannerData.product_id}")
-                                if(!bannerData.product_id.equals("0", true)){
-                                    val prod = Product(bannerData.product_id, ArrayList(),
+                                if (!bannerData.product_id.equals("0", true)) {
+                                    val prod = Product(
+                                        bannerData.product_id, ArrayList(),
                                         "", "", "", "",
                                         0, "", "", "",
                                         0, 0f, 0,
                                         "", "", 0,
                                         0, 0, "", "", 0f,
-                                        0, 0f)
-                                    val homeToDetailViewFrag:HomeFragDirections.ActionHomeFragToDetailViewProductFrag
-                                            = HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
+                                        0, 0f
+                                    )
+                                    val homeToDetailViewFrag: HomeFragDirections.ActionHomeFragToDetailViewProductFrag =
+                                        HomeFragDirections.actionHomeFragToDetailViewProductFrag(
+                                            prod
+                                        )
                                     navController.navigate(homeToDetailViewFrag)
                                 }
 
-                            }else if (bannerData.banner_use_for == 2){
+                            } else if (bannerData.banner_use_for == 2) {
                                 navController.navigate(R.id.merchantMainFrag)
-                            }else if(bannerData.url?.isNotEmpty() == true){
+                            } else if (bannerData.url?.isNotEmpty() == true) {
                                 navController.navigate(homeDirections)
                             }
                             Log.e("offer web link", " :: ${bannerData.url}")
@@ -479,24 +515,29 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         })
 
 //        setViewPagerTimer(bannerList.size)
-        val llManager: LinearLayoutManager = object : LinearLayoutManager(mContext, HORIZONTAL, false) {
-            override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
-                val smoothScroller: LinearSmoothScroller =
-                    object : LinearSmoothScroller(mContext) {
-                        private val SPEED = 4000f // Change this value (default=25f)
-                        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-                            return SPEED
+        val llManager: LinearLayoutManager =
+            object : LinearLayoutManager(mContext, HORIZONTAL, false) {
+                override fun smoothScrollToPosition(
+                    recyclerView: RecyclerView,
+                    state: RecyclerView.State,
+                    position: Int
+                ) {
+                    val smoothScroller: LinearSmoothScroller =
+                        object : LinearSmoothScroller(mContext) {
+                            private val SPEED = 4000f // Change this value (default=25f)
+                            override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+                                return SPEED
+                            }
                         }
-                    }
-                smoothScroller.targetPosition = position
-                startSmoothScroll(smoothScroller)
+                    smoothScroller.targetPosition = position
+                    startSmoothScroll(smoothScroller)
+                }
             }
-        }
 
         brandDataList = ArrayList()
         dashboardVM.getBrandsFromDB().observe(viewLifecycleOwner, Observer {
             brandDataList = it as ArrayList<Brand>
-            brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener{
+            brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener {
                 override fun BrandId(brandID: Int, title: String) {
                     val action = HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
                     action.brandId = brandID
@@ -512,18 +553,18 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
 
         categroyDataList = ArrayList()
         dashboardVM.getAllSubCategoryFromDB().observe(viewLifecycleOwner, Observer {
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 homeFragBinding.srlHomeFrag.isRefreshing = false
                 homeFragBinding.clHomeAllViews.visibility = View.VISIBLE
-            }else{
+            } else {
                 homeFragBinding.srlHomeFrag.isRefreshing = true
                 homeFragBinding.clHomeAllViews.visibility = View.GONE
             }
             categroyDataList = it as ArrayList<SubCategory>
             autoScrollForCategory()
             subCategoryAdapter = HomeSubCategoryAdapter(mContext, categroyDataList!!,
-                object : HomeSubCategoryAdapter.SubCategoryListener{
-                    override fun subCategoryId(subCategID: Int, title:String) {
+                object : HomeSubCategoryAdapter.SubCategoryListener {
+                    override fun subCategoryId(subCategID: Int, title: String) {
                         val action = HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
                         action.subCategoryID = subCategID
                         action.subCategTitle = title
@@ -533,7 +574,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
                 })
             homeFragBinding.recViewSubCategory.adapter = subCategoryAdapter
 
-            homeFragBinding.recViewSubCategory.setOnClickListener{
+            homeFragBinding.recViewSubCategory.setOnClickListener {
 
             }
 
@@ -567,89 +608,144 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         })
 
         dashboardVM.getBestSellerProductFromDB().observe(viewLifecycleOwner, Observer {
-            val bestSellerAdapter = BestSellerHomeProductAdapter(mContext, it as ArrayList<BestSellerHome>,
-                object : BestSellerHomeProductAdapter.BestSellerProductListener,
-                    UserLogoutDialog.UserLoginPopupListener {
-                    override fun bestProductObj(bestSellerProd: BestSellerHome) {
+            val bestSellerAdapter =
+                BestSellerHomeProductAdapter(mContext, it as ArrayList<BestSellerHome>,
+                    object : BestSellerHomeProductAdapter.BestSellerProductListener,
+                        UserLogoutDialog.UserLoginPopupListener {
+                        override fun bestProductObj(bestSellerProd: BestSellerHome) {
 
-                        val prod = Product(bestSellerProd.id.toString(), bestSellerProd.keyfeature,
-                            bestSellerProd.material,
-                            bestSellerProd.title, bestSellerProd.alias, bestSellerProd.image,
-                            bestSellerProd.status, bestSellerProd.short_description,
-                            bestSellerProd.description, bestSellerProd.data_sheet,
-                            bestSellerProd.quantity, bestSellerProd.price, bestSellerProd.offer_price,
-                            bestSellerProd.product_code, bestSellerProd.product_condition,
-                            bestSellerProd.discount, bestSellerProd.latest,
-                            bestSellerProd.best, bestSellerProd.brandtitle, bestSellerProd.colortitle, bestSellerProd.customerRating, bestSellerProd.reviewCount)
-                        val homeToDetailViewFrag:HomeFragDirections.ActionHomeFragToDetailViewProductFrag
-                                = HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
-                        navController.navigate(homeToDetailViewFrag)
-                    }
-
-                    override fun bestAddToCart(prodID: Int, cartQty: Int) {
-                        if(userData != null){
-                            dashboardVM.addItemsToCart(userData!!.id, userData!!.token!!, prodID, cartQty, 0)
-                        }else{
-                            val userLoginRequestPopup = UserLogoutDialog()
-                            userLoginRequestPopup.isCancelable = false
-                            userLoginRequestPopup.setUserLoginRequestListener(this)
-                            userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                            val prod = Product(
+                                bestSellerProd.id.toString(),
+                                bestSellerProd.keyfeature,
+                                bestSellerProd.material,
+                                bestSellerProd.title,
+                                bestSellerProd.alias,
+                                bestSellerProd.image,
+                                bestSellerProd.status,
+                                bestSellerProd.short_description,
+                                bestSellerProd.description,
+                                bestSellerProd.data_sheet,
+                                bestSellerProd.quantity,
+                                bestSellerProd.price,
+                                bestSellerProd.offer_price,
+                                bestSellerProd.product_code,
+                                bestSellerProd.product_condition,
+                                bestSellerProd.discount,
+                                bestSellerProd.latest,
+                                bestSellerProd.best,
+                                bestSellerProd.brandtitle,
+                                bestSellerProd.colortitle,
+                                bestSellerProd.customerRating,
+                                bestSellerProd.reviewCount
+                            )
+                            val homeToDetailViewFrag: HomeFragDirections.ActionHomeFragToDetailViewProductFrag =
+                                HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
+                            navController.navigate(homeToDetailViewFrag)
                         }
-                    }
 
-                    override fun fcCartEmptyError(msg: String) {
-                        errorToastTextView.text = msg
-                        errorToast.show()
-                    }
+                        override fun bestAddToCart(prodID: Int, cartQty: Int) {
+                            if (userData != null) {
+                                dashboardVM.addItemsToCart(
+                                    userData!!.id,
+                                    userData!!.token!!,
+                                    prodID,
+                                    cartQty,
+                                    0
+                                )
+                            } else {
+                                val userLoginRequestPopup = UserLogoutDialog()
+                                userLoginRequestPopup.isCancelable = false
+                                userLoginRequestPopup.setUserLoginRequestListener(this)
+                                userLoginRequestPopup.show(
+                                    mActivity.supportFragmentManager,
+                                    "User login request popup !!"
+                                )
+                            }
+                        }
 
-                    override fun onUserAccepted(isAccept: Boolean) {
-                        navController.navigate(R.id.loginFrag)
-                    }
-                })
+                        override fun fcCartEmptyError(msg: String) {
+                            errorToastTextView.text = msg
+                            errorToast.show()
+                        }
+
+                        override fun onUserAccepted(isAccept: Boolean) {
+                            navController.navigate(R.id.loginFrag)
+                        }
+                    })
             homeFragBinding.recViewBestSellers.adapter = bestSellerAdapter
         })
 
         dashboardVM.getLatestProductHomeFromDB().observe(viewLifecycleOwner, Observer {
-            val latestProductAdapter = LatestProductHomeAdapter(mContext, it as ArrayList<LatestProductHome>,
-                object : LatestProductHomeAdapter.latestProductListener,
-                    UserLogoutDialog.UserLoginPopupListener {
-                override fun latestProductObj(latestProd: LatestProductHome) {
-                    val prod = Product(latestProd.id.toString(), latestProd.keyfeature, latestProd.material, latestProd.title, latestProd.alias, latestProd.image,
-                        latestProd.status, latestProd.short_description, latestProd.description, latestProd.data_sheet,
-                        latestProd.quantity, latestProd.price, latestProd.offer_price,
-                        latestProd.product_code, latestProd.product_condition,
-                        latestProd.discount, latestProd.latest, latestProd.best, latestProd.brandtitle, latestProd.colortitle, latestProd.customerRating, latestProd.reviewCount)
-                    val homeToDetailViewFrag:HomeFragDirections.ActionHomeFragToDetailViewProductFrag = HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
-                    navController.navigate(homeToDetailViewFrag)
-                }
+            val latestProductAdapter =
+                LatestProductHomeAdapter(mContext, it as ArrayList<LatestProductHome>,
+                    object : LatestProductHomeAdapter.latestProductListener,
+                        UserLogoutDialog.UserLoginPopupListener {
+                        override fun latestProductObj(latestProd: LatestProductHome) {
+                            val prod = Product(
+                                latestProd.id.toString(),
+                                latestProd.keyfeature,
+                                latestProd.material,
+                                latestProd.title,
+                                latestProd.alias,
+                                latestProd.image,
+                                latestProd.status,
+                                latestProd.short_description,
+                                latestProd.description,
+                                latestProd.data_sheet,
+                                latestProd.quantity,
+                                latestProd.price,
+                                latestProd.offer_price,
+                                latestProd.product_code,
+                                latestProd.product_condition,
+                                latestProd.discount,
+                                latestProd.latest,
+                                latestProd.best,
+                                latestProd.brandtitle,
+                                latestProd.colortitle,
+                                latestProd.customerRating,
+                                latestProd.reviewCount
+                            )
+                            val homeToDetailViewFrag: HomeFragDirections.ActionHomeFragToDetailViewProductFrag =
+                                HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
+                            navController.navigate(homeToDetailViewFrag)
+                        }
 
-                    override fun fcCartEmptyError(msg: String) {
-                        errorToastTextView.text = msg
-                        errorToast.show()
-                    }
+                        override fun fcCartEmptyError(msg: String) {
+                            errorToastTextView.text = msg
+                            errorToast.show()
+                        }
 
-                override fun latestAddToCart(prodID: Int, cartQty: Int) {
-                    if(userData != null){
-                        dashboardVM.addItemsToCart(userData!!.id, userData!!.token!!, prodID, cartQty, 0)
-                    }else{
-                        val userLoginRequestPopup = UserLogoutDialog()
-                        userLoginRequestPopup.isCancelable = false
-                        userLoginRequestPopup.setUserLoginRequestListener(this)
-                        userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
-                    }
-                }
+                        override fun latestAddToCart(prodID: Int, cartQty: Int) {
+                            if (userData != null) {
+                                dashboardVM.addItemsToCart(
+                                    userData!!.id,
+                                    userData!!.token!!,
+                                    prodID,
+                                    cartQty,
+                                    0
+                                )
+                            } else {
+                                val userLoginRequestPopup = UserLogoutDialog()
+                                userLoginRequestPopup.isCancelable = false
+                                userLoginRequestPopup.setUserLoginRequestListener(this)
+                                userLoginRequestPopup.show(
+                                    mActivity.supportFragmentManager,
+                                    "User login request popup !!"
+                                )
+                            }
+                        }
 
-                override fun onUserAccepted(isAccept: Boolean) {
-                    navController.navigate(R.id.loginFrag)
-                }
-            })
+                        override fun onUserAccepted(isAccept: Boolean) {
+                            navController.navigate(R.id.loginFrag)
+                        }
+                    })
             homeFragBinding.recViewLatestProducts.adapter = latestProductAdapter
         })
 
         brandDataList = ArrayList()
         dashboardVM.getBrandsFromDB().observe(viewLifecycleOwner, Observer {
             brandDataList = it as ArrayList<Brand>
-            brandAdapter = BrandDataAdapter(mContext, it , object : BrandDataAdapter.BrandListener{
+            brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener {
                 override fun BrandId(brandID: Int, title: String) {
                     val action = HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
                     action.brandId = brandID
@@ -667,29 +763,46 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         dashboardVM.getLatestOfferFromDB().observe(viewLifecycleOwner, Observer {
             val sliderAdapter =
                 LatestOfferSliderAdapter(mContext, it as ArrayList<LatestOffer>,
-                    object : LatestOfferSliderAdapter.LatestOfferSliderListener{
-                        override fun onOfferSliderClick(offerUrl: String, offerType:Int) {
-                          /*  val homeDirections:HomeFragDirections.ActionHomeFragToOfferViewProdLink =
-                                HomeFragDirections.actionHomeFragToOfferViewProdLink(offerUrl)*/
-                            if(offerUrl.isNotEmpty()){
+                    object : LatestOfferSliderAdapter.LatestOfferSliderListener {
+                      /*  override fun onOfferSliderClick(offerUrl: String, offerType: Int) {
+
+                            *//*  val homeDirections:HomeFragDirections.ActionHomeFragToOfferViewProdLink =
+                                  HomeFragDirections.actionHomeFragToOfferViewProdLink(offerUrl)*//*
+                            if (offerUrl.isNotEmpty()) {
                                 Log.e("latestOfferUrl", " :: $offerUrl")
-                                    val prod = Product(offerUrl, ArrayList(),
-                                        "", "", "", "",
-                                        0, "", "", "",
-                                        0, 0f, 0,
-                                        "", "", 0,
-                                        0, 0, "", "", 0f,
-                                        0, 0f)
-                                    val homeToDetailViewFrag:HomeFragDirections.ActionHomeFragToDetailViewProductFrag
-                                            = HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
-                                    navController.navigate(homeToDetailViewFrag)
-                            }else{
-                                if(offerType == 1){
+                                val prod = Product(
+                                    offerUrl, ArrayList(),
+                                    "", "", "", "",
+                                    0, "", "", "",
+                                    0, 0f, 0,
+                                    "", "", 0,
+                                    0, 0, "", "", 0f,
+                                    0, 0f
+                                )
+                                val homeToDetailViewFrag: HomeFragDirections.ActionHomeFragToDetailViewProductFrag =
+                                    HomeFragDirections.actionHomeFragToDetailViewProductFrag(prod)
+                                navController.navigate(homeToDetailViewFrag)
+                            } else {
+                                if (offerType == 1) {
                                     navController.navigate(R.id.action_homeFrag_to_latestProductPage)
-                                }else{
+                                } else {
                                     navController.navigate(R.id.action_homeFrag_to_bestSellerProductPage)
                                 }
                             }
+                        }*/
+
+                        override fun onOfferSliderClick(latestOffer: LatestOffer) {
+                            Log.d("Home latest offer", "onOfferSliderClick() called with: latestOffer = $latestOffer")
+                            latestOffer.brand_id?.let {
+                                val action =
+                                    HomeFragDirections.actionHomeFragToSubCategoryViewProductFrag()
+                                action.brandId = it
+                                action.subCategoryID = latestOffer.category_id?:0
+                                action.subCategTitle = ""
+                                navController.navigate(action)
+                                (mActivity as MainDashboardPage).setSubCategoryTitle("")
+                            }
+
                         }
                     })
             latestOfferList = it
@@ -702,31 +815,37 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
                 MerchantBenefitSliderAdapter(
                     mContext,
                     it as ArrayList<MerchantBanner>,
-                    object : MerchantBenefitSliderAdapter.MerchantSectionListener{
+                    object : MerchantBenefitSliderAdapter.MerchantSectionListener {
                         override fun onClickMerchantSection() {
-                            if(userData != null){
-                                if(userData!!.usertype == 1){
-                                    if(userData!!.status == 0){
-                                        if (notebookPrefs.primeUserUpgradeAvail == 1){
+                            if (userData != null) {
+                                if (userData!!.usertype == 1) {
+                                    if (userData!!.status == 0) {
+                                        if (notebookPrefs.primeUserUpgradeAvail == 1) {
                                             navController.navigate(R.id.primeMerchantFormFrag)
-                                        }else{
+                                        } else {
                                             val userLoginRequestPopup = CouponAlertDialog()
                                             userLoginRequestPopup.isCancelable = true
                                             val bundle = Bundle()
-                                            bundle.putString("displayTitle", "You are already a Prime Merchant")
+                                            bundle.putString(
+                                                "displayTitle",
+                                                "You are already a Prime Merchant"
+                                            )
                                             userLoginRequestPopup.arguments = bundle
 //                                            userLoginRequestPopup.setUserLoginRequestListener(this)
-                                            userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
+                                            userLoginRequestPopup.show(
+                                                mActivity.supportFragmentManager,
+                                                "User login request popup !!"
+                                            )
                                         }
-                                    }else{
+                                    } else {
                                         navController.navigate(R.id.merchantMainFrag)
                                     }
-                                }else if(userData!!.usertype == 0){
+                                } else if (userData!!.usertype == 0) {
                                     navController.navigate(R.id.merchantMainFrag)
-                                }else{
+                                } else {
                                     navController.navigate(R.id.merchantMainFrag)
                                 }
-                            }else{
+                            } else {
                                 navController.navigate(R.id.merchantMainFrag)
                             }
                         }
@@ -739,7 +858,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     override fun onClick(v: View?) {
-        when(v){
+        when (v) {
             homeFragBinding.clBulkOrderQuery -> {
                 navController.navigate(R.id.action_homeFrag_to_bulkOrderQuery)
             }
@@ -757,9 +876,9 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             }
 
             homeFragBinding.btnRetryInternet -> {
-                if(isNetworkAvailable()){
+                if (isNetworkAvailable()) {
                     dashboardVM.getBannerData(BANNER_TYPE_HOME)
-                }else{
+                } else {
                     homeFragBinding.clInternetNotAvailable.visibility = View.VISIBLE
                     homeFragBinding.imgFileNotFound.setImageResource(R.drawable.ic_error)
                     homeFragBinding.tvInternetNotAvailText.text = "No internet available"
@@ -768,8 +887,9 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         }
     }
 
-    fun isNetworkAvailable() : Boolean{
-        val connectivityManager = mContext.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            mContext.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.activeNetworkInfo.also {
             return it != null && it.isConnected
         }
@@ -785,9 +905,9 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     override fun onApiCartAddCallStarted() {
-        if(mActivity.supportFragmentManager.findFragmentByTag("Show loading dialog") == null){
+        if (mActivity.supportFragmentManager.findFragmentByTag("Show loading dialog") == null) {
             loadingDialog.show(mActivity.supportFragmentManager, "Show loading dialog")
-        }else{
+        } else {
             loadingDialog.requireDialog().show()
         }
     }
@@ -806,8 +926,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
     }
 
     override fun onPolicyDrawerData(policy: List<PolicyData>) {
-        for(i in policy.indices){
-            if (policy[i].title?.contains("terms & conditions", true) == true){
+        for (i in policy.indices) {
+            if (policy[i].title?.contains("terms & conditions", true) == true) {
                 Log.e("termsPolicyLink", " :: ${policy[i].url}")
                 notebookPrefs.TermsConditionLink = policy[i].url
             }
@@ -824,8 +944,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             HomeTopSliderAdapter(
                 mContext,
                 bannerResponse as ArrayList<Banner>,
-                object : HomeTopSliderAdapter.BannerSliderListener{
-                    override fun onSliderClick(bannerData:Banner) {
+                object : HomeTopSliderAdapter.BannerSliderListener {
+                    override fun onSliderClick(bannerData: Banner) {
                         navController.navigate(R.id.action_homeFrag_to_bulkOrderQuery)
                     }
                 })
@@ -869,10 +989,10 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         Log.e("faqDrawerData", " :: $faqLink :: $aboutUsLink")
     }
 
-    private var upgradeRequire:Int = 0
+    private var upgradeRequire: Int = 0
     override fun onGettingUpgradeCheck(isUpgradeAvail: Int?) {
         Log.e("upgradeValue", " :: $isUpgradeAvail")
-        upgradeRequire = isUpgradeAvail?:0
+        upgradeRequire = isUpgradeAvail ?: 0
         notebookPrefs.primeUserUpgradeAvail = upgradeRequire
     }
 
@@ -884,8 +1004,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         navController.navigate(R.id.loginFrag)
     }
 
-    override fun onFailureCart(msg: String, isAddCart:Boolean) {
-        if(isAddCart){
+    override fun onFailureCart(msg: String, isAddCart: Boolean) {
+        if (isAddCart) {
             errorToastTextView.text = msg
             errorToast.show()
         }
@@ -910,7 +1030,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             activity?.let {
                 it.runOnUiThread {
                     if (homeFragBinding.vpImageSlider.currentItem < bannerList.size - 1) {
-                        homeFragBinding.vpImageSlider.currentItem = homeFragBinding.vpImageSlider.currentItem + 1
+                        homeFragBinding.vpImageSlider.currentItem =
+                            homeFragBinding.vpImageSlider.currentItem + 1
                     } else {
                         homeFragBinding.vpImageSlider.currentItem = 0
                     }
@@ -924,7 +1045,8 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             activity?.let {
                 it.runOnUiThread {
                     if (homeFragBinding.vpImageOffersSlider.currentItem < latestOfferList.size - 1) {
-                        homeFragBinding.vpImageOffersSlider.currentItem = homeFragBinding.vpImageOffersSlider.currentItem + 1
+                        homeFragBinding.vpImageOffersSlider.currentItem =
+                            homeFragBinding.vpImageOffersSlider.currentItem + 1
                     } else {
                         homeFragBinding.vpImageOffersSlider.currentItem = 0
                     }
@@ -938,7 +1060,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             activity?.let {
                 it.runOnUiThread {
                     if (homeFragBinding.vpMerchantBenefitsSlider.currentItem < merchantBannerList.size - 1) {
-                        homeFragBinding.vpMerchantBenefitsSlider.currentItem=
+                        homeFragBinding.vpMerchantBenefitsSlider.currentItem =
                             homeFragBinding.vpMerchantBenefitsSlider.currentItem + 1
                     } else {
                         homeFragBinding.vpMerchantBenefitsSlider.currentItem = 0
@@ -953,7 +1075,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             activity?.let {
                 it.runOnUiThread {
                     if (homeFragBinding.vpBulkOrderQuerySlider.currentItem < bulkOrderBannerList.size - 1) {
-                        homeFragBinding.vpBulkOrderQuerySlider.currentItem=
+                        homeFragBinding.vpBulkOrderQuerySlider.currentItem =
                             homeFragBinding.vpBulkOrderQuerySlider.currentItem + 1
                     } else {
                         homeFragBinding.vpBulkOrderQuerySlider.currentItem = 0

@@ -2,18 +2,16 @@ package com.notebook.android.ui.productDetail.frag
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.notebook.android.R
-import com.notebook.android.databinding.FragmentReviewProductBinding
 import com.notebook.android.databinding.FragmentZoomableViewBinding
-import com.notebook.android.ui.dashboard.frag.fragHome.DetailViewProductFragArgs
-import com.notebook.android.utility.Constant
 
 class ZoomableViewFrag : Fragment() {
 
@@ -21,13 +19,13 @@ class ZoomableViewFrag : Fragment() {
 
     private lateinit var mContext: Context
     private lateinit var mActivity: FragmentActivity
-    private var imgUrl:String ?= null
+    private var imgUrl: Array<String>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(this::mContext.isInitialized){
+        if (this::mContext.isInitialized) {
 
-        }else{
+        } else {
 
         }
         mContext = context
@@ -42,8 +40,10 @@ class ZoomableViewFrag : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        fragmentZoomableViewBinding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_zoomable_view, container, false)
+        fragmentZoomableViewBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_zoomable_view, container, false
+        )
 
         fragmentZoomableViewBinding.lifecycleOwner = this
         return fragmentZoomableViewBinding.root
@@ -52,6 +52,9 @@ class ZoomableViewFrag : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Glide.with(mContext).load(imgUrl).into(fragmentZoomableViewBinding.imgPhotoView)
+        imgUrl?.let {
+            fragmentZoomableViewBinding.rvPhotos.adapter = ZoomImageAdapter(requireContext(), it)
+            LinearSnapHelper().attachToRecyclerView(fragmentZoomableViewBinding.rvPhotos)
+        }
     }
 }

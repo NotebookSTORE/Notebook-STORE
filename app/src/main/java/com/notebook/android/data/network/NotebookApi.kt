@@ -364,7 +364,8 @@ interface NotebookApi {
     @GET("coupon")
     suspend fun couponDataFromServer(
         @Query("userID") userID: Int,
-        @Query("product_id") prodID: String
+        @Query("product_id") prodID: String,
+        @Query("total_amount") totalAmount: String
     ) : Response<CouponData>
 
     @FormUrlEncoded

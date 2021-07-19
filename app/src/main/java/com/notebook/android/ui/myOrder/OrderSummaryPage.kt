@@ -34,11 +34,11 @@ import java.util.*
 
 class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnClickListener,
     CancelOrderDialog.CancelOrderReasonListener {
-    private lateinit var fragOrderSummaryBinding:FragmentOrderSummaryPageBinding
+    private lateinit var fragOrderSummaryBinding: FragmentOrderSummaryPageBinding
     private lateinit var orderHistoryData: OrderHistory
     private lateinit var navController: NavController
 
-    companion object{
+    companion object {
         val GRAVITY_BOTTOM = 80
         val GRAVITY_CENTER = 17
     }
@@ -48,21 +48,21 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
     }
 
     override val kodein by kodein()
-    private val viewModelFactory : MyOrderVMFactory by instance()
-    private val myOrderVM: MyOrderVM by lazy{
+    private val viewModelFactory: MyOrderVMFactory by instance()
+    private val myOrderVM: MyOrderVM by lazy {
         ViewModelProvider(this, viewModelFactory).get(MyOrderVM::class.java)
     }
-    private val loadingDialog: LoadingDialog by lazy{
+    private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog()
     }
     private lateinit var userData: User
-    private lateinit var errorToast:Toast
-    private lateinit var successToast:Toast
-    private lateinit var errorToastTextView:TextView
-    private lateinit var successToastTextView:TextView
+    private lateinit var errorToast: Toast
+    private lateinit var successToast: Toast
+    private lateinit var errorToastTextView: TextView
+    private lateinit var successToastTextView: TextView
 
     private lateinit var mContext: Context
-    private lateinit var mActivity:FragmentActivity
+    private lateinit var mActivity: FragmentActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -81,22 +81,24 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
         myOrderVM.orderHistoryListener = this
 
         //success toast layout initialization here....
-        val successToastLayout:View = inflater.inflate(
+        val successToastLayout: View = inflater.inflate(
             R.layout.custom_toast_layout,
             fragOrderSummaryBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
         )
-        successToastTextView= (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
+        successToastTextView =
+            (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
         successToast = Toast(mContext)
         successToast.setView(successToastLayout)
         successToast.setDuration(Toast.LENGTH_SHORT)
         successToast.setGravity(GRAVITY_BOTTOM, 0, 80)
 
         //error toast layout here....
-        val errorToastLayout:View = inflater.inflate(
+        val errorToastLayout: View = inflater.inflate(
             R.layout.error_custom_toast_layout,
             fragOrderSummaryBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup
         )
-        errorToastTextView = (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
+        errorToastTextView =
+            (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
         errorToast = Toast(mContext)
         errorToast.setView(errorToastLayout)
         errorToast.setDuration(Toast.LENGTH_SHORT)
@@ -119,28 +121,33 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
             }
         })
 
-        if(orderHistoryData.cancel_status == 1 && orderHistoryData.return_status == 0){
+        if (orderHistoryData.cancel_status == 1 && orderHistoryData.return_status == 0) {
             fragOrderSummaryBinding.clOrderDataFlowLayout.visibility = View.GONE
             fragOrderSummaryBinding.clOrderAdminMessage.visibility = View.VISIBLE
             fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
             fragOrderSummaryBinding.tvRequestReturnCancel.text = "Cancelled"
-            fragOrderSummaryBinding.tvAdminMessage.text = "Reason  :  ${orderHistoryData.can_reason}"
-        }else if(orderHistoryData.cancel_status == 0 && orderHistoryData.return_status == 1){
+            fragOrderSummaryBinding.tvAdminMessage.text =
+                "Reason  :  ${orderHistoryData.can_reason}"
+        } else if (orderHistoryData.cancel_status == 0 && orderHistoryData.return_status == 1) {
             fragOrderSummaryBinding.clOrderDataFlowLayout.visibility = View.GONE
             fragOrderSummaryBinding.clOrderAdminMessage.visibility = View.VISIBLE
             fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
             fragOrderSummaryBinding.tvRequestReturnCancel.text = "Returned"
-            fragOrderSummaryBinding.tvAdminMessage.text = "Reason  :  ${orderHistoryData.ret_reason}"
-        }else{
+            fragOrderSummaryBinding.tvAdminMessage.text =
+                "Reason  :  ${orderHistoryData.ret_reason}"
+        } else {
             fragOrderSummaryBinding.clOrderDataFlowLayout.visibility = View.VISIBLE
             fragOrderSummaryBinding.clOrderAdminMessage.visibility = View.GONE
-            if(orderHistoryData.deliveryStatus.equals(ORDER_STATUS_CONFIRM, true)){
+            if (orderHistoryData.deliveryStatus.equals(ORDER_STATUS_CONFIRM, true)) {
                 fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
                 fragOrderSummaryBinding.tvRequestReturnCancel.text = "Return"
 
                 fragOrderSummaryBinding.tvDeliveredText.text = "Delivered on"
-                orderExpectedDate(fragOrderSummaryBinding.tvDeliveredDate, orderHistoryData.delivered_date)
-            }else{
+                orderExpectedDate(
+                    fragOrderSummaryBinding.tvDeliveredDate,
+                    orderHistoryData.delivered_date
+                )
+            } else {
                 fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
                 fragOrderSummaryBinding.tvRequestReturnCancel.text = "Cancel"
 
@@ -149,7 +156,17 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
         }
 
 
-        if(!orderHistoryData.return_date.isNullOrEmpty()){
+        if (orderHistoryData.delivered_date.isNullOrEmpty()) {
+            fragOrderSummaryBinding.progressView2.visibility = View.VISIBLE
+            fragOrderSummaryBinding.tvDeliveredSuccessDate.visibility = View.VISIBLE
+            fragOrderSummaryBinding.tvDeliveredSuccessText.visibility = View.VISIBLE
+        } else {
+            fragOrderSummaryBinding.progressView2.visibility = View.GONE
+            fragOrderSummaryBinding.tvDeliveredSuccessDate.visibility = View.GONE
+            fragOrderSummaryBinding.tvDeliveredSuccessText.visibility = View.GONE
+        }
+
+        if (!orderHistoryData.return_date.isNullOrEmpty()) {
             try {
                 val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 val str1 = orderHistoryData.return_date
@@ -165,7 +182,7 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
     }
 
     override fun onClick(p0: View?) {
-        when(p0){
+        when (p0) {
             fragOrderSummaryBinding.tvRequestReturnCancel -> {
                 val returnText = fragOrderSummaryBinding.tvRequestReturnCancel.text.toString()
                 if (returnText.equals("cancel", true)) {
@@ -176,7 +193,7 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
                         mActivity.supportFragmentManager,
                         "Cancel Order Dialog Show"
                     )
-                }else if (returnText.equals("return", true)){
+                } else if (returnText.equals("return", true)) {
                     val myOrderDetailDirections: OrderSummaryPageDirections.ActionOrderSummaryPageToRequestReturn =
                         OrderSummaryPageDirections.actionOrderSummaryPageToRequestReturn(
                             orderHistoryData
@@ -218,7 +235,6 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
         errorToastTextView.text = msg
         errorToast.show()
     }
-
 
 
     override fun onInvalidCredential() {

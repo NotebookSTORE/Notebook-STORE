@@ -12,6 +12,8 @@ data class LatestOffer(
     var id: String,
     var url: String? = null,
     var offer:Int,
-    var image: String? = null
+    var image: String? = null,
+    var category_id: Int? = null,
+    var brand_id: Int? = null
 ) {
 }

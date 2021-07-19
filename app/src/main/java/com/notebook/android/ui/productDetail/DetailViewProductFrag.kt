@@ -29,9 +29,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import androidx.transition.TransitionInflater
 import com.google.android.gms.tasks.Task
 import com.google.firebase.dynamiclinks.DynamicLink
@@ -70,6 +68,7 @@ import org.kodein.di.generic.instance
 import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 class DetailViewProductFrag : Fragment(), KodeinAware,
     DiscountProdResponseListener,
@@ -342,7 +341,9 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     detailViewProductBinding.recViewProdBenefits.visibility = View.VISIBLE
                 }else{
                     sharedVM.setFreeDeliveryData(0)
-                    detailViewProductBinding.recViewProdBenefits.visibility = View.GONE
+                    prodModel.delivery_charges?.let {
+                        showDeliverCharges(it)
+                    }
                 }
 
                 if(prodModel.can_return?.toInt() == 1){
@@ -364,7 +365,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     val sliderAdapter = ProductImageSliderAdapter(mContext,
                         prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
                         object : ProductImageSliderAdapter.ProductImageSliderListener{
-                            override fun onSliderClick(offerUrl: String) {
+                            override fun onSliderClick(offerUrl: Array<String>) {
                                 val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
                                     DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(offerUrl)
                                 Log.e("offer web link", " :: $offerUrl")
@@ -426,6 +427,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                             }
                         })
                 detailViewProductBinding.recViewSimilarDiscntProds.adapter = discProductAdapter
+
             }else {
                 detailViewProductBinding.clSimilarProducts.visibility = View.GONE
             }
@@ -537,6 +539,16 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 //                prodModel.delivery_charges
             }
         }
+    }
+
+    fun showDeliverCharges(delivery_charges:Float){
+        val deliveryCharges = FreeDeliveryData.FreeDelivery("Applicable delivery charges",delivery_charges.roundToInt())
+
+        val deliveryChargesList = arrayListOf<FreeDeliveryData.FreeDelivery>()
+        deliveryChargesList.add(deliveryCharges)
+
+        val benefitAdapter = ProductBenefitAdapter(mContext,deliveryChargesList)
+        detailViewProductBinding.recViewProdBenefits.adapter = benefitAdapter
     }
 
     override fun onInvalidCredential() {

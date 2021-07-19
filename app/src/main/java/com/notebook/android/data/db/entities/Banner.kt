@@ -11,7 +11,8 @@ data class Banner(
     var image: String? = null,
     var url: String? = null,
     var banner_use_for:Int ?= null,
-    var product_id:String ?= null
+    var product_id:String ?= null,
+    var brand_id:Int ?= null
 ) {
     @PrimaryKey(autoGenerate = true)
     var bannerID:Int = BANNER_ID

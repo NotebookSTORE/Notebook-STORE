@@ -39,6 +39,7 @@ val latestOfferSliderListener: LatestOfferSliderListener) : PagerAdapter() {
 
         view.setOnClickListener {
             latestOfferSliderListener.onOfferSliderClick(imgList[position].url?:"", imgList[position].offer)
+            latestOfferSliderListener.onOfferSliderClick(imgList[position])
         }
 
         return view
@@ -49,6 +50,7 @@ val latestOfferSliderListener: LatestOfferSliderListener) : PagerAdapter() {
     }
 
     interface LatestOfferSliderListener{
-        fun onOfferSliderClick(offerUrl:String, offerType:Int)
+        fun onOfferSliderClick(offerUrl:String, offerType:Int){}
+        fun onOfferSliderClick(latestOffer:LatestOffer)
     }
 }

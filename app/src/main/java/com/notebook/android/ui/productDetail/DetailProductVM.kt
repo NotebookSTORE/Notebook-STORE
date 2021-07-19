@@ -100,11 +100,11 @@ class DetailProductVM(
         }
     }
 
-    fun getApplyCouponData(userID:Int, prodID: String){
+    fun getApplyCouponData(userID:Int, prodID: String,totalAmount:String){
         Coroutines.main{
             try {
                 prodDetailRepo.clearCouponTable()
-                val prodResponse = prodDetailRepo.getApplyCouponData(userID, prodID)
+                val prodResponse = prodDetailRepo.getApplyCouponData(userID, prodID,totalAmount)
                 prodResponse.let {
                     if(it.status == 1){
                         prodDetailRepo.insertCouponDat(it.coupon?:ArrayList())

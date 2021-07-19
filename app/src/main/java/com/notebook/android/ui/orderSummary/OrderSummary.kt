@@ -299,9 +299,9 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                     showProgress()
                     if(paymentType == 1){
                         productID = it.first().id
-                        detailVM.getApplyCouponData(user.id, productID ?: "")
+                        detailVM.getApplyCouponData(user.id, productID ?: "",it.first().cartTotalAmount.toString())
                     }else{
-                        detailVM.getApplyCouponData(user.id, "")
+                        detailVM.getApplyCouponData(user.id, "","")
                     }
                 }
             })

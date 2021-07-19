@@ -783,7 +783,7 @@
         tools:layout="@layout/fragment_zoomable_view">
         <argument
             android:name="imgUrl"
-            app:argType="string" />
+            app:argType="string[]" />
     </fragment>
 
 </navigation>

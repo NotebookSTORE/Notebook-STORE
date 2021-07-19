@@ -48,6 +48,19 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
                     "${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}"
                 }
             )
+            
+            val imageArray:ArrayList<String>  = arrayListOf()
+            imgList.forEach {
+               val imageUrl =  if (imgList[position].id == 0) {
+                    "${PRODUCT_IMAGE_PATH}${imgList[position].image}"
+                } else {
+                    "${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}"
+                }
+                imageArray.add(imageUrl)
+            }
+            
+            prodImageSliderListener.onSliderClick(imageArray.toTypedArray())
+            
         }
 
         return view
@@ -58,6 +71,7 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
     }
 
     interface ProductImageSliderListener{
-        fun onSliderClick(offerUrl:String)
+        fun onSliderClick(offerUrl:String){}
+        fun onSliderClick(offerUrl: Array<String>)
     }
 }

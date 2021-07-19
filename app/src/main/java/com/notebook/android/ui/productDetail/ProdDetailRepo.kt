@@ -71,8 +71,8 @@ class ProdDetailRepo(
         return apiRequest { notebookApi.productDetailData(prodID) }
     }
 
-    suspend fun getApplyCouponData(userID:Int, prodID: String) : CouponData {
-        return apiRequest { notebookApi.couponDataFromServer(userID, prodID) }
+    suspend fun getApplyCouponData(userID:Int, prodID: String,totalAmount:String) : CouponData {
+        return apiRequest { notebookApi.couponDataFromServer(userID, prodID,totalAmount) }
     }
 
     suspend fun getProductBenefitData() : BenefitProductData {
