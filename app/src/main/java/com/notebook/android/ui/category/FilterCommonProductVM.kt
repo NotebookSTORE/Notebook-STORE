@@ -1,8 +1,10 @@
 package com.notebook.android.ui.category
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
+import com.notebook.android.data.db.entities.FilterProduct
 import com.notebook.android.model.filter.FilterRequestData
 import com.notebook.android.ui.dashboard.frag.fragHome.subCa.SubCategProdResponseListener
 import com.notebook.android.utility.ApiException
@@ -16,7 +18,7 @@ class FilterCommonProductVM(
 
     lateinit var filterProdListener:FilterCommonProductListener
     fun getUserData() = filterProdRepo.getUser()
-    fun getFilterCommonProdDataFromDB() = filterProdRepo.getFilterCommonProductData()
+    val getFilterCommonProdDataFromDB = MutableLiveData<List<FilterProduct>>()
 
     fun deleteUser(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -45,8 +47,9 @@ class FilterCommonProductVM(
                         }else{
                             filterProdListener.onSuccess(false)
                         }
-                        filterProdRepo.clearFilterCommonProductTable()
-                        filterProdRepo.insertAllFilterCommonProduct(it.product?:ArrayList())
+//                        filterProdRepo.clearFilterCommonProductTable()
+//                        filterProdRepo.insertAllFilterCommonProduct(it.product?:ArrayList())
+                        getFilterCommonProdDataFromDB.postValue(it.product?:ArrayList())
                         if(it.banner?.isNotEmpty() == true){
                             filterProdListener.onGetBannerImageData(it.banner?.get(0)?.image?:"")
                         }

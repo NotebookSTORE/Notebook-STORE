@@ -190,7 +190,7 @@ class CategoryDetailProductFrag : Fragment(), KodeinAware,
                 Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
             })
 
-        filterCommonProductVM.getFilterCommonProdDataFromDB().observe(viewLifecycleOwner, Observer {
+        filterCommonProductVM.getFilterCommonProdDataFromDB.observe(viewLifecycleOwner, Observer {
             val bsProdAdapter = FilterCommonProductAdapter(mContext, it as ArrayList<FilterProduct>,
                 object : FilterCommonProductAdapter.FilterCommonProductListener,
                     UserLogoutDialog.UserLoginPopupListener {

@@ -1,9 +1,12 @@
 package com.notebook.android.ui.dashboard.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
-import com.notebook.android.data.db.entities.User
+import com.notebook.android.data.db.entities.*
 import com.notebook.android.ui.dashboard.listener.DashboardApiListener
 import com.notebook.android.ui.dashboard.listener.PolicyDataListener
 import com.notebook.android.ui.dashboard.repository.DashboardRepo
@@ -21,17 +24,17 @@ class DashboardViewModel(
 //    lateinit var policyDataListener : PolicyDataListener
 
     //get all data from cart db....
-    fun getCartData() = dashboardRepo.getCartData()
+    val getCartData = MutableLiveData<List<Cart>>()
     fun getUserData() = dashboardRepo.getUser()
-    fun getAllBannerData() = dashboardRepo.getAllBannerFromDB()
-    fun getAllCategoryDataFromDB() = dashboardRepo.getAllCategoryFromDB()
-    fun getAllSubCategoryFromDB() = dashboardRepo.getAllSubCategoryFromDB()
+    val getAllBannerData = MutableLiveData<List<Banner>>()
+    val getAllCategoryDataFromDB = MutableLiveData<List<Category>>()
+    val getAllSubCategoryFromDB = MutableLiveData<List<SubCategory>>()
 
-    fun getLatestProductHomeFromDB() = dashboardRepo.getAllLatestProductHome()
-    fun getBestSellerProductFromDB() = dashboardRepo.getAllBestSellerProductHome()
-    fun getBrandsFromDB() = dashboardRepo.getAllBrands()
-    fun getLatestOfferFromDB() = dashboardRepo.getAllLatestOffers()
-    fun getMerchantBannerFromDB() = dashboardRepo.getAllMerchantBanner()
+    val getLatestProductHomeFromDB = MutableLiveData<List<LatestProductHome>>()
+    val getBestSellerProductFromDB = MutableLiveData<List<BestSellerHome>>()
+    val getBrandsFromDB = MutableLiveData<List<Brand>>()
+    val getLatestOfferFromDB = MutableLiveData<List<LatestOffer>>()
+    val getMerchantBannerFromDB = MutableLiveData<List<MerchantBanner>>()
 
     // get Drawer data from db..
     fun getDrawerDataFromDB() = dashboardRepo.getAllDataFromDrawerDB()
@@ -120,7 +123,10 @@ class DashboardViewModel(
                 bannerResp.let {
                     if(it.status == 1){
                         dashboardRepo.deleteBanner()
-                        dashboardRepo.insertAllBannerIntoDB(it.bannerresponse?:ArrayList())
+                        Log.d("TAG", "getBannerData() called")
+
+                        getAllBannerData.postValue(it.bannerresponse)
+//                        dashboardRepo.insertAllBannerIntoDB(it.bannerresponse?:ArrayList())
                         getAllCategoryData()
 //                        getBulkQueryData(Constant.BANNER_TYPE_BULK_QUERY)
                     }else{
@@ -204,7 +210,8 @@ class DashboardViewModel(
                 val categResp = dashboardRepo.getAllCategory()
                 categResp.let {
                     if(it.status == 1){
-                        dashboardRepo.insertAllCategoryIntoDB(it.category?: ArrayList())
+                        getAllCategoryDataFromDB.postValue(it.category)
+//                        dashboardRepo.insertAllCategoryIntoDB(it.category?: ArrayList())
                         getAllSubCategoryData()
                     }else{
                         dashboardApiListener.onFailure(it.msg?:"")
@@ -224,7 +231,8 @@ class DashboardViewModel(
                 val categResp = dashboardRepo.getAllSubCategory()
                 categResp.let {
                     if(it.status == 1){
-                        dashboardRepo.insertAllSubCategoryIntoDB(it.subcategory?: ArrayList())
+                        getAllSubCategoryFromDB.postValue(it.subcategory)
+//                        dashboardRepo.insertAllSubCategoryIntoDB(it.subcategory?: ArrayList())
                         getAllHomeProducts()
                     }else{
                         dashboardApiListener.onFailure(it.msg?:"")
@@ -244,10 +252,13 @@ class DashboardViewModel(
                 val categResp = dashboardRepo.getHomeLatestORBestProducts()
                 categResp.let {
                     if(it.status == 1){
-                        dashboardRepo.clearBestSellerHomeProduct()
-                        dashboardRepo.clearLatestProdrHomeProduct()
-                        dashboardRepo.insertAllBestSellerIntoDB(it.bestseller?: ArrayList())
-                        dashboardRepo.insertAllLatestProductIntoDB(it.latestproduct?: ArrayList())
+//                        dashboardRepo.clearBestSellerHomeProduct()
+//                        dashboardRepo.clearLatestProdrHomeProduct()
+//                        dashboardRepo.insertAllBestSellerIntoDB(it.bestseller?: ArrayList())
+//                        dashboardRepo.insertAllLatestProductIntoDB(it.latestproduct?: ArrayList())
+                        getBestSellerProductFromDB.postValue(it.bestseller?:ArrayList())
+                        getLatestProductHomeFromDB.postValue(it.latestproduct?:ArrayList())
+
                         getAllBrands()
 //                        dashboardApiListener?.onSuccess(it.msg!!)
                     }else{
@@ -268,8 +279,9 @@ class DashboardViewModel(
                 val brandResp = dashboardRepo.getBrandData()
                 brandResp.let {
                     if(it.status == 1){
-                        dashboardRepo.clearBrandTable()
-                        dashboardRepo.insertAllBrandsIntoDB(it.brand?: ArrayList())
+//                        dashboardRepo.clearBrandTable()
+//                        dashboardRepo.insertAllBrandsIntoDB(it.brand?: ArrayList())
+                        getBrandsFromDB.postValue(it.brand?: ArrayList())
                         getAllLatestOffer()
                     }else{
                         dashboardApiListener.onFailure(it.msg?:"")
@@ -289,8 +301,9 @@ class DashboardViewModel(
                 val brandResp = dashboardRepo.getLatestOfferData()
                 brandResp.let {
                     if(it.status == 1){
-                        dashboardRepo.clearLatestOfferDB()
-                        dashboardRepo.insertAllLatestOfferIntoDB(it.latestoffer?: ArrayList())
+//                        dashboardRepo.clearLatestOfferDB()
+//                        dashboardRepo.insertAllLatestOfferIntoDB(it.latestoffer?: ArrayList())
+                        getLatestOfferFromDB.postValue(it.latestoffer?: ArrayList())
                         getAllMerchantBanner()
                     }else{
                         dashboardApiListener.onFailure(it.msg?:"")
@@ -310,8 +323,9 @@ class DashboardViewModel(
                 val brandResp = dashboardRepo.getMerchantBannerData()
                 brandResp.let {
                     if(it.status == 1){
-                        dashboardRepo.clearMerchantBannerTable()
-                        dashboardRepo.insertMerchantBannerIntoDB(it.Merchantbanner?: ArrayList())
+//                        dashboardRepo.clearMerchantBannerTable()
+//                        dashboardRepo.insertMerchantBannerIntoDB(it.Merchantbanner?: ArrayList())
+                        getMerchantBannerFromDB.postValue(it.Merchantbanner?: ArrayList())
                     }else{
                         dashboardApiListener.onFailure(it.msg?:"")
                     }
@@ -356,7 +370,8 @@ class DashboardViewModel(
                 prodResponse.let {
                     if(it.status == 1){
                         if(it.cartdata != null){
-                            dashboardRepo.insertCartList(it.cartdata!!)
+                            getCartData.postValue(it.cartdata!!)
+//                            dashboardRepo.insertCartList(it.cartdata!!)
                         }
                         dashboardApiListener.onSuccessLogout()
                     }else if(it.status == 2){

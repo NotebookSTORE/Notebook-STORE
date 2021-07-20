@@ -431,7 +431,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         latestOfferList = ArrayList()
         merchantBannerList = ArrayList()
         bulkOrderBannerList = ArrayList()
-        dashboardVM.getAllCategoryDataFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getAllCategoryDataFromDB.observe(viewLifecycleOwner, Observer {
 
             if (it.isNotEmpty()) {
                 homeFragBinding.srlHomeFrag.isRefreshing = false
@@ -452,7 +452,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             homeFragBinding.recViewCategory.adapter = prodCategoryAdapter
         })
 
-        dashboardVM.getAllBannerData().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getAllBannerData.observe(viewLifecycleOwner, Observer {
             bannerList = ArrayList()
             val sliderAdapter =
                 HomeTopSliderAdapter(
@@ -535,7 +535,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             }
 
         brandDataList = ArrayList()
-        dashboardVM.getBrandsFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getBrandsFromDB.observe(viewLifecycleOwner, Observer {
             brandDataList = it as ArrayList<Brand>
             brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener {
                 override fun BrandId(brandID: Int, title: String) {
@@ -552,7 +552,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         })
 
         categroyDataList = ArrayList()
-        dashboardVM.getAllSubCategoryFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getAllSubCategoryFromDB.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 homeFragBinding.srlHomeFrag.isRefreshing = false
                 homeFragBinding.clHomeAllViews.visibility = View.VISIBLE
@@ -607,7 +607,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             autoScrollForCategory()
         })
 
-        dashboardVM.getBestSellerProductFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getBestSellerProductFromDB.observe(viewLifecycleOwner, Observer {
             val bestSellerAdapter =
                 BestSellerHomeProductAdapter(mContext, it as ArrayList<BestSellerHome>,
                     object : BestSellerHomeProductAdapter.BestSellerProductListener,
@@ -675,7 +675,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             homeFragBinding.recViewBestSellers.adapter = bestSellerAdapter
         })
 
-        dashboardVM.getLatestProductHomeFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getLatestProductHomeFromDB.observe(viewLifecycleOwner, Observer {
             val latestProductAdapter =
                 LatestProductHomeAdapter(mContext, it as ArrayList<LatestProductHome>,
                     object : LatestProductHomeAdapter.latestProductListener,
@@ -743,7 +743,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         })
 
         brandDataList = ArrayList()
-        dashboardVM.getBrandsFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getBrandsFromDB.observe(viewLifecycleOwner, Observer {
             brandDataList = it as ArrayList<Brand>
             brandAdapter = BrandDataAdapter(mContext, it, object : BrandDataAdapter.BrandListener {
                 override fun BrandId(brandID: Int, title: String) {
@@ -760,7 +760,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             autoScrollAnother()
         })
 
-        dashboardVM.getLatestOfferFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getLatestOfferFromDB.observe(viewLifecycleOwner, Observer {
             val sliderAdapter =
                 LatestOfferSliderAdapter(mContext, it as ArrayList<LatestOffer>,
                     object : LatestOfferSliderAdapter.LatestOfferSliderListener {
@@ -810,7 +810,7 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
             homeFragBinding.tlImageOfferSliderIndicator.setupWithViewPager(homeFragBinding.vpImageOffersSlider)
         })
 
-        dashboardVM.getMerchantBannerFromDB().observe(viewLifecycleOwner, Observer {
+        dashboardVM.getMerchantBannerFromDB.observe(viewLifecycleOwner, Observer {
             val sliderAdapter =
                 MerchantBenefitSliderAdapter(
                     mContext,
