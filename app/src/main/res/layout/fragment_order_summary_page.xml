@@ -67,14 +67,17 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_6dp"
                     android:padding="@dimen/_8dp"
                     android:text="@{orderSummaryModel.title}"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/font_fourteen"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintWidth_default="wrap"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tvProdQty"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
