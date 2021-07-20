@@ -236,6 +236,7 @@
                             android:id="@+id/progress_view_2"
                             android:layout_width="wrap_content"
                             android:layout_height="100dp"
+                            android:visibility="gone"
                             android:src="@drawable/ic_order_detail_extended"
                             app:layout_constraintRight_toLeftOf="@+id/gl15OrderDetail"
                             app:layout_constraintTop_toBottomOf="@id/progress_view_1" />
@@ -303,6 +304,7 @@
                             android:layout_marginStart="@dimen/_8dp"
                             android:layout_marginTop="24dp"
                             android:padding="@dimen/_4dp"
+                            android:visibility="gone"
                             android:text="delivered on"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/font_fourteen"
@@ -317,6 +319,7 @@
                             android:padding="@dimen/_4dp"
                             android:textColor="@color/colorLightGrey"
                             android:textSize="@dimen/font_fourteen"
+                            android:visibility="gone"
                             app:layout_constraintLeft_toRightOf="@+id/gl15OrderDetail"
                             app:layout_constraintTop_toBottomOf="@+id/tvDeliveredSuccessText"
                             app:orderExpectedDate="@{orderSummaryModel.delivered_date}" />
