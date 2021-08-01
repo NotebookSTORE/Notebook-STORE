@@ -4,12 +4,8 @@ import com.notebook.android.data.db.database.NotebookDatabase
 import com.notebook.android.data.db.entities.*
 import com.notebook.android.data.network.NotebookApi
 import com.notebook.android.data.network.SafeApiRequest
-import com.notebook.android.model.auth.RegistrationResponse
 import com.notebook.android.model.cart.CartData
-import com.notebook.android.model.cart.CartDelete
 import com.notebook.android.model.cart.CartResponseData
-import com.notebook.android.model.cashfree.CFTokenResponse
-import com.notebook.android.model.category.SimilarDiscountedProduct
 import com.notebook.android.model.coupon.CouponData
 import com.notebook.android.model.drawerParts.ContactUs
 import com.notebook.android.model.helpSupport.FeedbackData
@@ -17,24 +13,20 @@ import com.notebook.android.model.home.BenefitProductData
 import com.notebook.android.model.home.DiscountedProdData
 import com.notebook.android.model.home.FreeDeliveryData
 import com.notebook.android.model.home.ProductCoupon
-import com.notebook.android.model.orderSummary.AfterPaymentRawData
-import com.notebook.android.model.orderSummary.OrderPaymentDetail
-import com.notebook.android.model.orderSummary.PaymentSuccesData
 import com.notebook.android.model.productDetail.PincodeData
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
 import com.notebook.android.model.productDetail.RatingReviewData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Multipart
 
 class ProdDetailRepo(
     val db : NotebookDatabase,
      val notebookApi: NotebookApi
 ) : SafeApiRequest() {
 
-    suspend fun getSimilarDiscountedProducts(discountValue:Int) : DiscountedProdData{
-        return apiRequest { notebookApi.productDiscountData(discountValue) }
+    suspend fun getSimilarDiscountedProducts(discountValue: Int, pageNumber: Int) : DiscountedProdData{
+        return apiRequest { notebookApi.productDiscountData(discountValue,pageNumber) }
     }
 
     suspend fun checkPincodeAvailabilit(pincode:String) : PincodeData{
@@ -45,13 +37,11 @@ class ProdDetailRepo(
         return apiRequest { notebookApi.addProductToCart(prodID!!, userID, token, prodQty!!, updateProd) }
     }
 
-    suspend fun ratingProductCallToServerWithoutImage(userID:Int, token:String, prodID: Int, name:String,
-                                          email:String, rating:Float, image:String, message:String) : ContactUs {
+    suspend fun ratingProductCallToServerWithoutImage(userID:Int, token:String, prodID: Int, name:String, email:String, rating:Float, image:String, message:String) : ContactUs {
         return apiRequest { notebookApi.ratingAndReviewProductWithoutImage(userID, token, prodID, name, email, message, rating, image) }
     }
 
-    suspend fun ratingProductCallToServer(userID: RequestBody, token:RequestBody, prodID: RequestBody, name:RequestBody,
-                                          email:RequestBody, rating:RequestBody, image:MultipartBody.Part, message:RequestBody) : ContactUs {
+    suspend fun ratingProductCallToServer(userID: RequestBody, token:RequestBody, prodID: RequestBody, name:RequestBody, email:RequestBody, rating:RequestBody, image:MultipartBody.Part, message:RequestBody) : ContactUs {
         return apiRequest { notebookApi.ratingAndReviewProduct(userID, token, prodID, name, email, message, rating, image) }
     }
 

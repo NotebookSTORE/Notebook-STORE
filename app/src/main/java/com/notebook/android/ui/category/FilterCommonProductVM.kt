@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
 import com.notebook.android.data.db.entities.FilterProduct
 import com.notebook.android.model.filter.FilterRequestData
-import com.notebook.android.ui.dashboard.frag.fragHome.subCa.SubCategProdResponseListener
+import com.notebook.android.model.filter.PaginationData
 import com.notebook.android.utility.ApiException
 import com.notebook.android.utility.NoInternetException
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +19,7 @@ class FilterCommonProductVM(
     lateinit var filterProdListener:FilterCommonProductListener
     fun getUserData() = filterProdRepo.getUser()
     val getFilterCommonProdDataFromDB = MutableLiveData<List<FilterProduct>>()
+    val getPageData = MutableLiveData<PaginationData>()
 
     fun deleteUser(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -35,21 +36,22 @@ class FilterCommonProductVM(
         }
     }
 
-    fun getProductFilterByWise(filterData:FilterRequestData){
+    fun getProductFilterByWise(filterData:FilterRequestData,pageNo:Int){
         Coroutines.main {
             try {
                 filterProdListener.onApiCallStarted()
-                val bdResponse = filterProdRepo.productAccordingToFilterByData(filterData)
+                val bdResponse = filterProdRepo.productAccordingToFilterByData(filterData,pageNo)
                 bdResponse.let {
                     if(it.status == 1){
-                        if(it.product?.size!! > 0){
+                        if(it.product?.data?.size!! > 0){
                             filterProdListener.onSuccess(true)
                         }else{
                             filterProdListener.onSuccess(false)
                         }
 //                        filterProdRepo.clearFilterCommonProductTable()
 //                        filterProdRepo.insertAllFilterCommonProduct(it.product?:ArrayList())
-                        getFilterCommonProdDataFromDB.postValue(it.product?:ArrayList())
+                        getFilterCommonProdDataFromDB.postValue(it.product?.data?:ArrayList())
+                        getPageData.postValue(PaginationData.create(it.product))
                         if(it.banner?.isNotEmpty() == true){
                             filterProdListener.onGetBannerImageData(it.banner?.get(0)?.image?:"")
                         }
@@ -63,7 +65,7 @@ class FilterCommonProductVM(
                         filterProdListener.onSuccess(false)
                     }
                 }
-            }catch (e:ApiException){
+            }catch (e:Exception){
                 filterProdListener.onApiFailure(e.message?:"")
             }catch (e:NoInternetException){
                 filterProdListener.onNoInternetAvailable(e.message?:"")

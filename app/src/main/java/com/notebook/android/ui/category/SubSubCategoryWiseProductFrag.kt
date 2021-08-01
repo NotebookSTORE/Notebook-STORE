@@ -94,7 +94,7 @@ class SubSubCategoryWiseProductFrag : Fragment(), KodeinAware,
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_SUB_SUB_CATEGORY_TYPE, ssCategProd!!, notebookPrefs.sortedValue)
         filterCommonProductVM.getFilterData(Constant.FILTER_SUB_SUB_CATEGORY_TYPE, ssCategProd!!)
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
 
         notebookPrefs.FilterCommonImageUrl = ""
     }
@@ -179,7 +179,7 @@ class SubSubCategoryWiseProductFrag : Fragment(), KodeinAware,
                 filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
                 filterRawData!!.para = ssCategProd!!
                 filterRawData!!.filter = Constant.FILTER_SUB_SUB_CATEGORY_TYPE
-                filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+                filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
                 Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
             })
 
@@ -315,7 +315,7 @@ class SubSubCategoryWiseProductFrag : Fragment(), KodeinAware,
     }
 
     override fun onRefresh() {
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 
     override fun onClick(p0: View?) {
@@ -337,6 +337,6 @@ class SubSubCategoryWiseProductFrag : Fragment(), KodeinAware,
         filterRawData!!.para = ssCategProd!!
         filterRawData!!.filter = Constant.FILTER_SUB_SUB_CATEGORY_TYPE
         filterRawData!!.filterType = value
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 }

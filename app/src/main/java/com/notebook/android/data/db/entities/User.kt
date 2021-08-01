@@ -41,6 +41,7 @@ data class User(
     var origincode:String ?= null,
     var referral_id:Int ?= null,
     var status:Int ?= null, //this is merchant status
+    var upgrade_for:Int?=null,
 var imageupdated:Int ?= null,
 var wallet_amounts:String ?= null,
 var otp:String?=null)

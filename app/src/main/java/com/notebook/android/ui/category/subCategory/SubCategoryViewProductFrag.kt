@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -33,6 +34,7 @@ import com.notebook.android.data.preferences.NotebookPrefs
 import com.notebook.android.databinding.FragmentSubCategoryViewProductBinding
 import com.notebook.android.decoration.GridItemDecoration
 import com.notebook.android.model.filter.FilterRequestData
+import com.notebook.android.model.filter.PaginationData
 import com.notebook.android.ui.category.FilterCommonProductListener
 import com.notebook.android.ui.category.FilterCommonProductVM
 import com.notebook.android.ui.category.FilterCommonProductVMFactory
@@ -42,6 +44,7 @@ import com.notebook.android.ui.popupDialogFrag.SortByDialogFrag
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.utility.Constant
 import com.notebook.android.utility.Constant.FILTER_SUB_CATEGORY_TYPE
+import com.notebook.android.utility.loadImage
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -76,6 +79,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
     private var price1 = 0
     private var price2 = 100000
     private var filterRawData: FilterRequestData?= null
+    private var pageData = PaginationData()
 
     private lateinit var myToast: Toast
     private lateinit var errorToast:Toast
@@ -104,7 +108,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_SUB_CATEGORY_TYPE, subCategoryID!!, notebookPrefs.sortedValue)
         filterCommonProductVM.getFilterData(FILTER_SUB_CATEGORY_TYPE, subCategoryID!!)
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        onRefresh()
 
         notebookPrefs.FilterCommonImageUrl = ""
     }
@@ -188,16 +192,31 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         }
 
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("filterData")?.observe(
-            viewLifecycleOwner, Observer {
-                filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
-                filterRawData!!.para = subCategoryID!!
-                filterRawData!!.filter = FILTER_SUB_CATEGORY_TYPE
-                filterCommonProductVM.getProductFilterByWise(filterRawData!!)
-                Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
-            })
+                viewLifecycleOwner, Observer {
+                    filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
+                    filterRawData!!.para = subCategoryID!!
+                    filterRawData!!.filter = FILTER_SUB_CATEGORY_TYPE
+                    onRefresh()
+                    Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
+                })
 
+
+
+        filterCommonProductVM.getPageData.observe(viewLifecycleOwner,{
+            pageData = it
+        })
+
+
+        val filterProductList = ArrayList<FilterProduct>()
         filterCommonProductVM.getFilterCommonProdDataFromDB.observe(viewLifecycleOwner, Observer {
-            val bsProdAdapter = FilterCommonProductAdapter(mContext, it as ArrayList<FilterProduct>,
+
+            if (isRefreshing){
+                filterProductList.clear()
+            }
+
+            filterProductList.addAll(it)
+
+            val bsProdAdapter = FilterCommonProductAdapter(mContext, filterProductList,
                 object : FilterCommonProductAdapter.FilterCommonProductListener,
                     UserLogoutDialog.UserLoginPopupListener {
 
@@ -246,30 +265,67 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         subCategoryProductBinding.tvSortByProducts.setOnClickListener(this)
     }
 
-    private fun setupRecyclerView(){
+    private val TAG = "SubCategoryViewProductF"
+
+    private fun setupRecyclerView() {
         val layoutManagerSubCateg = GridLayoutManager(mContext, 2, RecyclerView.VERTICAL, false)
         subCategoryProductBinding.recViewSubCategProducts.apply {
             layoutManager = layoutManagerSubCateg
-            addItemDecoration(GridItemDecoration(10,2))
+            addItemDecoration(GridItemDecoration(10, 2))
             itemAnimator = DefaultItemAnimator()
             hasFixedSize()
         }
+
+        subCategoryProductBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (v.getChildAt(v.childCount - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight)) &&
+                    scrollY > oldScrollY
+                ) {
+                    Log.d(TAG, "NOW LOAD MORE")
+                    if (!isLoading)
+                        loadPaginatedData()
+                }
+            }
+        })
+
+    }
+
+    private var isLoading = false
+    private var isRefreshing = false
+    private fun loadPaginatedData() {
+
+        isRefreshing = false
+
+        pageData.next_page_url?.let {
+            val nextPage = it.substringAfterLast("=").toInt()
+            filterCommonProductVM.getProductFilterByWise(filterRawData!!, nextPage)
+            isLoading = true
+        }
+
     }
 
     override fun onApiCallStarted() {
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = true
+        isLoading = true
     }
 
     override fun onApiCartCallStarted() {
         loadingDialog.show(childFragmentManager, "Loading dialog show")
     }
 
-    override fun onSuccess(isListSizeGreater:Boolean) {
+    override fun onSuccess(isListSizeGreater: Boolean) {
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = false
-        if(isListSizeGreater){
+            isLoading = false
+
+        if (isListSizeGreater) {
             subCategoryProductBinding.imgNoProdFound.visibility = View.GONE
-        }else{
+            subCategoryProductBinding.imgSubCategBanner.visibility = View.VISIBLE
+            subCategoryProductBinding.recViewSubCategProducts.visibility = View.VISIBLE
+
+        } else {
             subCategoryProductBinding.imgNoProdFound.visibility = View.VISIBLE
+            subCategoryProductBinding.imgSubCategBanner.visibility = View.GONE
+            subCategoryProductBinding.recViewSubCategProducts.visibility = View.GONE
         }
     }
 
@@ -283,6 +339,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = false
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onApiFailure(msg: String) {
@@ -290,6 +347,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = false
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onInvalidCredential() {
@@ -298,37 +356,50 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         filterCommonProductVM.deleteUser()
         filterCommonProductVM.clearCartTableFromDB()
         navController.navigate(R.id.loginFrag)
+        isLoading = false
     }
 
     override fun onUserAccepted(isAccept: Boolean) {
         filterCommonProductVM.deleteUser()
         filterCommonProductVM.clearCartTableFromDB()
         navController.navigate(R.id.loginFrag)
+        isLoading = false
     }
 
     override fun onGetBannerImageData(imgUrl: String) {
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = false
+        isLoading = false
+
         if(imgUrl.isEmpty()){
             subCategoryProductBinding.imgSubCategBanner.visibility = View.GONE
         }else{
             subCategoryProductBinding.imgSubCategBanner.visibility = View.VISIBLE
             notebookPrefs.FilterCommonImageUrl = imgUrl
-            Glide.with(mContext).apply {
+
+            subCategoryProductBinding.imgSubCategBanner.loadImage("${Constant.BASE_IMAGE_PATH}${imgUrl}")
+
+//            subCategoryProductBinding.imgSubCategBanner.setImageURI(Uri.parse("${Constant.BASE_IMAGE_PATH}${imgUrl}"))
+            Log.e("TAG", "onGetBannerImageData: ${Constant.BASE_IMAGE_PATH}${imgUrl}")
+
+            /*Glide.with(mContext).apply {
                 load("${Constant.BASE_IMAGE_PATH}${imgUrl}")
                     .into(subCategoryProductBinding.imgSubCategBanner)
-            }
+            }*/
         }
     }
 
     override fun onNoInternetAvailable(msg: String) {
         loadingDialog.dismissAllowingStateLoss()
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = false
+
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onRefresh() {
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        isRefreshing = true
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!, 1)
     }
 
     override fun onClick(p0: View?) {
@@ -350,6 +421,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
         filterRawData!!.para = subCategoryID!!
         filterRawData!!.filter = Constant.FILTER_SUB_CATEGORY_TYPE
         filterRawData!!.filterType = value
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+
+        onRefresh()
     }
 }

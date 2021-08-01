@@ -1,7 +1,6 @@
 package com.notebook.android.adapter.home.productAdapter
 
 import android.content.Context
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.notebook.android.BR
 import com.notebook.android.R
-import com.notebook.android.data.db.entities.BestSeller
 import com.notebook.android.data.db.entities.FilterProduct
-import com.notebook.android.databinding.BestSellerProductLayoutBinding
 import com.notebook.android.databinding.FilterCommonProductItemLayoutBinding
 
-class FilterCommonProductAdapter(val mCtx: Context, val fcProductList:ArrayList<FilterProduct>,
-                                 val fcProductListener: FilterCommonProductListener)
-    : RecyclerView.Adapter<FilterCommonProductAdapter.FCViewHolder>() {
+class FilterCommonProductAdapter(
+    val mCtx: Context, val fcProductList: ArrayList<FilterProduct>,
+    val fcProductListener: FilterCommonProductListener
+) : RecyclerView.Adapter<FilterCommonProductAdapter.FCViewHolder>() {
 
     override fun onViewRecycled(holder: FCViewHolder) {
         super.onViewRecycled(holder)
         Glide.with(mCtx).clear(holder.itemView.rootView)
+    }
+
+    fun updateData(fcProductList: ArrayList<FilterProduct>) {
+        this.fcProductList.addAll(fcProductList)
     }
 
     override fun onCreateViewHolder(
@@ -30,24 +32,25 @@ class FilterCommonProductAdapter(val mCtx: Context, val fcProductList:ArrayList<
         viewType: Int
     ): FCViewHolder {
         val filterProdItemBinding: FilterCommonProductItemLayoutBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(mCtx), R.layout.filter_common_product_item_layout, parent, false)
+            LayoutInflater.from(mCtx), R.layout.filter_common_product_item_layout, parent, false
+        )
         return FCViewHolder(filterProdItemBinding)
     }
 
-    inner class FCViewHolder(val filterProdItemBinding: FilterCommonProductItemLayoutBinding)
-        : RecyclerView.ViewHolder(filterProdItemBinding.root) {
+    inner class FCViewHolder(val filterProdItemBinding: FilterCommonProductItemLayoutBinding) :
+        RecyclerView.ViewHolder(filterProdItemBinding.root) {
 
-        fun bind(filterProd: FilterProduct){
-            filterProdItemBinding.rbProductRating.rating = filterProd.customerRating?:4f
+        fun bind(filterProd: FilterProduct) {
+            filterProdItemBinding.rbProductRating.rating = filterProd.customerRating ?: 4f
             filterProdItemBinding.setVariable(BR.filterCommonProduct, filterProd)
             filterProdItemBinding.executePendingBindings()
 
-            if(filterProd.quantity <= 0){
+            if (filterProd.quantity <= 0) {
                 filterProdItemBinding.imgAddToCart.visibility = View.GONE
                 filterProdItemBinding.clOutStockLayout.visibility = View.GONE
 //                filterProdItemBinding.clTopProductLayout.isEnabled = false
                 filterProdItemBinding.imgAddToCart.isEnabled = false
-            }else{
+            } else {
                 filterProdItemBinding.imgAddToCart.visibility = View.VISIBLE
                 filterProdItemBinding.clOutStockLayout.visibility = View.GONE
 //                filterProdItemBinding.clTopProductLayout.isEnabled = true
@@ -63,10 +66,13 @@ class FilterCommonProductAdapter(val mCtx: Context, val fcProductList:ArrayList<
             }
 
             filterProdItemBinding.clTopProductLayout.setOnClickListener {
-                if(filterProd.quantity <= 0){
+                if (filterProd.quantity <= 0) {
                     fcProductListener.fcCartEmptyError("Product is Out of Stock")
-                }else{
-                    fcProductListener.fcProductCallback(filterProd, filterProdItemBinding.imgProductImage)
+                } else {
+                    fcProductListener.fcProductCallback(
+                        filterProd,
+                        filterProdItemBinding.imgProductImage
+                    )
                 }
             }
 
@@ -84,9 +90,9 @@ class FilterCommonProductAdapter(val mCtx: Context, val fcProductList:ArrayList<
         holder.bind(fcProductList[position])
     }
 
-    interface FilterCommonProductListener{
-        fun fcProductCallback(fcProd: FilterProduct, imgProduct:ImageView)
-        fun fcAddToCart(prodID:Int, cartQty:Int)
-        fun fcCartEmptyError(msg:String)
+    interface FilterCommonProductListener {
+        fun fcProductCallback(fcProd: FilterProduct, imgProduct: ImageView)
+        fun fcAddToCart(prodID: Int, cartQty: Int)
+        fun fcCartEmptyError(msg: String)
     }
 }

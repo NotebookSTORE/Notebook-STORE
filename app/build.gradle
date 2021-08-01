@@ -110,7 +110,7 @@ dependencies {
     def JUnitTestExtensionVersion = "1.1.2"
     def EspressoVersion = "3.3.0"
     def nav_version = "2.3.1"
-    def GlideVersion = "4.11.0"
+    def GlideVersion = "4.12.0"
     def CircularIVVersion = "3.1.0"
     def OtpViewVersion = "2.1.0"
     def PriceRangeSeekBar = "1.0.6"

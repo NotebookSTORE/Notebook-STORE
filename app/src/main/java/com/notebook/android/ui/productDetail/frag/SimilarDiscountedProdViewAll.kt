@@ -112,7 +112,7 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
 
     override fun onResume() {
         super.onResume()
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 
     override fun onCreateView(
@@ -199,7 +199,7 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
                 filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
                 filterRawData!!.para = 0
                 filterRawData!!.filter = Constant.FILTER_DISCOUNTED_PRODUCT_TYPE
-                filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+                filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
                 Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
             })
 
@@ -338,7 +338,7 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
     }
 
     override fun onRefresh() {
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 
     override fun onClick(p0: View?) {
@@ -360,6 +360,6 @@ class SimilarDiscountedProdViewAll : BaseFragment(), KodeinAware,
         filterRawData!!.para = 0
         filterRawData!!.filter = Constant.FILTER_DISCOUNTED_PRODUCT_TYPE
         filterRawData!!.filterType = value
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 }

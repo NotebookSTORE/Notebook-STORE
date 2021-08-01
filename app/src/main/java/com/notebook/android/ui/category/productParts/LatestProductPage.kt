@@ -94,7 +94,7 @@ class LatestProductPage : Fragment(), KodeinAware,
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_LATEST_PRODUCT_TYPE, 0, notebookPrefs.sortedValue)
         filterCommonProductVM.getFilterData(Constant.FILTER_LATEST_PRODUCT_TYPE, 0)
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
 
         notebookPrefs.FilterCommonImageUrl = ""
     }
@@ -178,7 +178,7 @@ class LatestProductPage : Fragment(), KodeinAware,
                 filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
                 filterRawData!!.para = 0
                 filterRawData!!.filter = Constant.FILTER_LATEST_PRODUCT_TYPE
-                filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+                filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
                 Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
             })
 
@@ -314,7 +314,7 @@ class LatestProductPage : Fragment(), KodeinAware,
     }
 
     override fun onRefresh() {
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 
     override fun onClick(p0: View?) {
@@ -336,6 +336,6 @@ class LatestProductPage : Fragment(), KodeinAware,
         filterRawData!!.para = 0
         filterRawData!!.filter = Constant.FILTER_LATEST_PRODUCT_TYPE
         filterRawData!!.filterType = value
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!)
+        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 }

@@ -574,36 +574,10 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
                 })
             homeFragBinding.recViewSubCategory.adapter = subCategoryAdapter
 
-            homeFragBinding.recViewSubCategory.setOnClickListener {
-
-            }
 
             homeFragBinding.recViewSubCategory.apply {
                 adapter = subCategoryAdapter
-
-
-                /*layoutManager = llManager
-                setHasFixedSize(true)
-                addOnItemTouchListener(
-                    RecyclerTouchListener(mContext,
-                    object : RecyclerTouchListener.ClickListener {
-                        @SuppressLint("Recycle")
-                        override fun onClick(view: View?, position: Int) {
-                            speedScroll = 1200
-                            val mRunnable: Runnable = Runnable {
-                                if (!mActivity.isFinishing) {
-                                    speedScroll =0
-                                }
-                            }
-                            mHandler.postDelayed(mRunnable, speedScroll.toLong())
-                            *//* it[position % it.size].title?.let { model ->
-                                 Toast.makeText(mContext, model, Toast.LENGTH_LONG).show()
-                             }*//*
-                        }
-                    })
-                )*/
             }
-//            mHandler.postDelayed(runnable, speedScroll.toLong())
             autoScrollForCategory()
         })
 

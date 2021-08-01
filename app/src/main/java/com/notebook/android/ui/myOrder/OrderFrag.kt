@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -94,6 +95,10 @@ class OrderFrag : Fragment(), KodeinAware, OrderHistoryListener, View.OnClickLis
                     val orderSummaryDirections: OrderFragDirections.ActionOrderFragToOrderSummaryPage =
                         OrderFragDirections.actionOrderFragToOrderSummaryPage(orderData)
                     navController.navigate(orderSummaryDirections)
+                }
+
+                override fun onTrackOrderClick(orderData: OrderHistory) {
+                    Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
                 }
             })
         fragmentOrderBinding.recViewMyOrder.adapter = orderAdapter

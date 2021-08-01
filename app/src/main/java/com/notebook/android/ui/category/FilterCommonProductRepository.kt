@@ -6,19 +6,17 @@ import com.notebook.android.data.network.NotebookApi
 import com.notebook.android.data.network.SafeApiRequest
 import com.notebook.android.model.cart.CartData
 import com.notebook.android.model.cart.CartResponseData
-import com.notebook.android.model.category.HomeCategoryProduct
 import com.notebook.android.model.filter.FilterByData
 import com.notebook.android.model.filter.FilterRequestData
 import com.notebook.android.model.home.FilterProductData
-import com.notebook.android.model.home.SubCategoryProductData
 
 class FilterCommonProductRepository(
     val db : NotebookDatabase,
     val notebookApi: NotebookApi
 ) : SafeApiRequest() {
 
-    suspend fun productAccordingToFilterByData(filterData: FilterRequestData) : FilterProductData {
-        return apiRequest { notebookApi.productFilterWise(filterData) }
+    suspend fun productAccordingToFilterByData(filterData: FilterRequestData, pageNo: Int) : FilterProductData {
+        return apiRequest { notebookApi.productFilterWise(filterData,pageNo) }
     }
 
     suspend fun getFilter(filterDataFromPage:String, parameter:Int) : FilterByData {

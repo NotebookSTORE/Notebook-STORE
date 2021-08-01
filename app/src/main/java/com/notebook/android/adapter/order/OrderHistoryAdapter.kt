@@ -69,6 +69,10 @@ class OrderHistoryAdapter(
                 orderDataListener.onItemViewClicked(orderData)
             }
 
+            orderItemBinding.tvTrackOrder.setOnClickListener {
+                orderDataListener.onTrackOrderClick(orderData)
+            }
+
             orderItemBinding.itemImage.setOnClickListener {
                 Log.e("anil"," id = " + orderData.cartproduct_id + "  title = " +  orderData.title)
             }
@@ -77,6 +81,7 @@ class OrderHistoryAdapter(
 
     interface OrderDataListener {
         fun onWriteReviewClick(orderData: OrderHistory)
+        fun onTrackOrderClick(orderData: OrderHistory)
         fun onItemViewClicked(orderData: OrderHistory)
     }
 }

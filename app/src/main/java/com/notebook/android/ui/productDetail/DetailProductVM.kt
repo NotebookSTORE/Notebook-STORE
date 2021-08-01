@@ -1,14 +1,14 @@
 package com.notebook.android.ui.productDetail
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
-import com.notebook.android.data.db.entities.Wishlist
+import com.notebook.android.data.db.entities.*
 import com.notebook.android.model.coupon.CouponData
+import com.notebook.android.model.filter.PaginationData
 import com.notebook.android.ui.dashboard.cart.CartResponseListener
 import com.notebook.android.ui.productDetail.listener.*
 import com.notebook.android.utility.ApiException
@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.internal.wait
 
 class DetailProductVM(
     val prodDetailRepo: ProdDetailRepo
@@ -37,6 +36,7 @@ class DetailProductVM(
     fun getUserData() = prodDetailRepo.getUserData()
     fun getCartData() = prodDetailRepo.getCartData()
     fun getProductDetailLiveData() = prodDetailRepo.getProductDetailData()
+    val getPageData = MutableLiveData<PaginationData>()
 
     var couponCanApplyData:MutableLiveData<List<CouponData.CouponCanApply>> = MutableLiveData()
 
@@ -75,7 +75,7 @@ class DetailProductVM(
         }
     }
 
-     fun getDiscProductUsingDiscontValue(discount:Int){
+     fun getDiscProductUsingDiscontValue(discount:Int,pageNumber:Int){
 
         Coroutines.main{
             try {
@@ -83,11 +83,12 @@ class DetailProductVM(
                     prodDetailRepo.clearDiscountedProductTable()
                 }
 //                discProdListener.onApiCallStarted()
-                val prodResponse = prodDetailRepo.getSimilarDiscountedProducts(discount)
+                val prodResponse = prodDetailRepo.getSimilarDiscountedProducts(discount,pageNumber)
                 prodResponse.let {
                     if(it.status == 1){
-                        discProdListener.onSuccess(it.product)
-                        prodDetailRepo.insertAllDiscProducts(it.product?:ArrayList())
+                        discProdListener.onSuccess(it.product?.data)
+                        prodDetailRepo.insertAllDiscProducts(it.product?.data?:ArrayList())
+                        getPageData.postValue(PaginationData.create(it.product))
                     }else{
                         discProdListener.onFailure(it.msg?:"")
                     }

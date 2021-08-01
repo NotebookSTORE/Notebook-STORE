@@ -135,6 +135,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/viewOrder"
                 app:layout_constraintRight_toRightOf="parent"/>
 
+            <TextView
+                android:id="@+id/tvTrackOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Track Order"
+                android:textColor="@color/colorGreenOrderDelivered"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/viewOrder" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
