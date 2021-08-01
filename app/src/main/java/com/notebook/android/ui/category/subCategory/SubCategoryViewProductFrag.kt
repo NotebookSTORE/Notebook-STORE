@@ -179,16 +179,11 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
 
         if(notebookPrefs.FilterCommonImageUrl?.isEmpty() == true){
             subCategoryProductBinding.imgSubCategBanner.visibility = View.GONE
-            Log.e("anil","banner image in empty")
+            Log.e(TAG,"banner image in empty")
         }else {
             subCategoryProductBinding.imgSubCategBanner.visibility = View.VISIBLE
-
-            Log.e("anil","banner image =   ${Constant.BASE_IMAGE_PATH}${notebookPrefs.FilterCommonImageUrl}")
-
-            Glide.with(mContext).apply {
-                load("${Constant.BASE_IMAGE_PATH}${notebookPrefs.FilterCommonImageUrl}")
-                    .into(subCategoryProductBinding.imgSubCategBanner)
-            }
+            Log.e(TAG,"banner image =   ${Constant.BASE_IMAGE_PATH}${notebookPrefs.FilterCommonImageUrl}")
+            subCategoryProductBinding.imgSubCategBanner.loadImage("${Constant.BASE_IMAGE_PATH}${notebookPrefs.FilterCommonImageUrl}")
         }
 
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("filterData")?.observe(
@@ -197,7 +192,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
                     filterRawData!!.para = subCategoryID!!
                     filterRawData!!.filter = FILTER_SUB_CATEGORY_TYPE
                     onRefresh()
-                    Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
+                    Log.e(TAG, " rawDataSubCategory:: ${Gson().fromJson(it, FilterRequestData::class.java)}")
                 })
 
 
@@ -218,7 +213,7 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
 
             val bsProdAdapter = FilterCommonProductAdapter(mContext, filterProductList,
                 object : FilterCommonProductAdapter.FilterCommonProductListener,
-                    UserLogoutDialog.UserLoginPopupListener {
+                        UserLogoutDialog.UserLoginPopupListener {
 
                     override fun fcProductCallback(fcProd: FilterProduct, imgProduct: ImageView) {
                         val prod = Product(fcProd.id.toString(), fcProd.keyfeature,
