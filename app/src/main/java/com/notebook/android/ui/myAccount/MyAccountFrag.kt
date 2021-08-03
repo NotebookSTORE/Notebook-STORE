@@ -45,6 +45,9 @@ import com.notebook.android.ui.popupDialogFrag.LoadingDialog
 import com.notebook.android.ui.popupDialogFrag.LogoutDialogFrag
 import com.notebook.android.ui.popupDialogFrag.UserLogoutDialog
 import com.notebook.android.utility.Constant
+import kotlinx.android.synthetic.main.fragment_faqs.*
+import kotlinx.android.synthetic.main.fragment_my_account.*
+import kotlinx.android.synthetic.main.fragment_my_account.view.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
@@ -130,6 +133,12 @@ class MyAccountFrag : Fragment(), View.OnClickListener, LogoutListener, KodeinAw
 
         profileVM.getUserData().observe(viewLifecycleOwner, Observer { user ->
             if (user != null) {
+
+                if (user.usertype ==1|| user.usertype ==0){
+                    fragmentMyAccountBinding.clMerchantDetails.visibility=View.VISIBLE
+                }else{
+                    fragmentMyAccountBinding.clMerchantDetails.visibility=View.GONE
+                }
 
                 userData = user
                 if (userData?.usertype == 1) {
