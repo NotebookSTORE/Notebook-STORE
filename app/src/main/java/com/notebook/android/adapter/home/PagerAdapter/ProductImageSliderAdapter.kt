@@ -50,11 +50,11 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
             )
             
             val imageArray:ArrayList<String>  = arrayListOf()
-            imgList.forEach {
-               val imageUrl =  if (imgList[position].id == 0) {
-                    "${PRODUCT_IMAGE_PATH}${imgList[position].image}"
+            imgList.forEachIndexed { i: Int, productImageData: ProductDetailData.ProductImageData ->
+                val imageUrl =  if (imgList[i].id == 0) {
+                    "${PRODUCT_IMAGE_PATH}${imgList[i].image}"
                 } else {
-                    "${PRODUCTIMAGE_IMAGE_PATH}${imgList[position].image}"
+                    "${PRODUCTIMAGE_IMAGE_PATH}${imgList[i].image}"
                 }
                 imageArray.add(imageUrl)
             }
