@@ -34,7 +34,7 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
         if (imgList[position].id == 0) {
             loadAllTypeImageWithSize(imgSlider,PRODUCT_IMAGE_PATH, imgList[position].image,1080,1000)
         } else {
-            loadAllTypeImageWithSize(imgSlider,PRODUCT_IMAGE_PATH, imgList[position].image,1080,1000)
+            loadAllTypeImageWithSize(imgSlider,PRODUCTIMAGE_IMAGE_PATH, imgList[position].image,1080,1000)
         }
 
         val viewPager = container as ViewPager
