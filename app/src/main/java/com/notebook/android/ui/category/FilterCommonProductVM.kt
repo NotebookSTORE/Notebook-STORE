@@ -54,6 +54,8 @@ class FilterCommonProductVM(
                         getPageData.postValue(PaginationData.create(it.product))
                         if(it.banner?.isNotEmpty() == true){
                             filterProdListener.onGetBannerImageData(it.banner?.get(0)?.image?:"")
+                        }else{
+                            filterProdListener.onGetBannerImageData("")
                         }
                     }else if(it.status == 2){
                         filterProdListener.onInvalidCredential()
