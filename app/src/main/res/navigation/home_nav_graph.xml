@@ -62,6 +62,9 @@
         <action
             android:id="@+id/action_cartFrag_to_orderSummary"
             app:destination="@id/orderSummary" />
+        <action
+            android:id="@+id/action_cartFrag_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
     </fragment>
 
     <fragment
@@ -673,6 +676,9 @@
         <action
             android:id="@+id/action_orderSummary_to_paymentMethodFrag"
             app:destination="@id/paymentMethodFrag" />
+        <action
+            android:id="@+id/action_orderSummary_to_detailViewProductFrag"
+            app:destination="@id/detailViewProductFrag" />
     </fragment>
     <fragment
         android:id="@+id/applyCoupon"

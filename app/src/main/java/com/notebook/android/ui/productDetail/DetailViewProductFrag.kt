@@ -808,8 +808,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                 if (!notDeliverable) {
                     if (prodQty != 0) {
                         val prodList = ArrayList<OrderSummaryProduct>()
-                        val result =
-                            prodModel.price.minus(Math.round((prodModel.price * prodModel.discount) / 100.0))
+                        val result = prodModel.price.minus(Math.round((prodModel.price * prodModel.discount) / 100.0))
                         prodList.add(
                             OrderSummaryProduct(
                                 prodModel.id.toString(),

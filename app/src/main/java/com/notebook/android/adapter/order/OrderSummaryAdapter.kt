@@ -12,6 +12,7 @@ import com.notebook.android.BR
 import com.notebook.android.R
 import com.notebook.android.adapter.DetailProduct.DetailProductSpinnerAdpater
 import com.notebook.android.data.db.entities.OrderSummaryProduct
+import com.notebook.android.data.db.entities.Product
 import com.notebook.android.databinding.OrderSummaryProductLayoutBinding
 
 class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<OrderSummaryProduct>,
@@ -86,6 +87,23 @@ class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<Orde
                     }
                 }
             }
+
+
+            orderSummaryBinding.imgProductImage.setOnClickListener {
+                val prod = Product(
+                    prodData.id, prodData.keyfeature,
+                    prodData.material,
+                    prodData.title, prodData.alias, prodData.image,
+                    prodData.status, prodData.short_description,
+                    prodData.description, prodData.data_sheet,
+                    prodData.quantity, prodData.price, prodData.offer_price,
+                    prodData.product_code, prodData.product_condition,
+                    prodData.discount, prodData.latest,
+                    prodData.best, prodData.brandtitle, prodData.colortitle)
+
+                orderPriceListener.onProductImageClick(prod)
+            }
+
         }
 
         private fun setQuantityList(qty:Int) : ArrayList<String> {
@@ -118,5 +136,6 @@ class OrderSummaryAdapter(val mCtx: Context, private val prodListData: List<Orde
         fun onChangeProdQuantity(orderItemPosition:Int, prodID:Int, orderQty:Int, orderAmount:Float)
         fun onPriceCheckOnCoupon(isGreater:Boolean)
         fun errorMessage(msg:String)
+        fun onProductImageClick(prod:Product)
     }
 }

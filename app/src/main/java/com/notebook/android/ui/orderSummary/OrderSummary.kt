@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -31,6 +32,7 @@ import com.notebook.android.model.home.ProductCoupon
 import com.notebook.android.model.orderSummary.OrderPaymentDetail
 import com.notebook.android.model.productDetail.ProductDetailData
 import com.notebook.android.model.productDetail.RatingData
+import com.notebook.android.ui.category.subCategory.SubCategoryViewProductFragDirections
 import com.notebook.android.ui.dashboard.cart.CartResponseListener
 import com.notebook.android.ui.dashboard.cart.CartVM
 import com.notebook.android.ui.dashboard.cart.CartVMFactory
@@ -42,6 +44,7 @@ import com.notebook.android.ui.productDetail.DetailProductVMFactory
 import com.notebook.android.ui.productDetail.SharedVM
 import com.notebook.android.ui.productDetail.listener.DiscountProdResponseListener
 import com.notebook.android.utility.Constant
+import kotlinx.android.synthetic.main.fragment_detail_view_product.*
 import kotlinx.android.synthetic.main.fragment_order_summary.*
 import kotlinx.android.synthetic.main.fragment_order_summary.view.*
 import org.kodein.di.KodeinAware
@@ -442,17 +445,17 @@ class OrderSummary : Fragment(), KodeinAware, View.OnClickListener,
                     userLoginRequestPopup.setUserLoginRequestListener(this@OrderSummary)
                     userLoginRequestPopup.show(mActivity.supportFragmentManager, "User login request popup !!")
                 }
-
-
             }
 
-            override fun onPriceCheckOnCoupon(isGreater: Boolean) {
-
+            override fun onProductImageClick(prod: Product) {
+//                val extras = FragmentNavigatorExtras(imgProduct to "transitionHome")
+                val orderSummaryToDetailViewProductFragDirections =
+                OrderSummaryDirections.actionOrderSummaryToDetailViewProductFrag(prod)
+                navController.navigate(orderSummaryToDetailViewProductFragDirections)
             }
 
-            override fun errorMessage(msg: String) {
-
-            }
+            override fun onPriceCheckOnCoupon(isGreater: Boolean) {}
+            override fun errorMessage(msg: String) {}
         }
     }
 

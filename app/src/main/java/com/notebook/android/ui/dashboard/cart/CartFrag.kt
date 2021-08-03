@@ -264,19 +264,18 @@ class CartFrag : Fragment(), KodeinAware, CartResponseListener,
                         }
 
                         override fun cartProductDetail(cartProd: Cart) {
-                            /*val prod = Product(cartProd.cartproduct_id,
+                            val prod = Product(cartProd.cartproduct_id,
                                 cartProd.keyfeature, cartProd.material,
                                 cartProd.title, cartProd.alias, cartProd.image,
                                 cartProd.status, cartProd.short_description,
                                 cartProd.description, cartProd.data_sheet,
-                                cartProd.quantity, cartProd.price, cartProd.offer_price,
+                                cartProd.quantity, cartProd.price, cartProd.offer_price?:0,
                                 cartProd.product_code, cartProd.product_condition,
-                                cartProd.discount, cartProd.latest,
+                                cartProd.discount?:0, cartProd.latest,
                                 cartProd.best, cartProd.brandtitle, cartProd.colortitle)
 
-                            val cartToProductDetailFrag: CartDirections.ActionCartToProductDetail
-                                    = CartDirections.actionCartToProductDetail(prod)
-                            navController.navigate(cartToProductDetailFrag)*/
+                            val cartToProductDetailFrag = CartFragDirections.actionCartFragToDetailViewProductFrag(prod)
+                            navController.navigate(cartToProductDetailFrag)
                         }
 
                         override fun cartUpdated(isUpdated: Boolean) {
