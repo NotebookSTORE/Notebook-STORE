@@ -5,27 +5,18 @@
     <!-- Access internet or wifi permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Access Sms permission... -->
-<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <!-- Access Location permission... -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Access Sms permission... -->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_SMS" /> -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- Access Location permission... -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Accesses for external storage permission.... -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Accesses for external storage permission.... -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- Camera permission for getting image... -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Camera permission for getting image... -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.hardware.camera" />
     <uses-permission android:name="android.hardware.camera.autofocus" />
 
     <application
-        tools:node="merge"
         android:name=".application.NoteBookApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
@@ -33,29 +24,37 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:node="merge"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.dashboard.MainDashboardPage"/>
+        <activity
+            android:name=".ui.myOrder.OrderTrackWebView"
+            android:exported="true" />
+        <activity
+            android:name=".ui.myOrder.MainActivity"
+            android:exported="true" />
+        <activity android:name=".ui.dashboard.MainDashboardPage" />
         <activity android:name=".ui.splash.SplashPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <data android:scheme="https"
-                    android:host="notebookstore.page.link"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="notebookstore.page.link"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
             android:screenOrientation="fullSensor"
@@ -82,25 +81,27 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.FirebaseMessagingService"
+        <service
+            android:name=".service.FirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".receiver.NetworkReceiver"
+        <receiver
+            android:name=".receiver.NetworkReceiver"
             android:exported="false">
             <intent-filter>
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
-                <!--<action android:name="android.net.wifi.STATE_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
+                <!--
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                -->
             </intent-filter>
-        </receiver>
-
-        <!--android:permission="android.permission.INSTALL_PACKAGES"-->
+        </receiver> <!-- android:permission="android.permission.INSTALL_PACKAGES" -->
         <receiver
             android:name=".receiver.InstallReferrerReceiver"
             android:exported="true"
@@ -109,11 +110,11 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receiver.GoogleSmsReadBroadcastReceiver"
+        <receiver
+            android:name=".receiver.GoogleSmsReadBroadcastReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
     </application>

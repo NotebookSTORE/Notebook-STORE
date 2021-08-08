@@ -138,32 +138,25 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
         } else {
             fragOrderSummaryBinding.clOrderDataFlowLayout.visibility = View.VISIBLE
             fragOrderSummaryBinding.clOrderAdminMessage.visibility = View.GONE
-            if (orderHistoryData.deliveryStatus.equals(ORDER_STATUS_CONFIRM, true)) {
-                fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
-                fragOrderSummaryBinding.tvRequestReturnCancel.text = "Return"
 
-                fragOrderSummaryBinding.tvDeliveredText.text = "Delivered on"
-                orderExpectedDate(
-                    fragOrderSummaryBinding.tvDeliveredDate,
-                    orderHistoryData.delivered_date
-                )
-            } else {
+            if (!orderHistoryData.expected_date.isNullOrBlank()) {
                 fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
                 fragOrderSummaryBinding.tvRequestReturnCancel.text = "Cancel"
 
                 fragOrderSummaryBinding.tvDeliveredText.text = "Expected delivery on"
+                orderExpectedDate(fragOrderSummaryBinding.tvDeliveredDate, orderHistoryData.expected_date)
             }
-        }
+            if (!orderHistoryData.delivered_date.isNullOrBlank()) {
 
+                fragOrderSummaryBinding.tvDeliveredSuccessText.visibility = View.VISIBLE
+                fragOrderSummaryBinding.tvDeliveredSuccessDate.visibility = View.VISIBLE
+                fragOrderSummaryBinding.progressView2.visibility = View.VISIBLE
 
-        if (orderHistoryData.delivered_date.isNullOrEmpty()) {
-            fragOrderSummaryBinding.progressView2.visibility = View.VISIBLE
-            fragOrderSummaryBinding.tvDeliveredSuccessDate.visibility = View.VISIBLE
-            fragOrderSummaryBinding.tvDeliveredSuccessText.visibility = View.VISIBLE
-        } else {
-            fragOrderSummaryBinding.progressView2.visibility = View.GONE
-            fragOrderSummaryBinding.tvDeliveredSuccessDate.visibility = View.GONE
-            fragOrderSummaryBinding.tvDeliveredSuccessText.visibility = View.GONE
+                fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
+                fragOrderSummaryBinding.tvRequestReturnCancel.text = "Return"
+
+                orderExpectedDate(fragOrderSummaryBinding.tvDeliveredSuccessDate, orderHistoryData.delivered_date)
+            }
         }
 
         if (!orderHistoryData.return_date.isNullOrEmpty()) {

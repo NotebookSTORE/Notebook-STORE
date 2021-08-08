@@ -104,19 +104,14 @@ class DashboardRepo(
 
 
     suspend fun insertAllBannerIntoDB(bannerList:List<Banner>) = db.getHomeDao().insertAllBanner(bannerList)
-    suspend fun insertAllBestSellerIntoDB(bestSellerList:List<BestSellerHome>)
-            = db.getHomeDao().insertAllBestSellerHome(bestSellerList)
-    suspend fun insertAllLatestProductIntoDB(latestProductList:List<LatestProductHome>)
-            = db.getHomeDao().insertAllLatestProductHome(latestProductList)
+    suspend fun insertAllBestSellerIntoDB(bestSellerList:List<BestSellerHome>) = db.getHomeDao().insertAllBestSellerHome(bestSellerList)
+    suspend fun insertAllLatestProductIntoDB(latestProductList:List<LatestProductHome>) = db.getHomeDao().insertAllLatestProductHome(latestProductList)
 
-    suspend fun insertAllBrandsIntoDB(brandList:List<Brand>)
-            = db.getHomeDao().insertAllBrands(brandList)
-    suspend fun insertAllLatestOfferIntoDB(latestOfferList:List<LatestOffer>)
-            = db.getHomeDao().insertAllLatestOffers(latestOfferList)
+    suspend fun insertAllBrandsIntoDB(brandList:List<Brand>) = db.getHomeDao().insertAllBrands(brandList)
+    suspend fun insertAllLatestOfferIntoDB(latestOfferList:List<LatestOffer>) = db.getHomeDao().insertAllLatestOffers(latestOfferList)
     suspend fun clearLatestOfferDB() = db.getHomeDao().clearLatestOfferHome()
 
-    suspend fun insertMerchantBannerIntoDB(merchantBannerList:List<MerchantBanner>)
-            = db.getHomeDao().insertAllMerchantBanner(merchantBannerList)
+    suspend fun insertMerchantBannerIntoDB(merchantBannerList:List<MerchantBanner>) = db.getHomeDao().insertAllMerchantBanner(merchantBannerList)
 
 
     //cart db function here..

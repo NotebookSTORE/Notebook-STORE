@@ -445,10 +445,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     val sliderAdapter = ProductImageSliderAdapter(mContext,
                         prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
                         object : ProductImageSliderAdapter.ProductImageSliderListener {
-                            override fun onSliderClick(offerUrl: Array<String>) {
+                            override fun onSliderClick(offerUrl: Array<String>,position: Int) {
                                 val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
                                     DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(
-                                        offerUrl
+                                        offerUrl,position
                                     )
                                 Log.e("offer web link", " :: $offerUrl")
                                 navController.navigate(detailViewProductFragDirections)

@@ -82,7 +82,19 @@
         <action
             android:id="@+id/action_orderFrag_to_reviewProduct"
             app:destination="@id/reviewProduct" />
+        <action
+            android:id="@+id/action_orderFrag_to_orderTrackWebView"
+            app:destination="@id/orderTrackWebView" />
     </fragment>
+
+    <fragment
+        android:id="@+id/orderTrackWebView"
+        android:name="com.notebook.android.ui.myOrder.OrderTrackWebView"
+        android:label="order track"
+        tools:layout="@layout/order_track_web_view">
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/myAccountFrag"
@@ -790,6 +802,9 @@
         <argument
             android:name="imgUrl"
             app:argType="string[]" />
+        <argument
+            android:name="imgPosition"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

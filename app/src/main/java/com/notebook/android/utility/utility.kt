@@ -109,9 +109,9 @@ fun getUserImageFullPath(img:String) : String{
 fun loadAllTypeImageWithSize(imgView: ImageView, loadImageBasePath:String, imageName:String?,width:Int? = 600,height:Int?=600){
 //    val imgBasePah = "https://notebookstore.in/stationarykingdom/public/uploads/product/"
     if(!imageName.isNullOrEmpty()){
-        Glide.with(imgView.context).load("$loadImageBasePath$imageName").override(width?:600,height?:600).into(imgView)
+        Glide.with(imgView.context).load("$loadImageBasePath$imageName").into(imgView)
     }else{
-        Glide.with(imgView.context).load(R.drawable.note_pad).override(width?:600,height?:600).into(imgView)
+        Glide.with(imgView.context).load(R.drawable.note_pad).into(imgView)
     }
 }
 
@@ -223,15 +223,21 @@ fun formatStringDateToStandard(textview:TextView, date:String?){
     }
 }
 
-@BindingAdapter("orderedDate")
-fun orderDeliveryDate(textview:TextView, date:String?){
+@BindingAdapter("orderedDate","deliveredDate")
+fun orderDeliveryDate(textview:TextView, date:String?,deliveredDate:String?){
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val formatter = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()) //If you need time just put specific format for time like 'HH:mm:ss'
-    if(!date.isNullOrEmpty()){
-        val dateParse = dateFormat.parse(date)//You will get date object relative to server/client timezone wherever it is parsed
+    if(!deliveredDate.isNullOrBlank()){
+        val dateParse = dateFormat.parse(deliveredDate)//You will get date object relative to server/client timezone wherever it is parsed
+        val convertedDate = formatter.format(dateParse!!)
+        textview.text = "Delivered on ${convertedDate}"
+    }else if (!date.isNullOrBlank()){
+        val dateParse = dateFormat.parse(deliveredDate)//You will get date object relative to server/client timezone wherever it is parsed
         val convertedDate = formatter.format(dateParse!!)
         textview.text = "Delivery on ${convertedDate}"
     }else{
         textview.text = ""
     }
+
+
 }

@@ -10,15 +10,15 @@ const val ORDER_HISTORY_ID = 0
 data class OrderHistory(
     var cartproduct_id: Int? = null,
     var original_price: Int? = null,
-    var delivery_cost : Int? = null,
-    var orderId:String,
+    var delivery_cost: Int? = null,
+    var orderId: String,
     var cartprice: Float,
     var cartquantity: Int,
-    var deliveryStatus:String ?= null,
+    var deliveryStatus: String? = null,
     var cartstatus: Int? = null,
     var carttotalamount: Float,
     var cartdiscount: Int? = null,
-    var keyfeature:List<String> ?= null,
+    var keyfeature: List<String>? = null,
     var material: String? = null,
     var title: String? = null,
     var alias: String? = null,
@@ -37,20 +37,21 @@ data class OrderHistory(
     var best: Int? = null,
     var brandtitle: String? = null,
     var colortitle: String? = null,
-    var rating:Float,
+    var rating: Float,
     var message: String? = null,
     var delivered_date: String? = null,
     var expected_date: String? = null,
     var return_date: String? = null,
     var created_at: String? = null,
-    var cancel_status:Int,
-    var return_status:Int,
-    var cancel_description:String ?= null,
-    var ret_reason:String ?= null,
-    var can_reason:String ?= null,
-    var cancel_date:String ?= null,
-    var cancel_approve_date:String ?= null
-): Serializable{
+    var cancel_status: Int,
+    var return_status: Int,
+    var cancel_description: String? = null,
+    var ret_reason: String? = null,
+    var can_reason: String? = null,
+    var cancel_date: String? = null,
+    var cancel_approve_date: String? = null,
+    var tracking_url: String? = null
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
-    var orderHistoryID:Int = ORDER_HISTORY_ID
+    var orderHistoryID: Int = ORDER_HISTORY_ID
 }

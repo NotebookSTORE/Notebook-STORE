@@ -97,7 +97,7 @@ android {
 dependencies {
     def paging_version = "2.1.2"
     def coroutineVersion = "1.3.7"
-    def room_version = "2.2.5"
+    def room_version = "2.3.0"
     def KodeinVersion = "6.5.5"
     def retrofit_version = "2.6.2"
     def lifecycle_version = "2.2.0"

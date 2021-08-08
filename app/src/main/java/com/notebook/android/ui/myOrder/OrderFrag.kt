@@ -98,7 +98,9 @@ class OrderFrag : Fragment(), KodeinAware, OrderHistoryListener, View.OnClickLis
                 }
 
                 override fun onTrackOrderClick(orderData: OrderHistory) {
-                    Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
+                    OrderTrackWebView.orderUrl = orderData.tracking_url
+                    val ordertrackingDirections = OrderFragDirections.actionOrderFragToOrderTrackWebView()
+                    navController.navigate(ordertrackingDirections)
                 }
             })
         fragmentOrderBinding.recViewMyOrder.adapter = orderAdapter

@@ -59,7 +59,7 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
                 imageArray.add(imageUrl)
             }
             
-            prodImageSliderListener.onSliderClick(imageArray.toTypedArray())
+            prodImageSliderListener.onSliderClick(imageArray.toTypedArray(),position)
             
         }
 
@@ -72,6 +72,6 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
 
     interface ProductImageSliderListener{
         fun onSliderClick(offerUrl:String){}
-        fun onSliderClick(offerUrl: Array<String>)
+        fun onSliderClick(offerUrl: Array<String>,position: Int)
     }
 }
