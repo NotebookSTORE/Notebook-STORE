@@ -24,7 +24,7 @@ class DashboardViewModel(
 //    lateinit var policyDataListener : PolicyDataListener
 
     //get all data from cart db....
-    val getCartData = MutableLiveData<List<Cart>>()
+    fun getCartData() = dashboardRepo.getCartData()
     fun getUserData() = dashboardRepo.getUser()
     val getAllBannerData = MutableLiveData<List<Banner>>()
     val getAllCategoryDataFromDB = MutableLiveData<List<Category>>()
@@ -370,8 +370,7 @@ class DashboardViewModel(
                 prodResponse.let {
                     if(it.status == 1){
                         if(it.cartdata != null){
-                            getCartData.postValue(it.cartdata!!)
-//                            dashboardRepo.insertCartList(it.cartdata!!)
+                            dashboardRepo.insertCartList(it.cartdata!!)
                         }
                         dashboardApiListener.onSuccessLogout()
                     }else if(it.status == 2){

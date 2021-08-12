@@ -177,7 +177,7 @@ class MainDashboardPage : AppCompatActivity(), View.OnClickListener,
 
 
         //Get cart item count...
-        dashboardVM.getCartData.observe(this, Observer {
+        dashboardVM.getCartData().observe(this, Observer {
             if(it.isNotEmpty()){
                 cartCount.value = it.size
                 var totalCartItem=0
