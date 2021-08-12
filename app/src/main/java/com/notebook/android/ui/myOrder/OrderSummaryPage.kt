@@ -143,7 +143,7 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
                 fragOrderSummaryBinding.clRequestReturnLayout.visibility = View.VISIBLE
                 fragOrderSummaryBinding.tvRequestReturnCancel.text = "Cancel"
 
-                fragOrderSummaryBinding.tvDeliveredText.text = "Expected delivery on"
+                fragOrderSummaryBinding.tvDeliveredText.text = "Expected Delivery on"
                 orderExpectedDate(fragOrderSummaryBinding.tvDeliveredDate, orderHistoryData.expected_date)
             }
             if (!orderHistoryData.delivered_date.isNullOrBlank()) {

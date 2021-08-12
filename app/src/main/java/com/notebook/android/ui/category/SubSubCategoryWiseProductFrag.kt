@@ -371,6 +371,7 @@ class SubSubCategoryWiseProductFrag : Fragment(), KodeinAware,
     }
 
     override fun onRefresh() {
+        isRefreshing=true
         filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 

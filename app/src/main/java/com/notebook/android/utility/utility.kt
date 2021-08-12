@@ -119,7 +119,7 @@ fun loadAllTypeImageWithSize(imgView: ImageView, loadImageBasePath:String, image
 fun loadAllTypeImage(imgView: ImageView, loadImageBasePath:String, imageName:String?){
 //    val imgBasePah = "https://notebookstore.in/stationarykingdom/public/uploads/product/"
     if(!imageName.isNullOrEmpty()){
-        Glide.with(imgView.context).load("$loadImageBasePath$imageName").override(600,600).into(imgView)
+        Glide.with(imgView.context).load("$loadImageBasePath$imageName").into(imgView)
     }else{
         Glide.with(imgView.context).load(R.drawable.note_pad).encodeQuality(70).into(imgView)
     }

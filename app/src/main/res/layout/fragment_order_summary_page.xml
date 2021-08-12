@@ -308,7 +308,7 @@
                             android:layout_marginTop="24dp"
                             android:padding="@dimen/_4dp"
                             android:visibility="gone"
-                            android:text="delivered on"
+                            android:text="Delivered on"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/font_fourteen"
                             app:layout_constraintLeft_toRightOf="@+id/gl15OrderDetail"

@@ -36,7 +36,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
-import com.google.firebase.iid.FirebaseInstanceId
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.max.ecomaxgo.maxpe.view.flight.utility.showPermissionExplaination
@@ -66,8 +67,6 @@ import com.notebook.android.ui.popupDialogFrag.RegisterForDialog
 import com.notebook.android.ui.popupDialogFrag.VerificationPopupDialog
 import com.notebook.android.utility.Constant
 import com.notebook.android.utility.CustomTextWatcher
-import com.canhub.cropper.CropImage
-import com.canhub.cropper.CropImageView
 import com.notebook.android.utility.getAppFilePath
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -90,22 +89,22 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     PrimeRegisterRespListener, OtpVerificationListener, GetSelectIntentListener,
     RegisterForDialog.RegisterForListener, MerchantBenefitListener {
 
-    private lateinit var fragPrimeMerchantBinding:FragmentPrimeMerchantFormBinding
-    private lateinit var navController:NavController
+    private lateinit var fragPrimeMerchantBinding: FragmentPrimeMerchantFormBinding
+    private lateinit var navController: NavController
     private lateinit var myCalendar: Calendar
     private lateinit var dateDOB: DatePickerDialog.OnDateSetListener
-    private var identityImage:String ?= null
-    private var identityImage2:String ?= null
-    private var pancardImage:String ?= null
+    private var identityImage: String? = null
+    private var identityImage2: String? = null
+    private var pancardImage: String? = null
     private var isTermAccepted = false
     private var isRegisterType = 0
     private var isFieldUpdated = false
 
-    private var cancelledChequeImage: String?= null
-    private var imageUri: Uri?= null
-    private var imageFile: File ?= null
+    private var cancelledChequeImage: String? = null
+    private var imageUri: Uri? = null
+    private var imageFile: File? = null
 
-    companion object{
+    companion object {
         const val GALLERY_REQUEST_CODE = 6011
         const val CAMERA_REQUEST_CODE = 6021
     }
@@ -118,8 +117,8 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         NotebookPrefs(mContext)
     }
     override val kodein by kodein()
-    private val viewModelFactory:MerchantVMFactory by instance()
-    private val merchantVM:MerchantViewModel by lazy {
+    private val viewModelFactory: MerchantVMFactory by instance()
+    private val merchantVM: MerchantViewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(MerchantViewModel::class.java)
     }
 
@@ -128,8 +127,8 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     private lateinit var errorToastTextView: TextView
     private lateinit var successToastTextView: TextView
 
-    private var addressData:Address ?= null
-    private lateinit var mContext:Context
+    private var addressData: Address? = null
+    private lateinit var mContext: Context
     private lateinit var mActivity: FragmentActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -143,7 +142,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         merchantVM.merchantBenefitData()
     }
 
-    private val loadingDialog: LoadingDialog by lazy{
+    private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog()
     }
 
@@ -159,7 +158,8 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         merchantVM.primeRespListener = this
         merchantVM.merchantBenefitListener = this
 
-        fragPrimeMerchantBinding.tvAnnualCharges.text = "Annual Subscription Charges ₹ ${notebookPrefs.primeSubscriptionCharge}/-"
+        fragPrimeMerchantBinding.tvAnnualCharges.text =
+            "Annual Subscription Charges ₹ ${notebookPrefs.primeSubscriptionCharge}/-"
         setTermsLoginTextClickable()
         myCalendar = Calendar.getInstance();
         dateDOB = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -172,22 +172,24 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
 
 //        fragPrimeMerchantBinding.edtAddress.setText(notebookPrefs.defaultAddr)
         //success toast layout initialization here....
-        val successToastLayout:View = inflater.inflate(
+        val successToastLayout: View = inflater.inflate(
             R.layout.custom_toast_layout,
             fragPrimeMerchantBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
         )
-        successToastTextView= (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
+        successToastTextView =
+            (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
         successToast = Toast(mContext)
         successToast.view = successToastLayout
         successToast.duration = Toast.LENGTH_SHORT
         successToast.setGravity(OrderSummaryPage.GRAVITY_BOTTOM, 0, 80)
 
         //error toast layout here....
-        val errorToastLayout:View = inflater.inflate(
+        val errorToastLayout: View = inflater.inflate(
             R.layout.error_custom_toast_layout,
             fragPrimeMerchantBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup
         )
-        errorToastTextView = (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
+        errorToastTextView =
+            (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
         errorToast = Toast(mContext)
         errorToast.view = errorToastLayout
         errorToast.duration = Toast.LENGTH_SHORT
@@ -351,26 +353,27 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        if (isFieldUpdated){
+        if (isFieldUpdated) {
             onRestoreInstanceState()
         }
         return fragPrimeMerchantBinding.root
     }
 
-    private var dateForServer:String ?= null
+    private var dateForServer: String? = null
     private fun updateLabelFrom() {
         val sdf = SimpleDateFormat(Constant.DATE_FORMAT, Locale.US)
-        dateForServer = SimpleDateFormat(Constant.DATE_FORMAT_SERVER, Locale.US).format(myCalendar.time)
+        dateForServer =
+            SimpleDateFormat(Constant.DATE_FORMAT_SERVER, Locale.US).format(myCalendar.time)
         notebookPrefs.merchantDOB = dateForServer
         fragPrimeMerchantBinding.edtDOB.setText(sdf.format(myCalendar.time))
     }
 
-    private var userData: User?= null
+    private var userData: User? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        if(refferalPrefs.refferCode?.isNotEmpty() == true || notebookPrefs.merchantRefferalID?.isNotEmpty() == true){
+        if (refferalPrefs.refferCode?.isNotEmpty() == true || notebookPrefs.merchantRefferalID?.isNotEmpty() == true) {
             fragPrimeMerchantBinding.edtReferralID.apply {
                 if (notebookPrefs.merchantRefferalID.isNullOrEmpty()) {
                     notebookPrefs.merchantRefferalID = refferalPrefs.refferCode
@@ -379,7 +382,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 isEnabled = false
                 isFocusable = false
             }
-        }else{
+        } else {
             fragPrimeMerchantBinding.edtReferralID.apply {
                 isEnabled = true
                 isFocusable = true
@@ -397,7 +400,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             if (it != null) {
                 userData = it
                 Log.e("refferalData", " :: ${refferalPrefs.refferCode}")
-                if(userData!!.referral_id!!> 0){
+                if (userData!!.referral_id!! > 0) {
                     refferalPrefs.clearPreference()
                 }
             } else {
@@ -408,23 +411,25 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             }
         })
 
-        if(isRegisterType == 2){
+        if (isRegisterType == 2) {
             fragPrimeMerchantBinding.clInstituteName.visibility = View.VISIBLE
-        }else{
+        } else {
             fragPrimeMerchantBinding.clInstituteName.visibility = View.GONE
         }
 
-        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("panCardImageUri")?.observe(
-            viewLifecycleOwner, {
-                pancardImage = it
-            })
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("panCardImageUri")
+            ?.observe(
+                viewLifecycleOwner, {
+                    pancardImage = it
+                })
 
-        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("aadharCardImageUri")?.observe(
-            viewLifecycleOwner, {
-                val aadharData: AadharData = Gson().fromJson(it, AadharData::class.java)
-                identityImage = aadharData.frontImage
-                identityImage2 = aadharData.backImage
-            })
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("aadharCardImageUri")
+            ?.observe(
+                viewLifecycleOwner, {
+                    val aadharData: AadharData = Gson().fromJson(it, AadharData::class.java)
+                    identityImage = aadharData.frontImage
+                    identityImage2 = aadharData.backImage
+                })
 
         fragPrimeMerchantBinding.edtAadharId.addTextChangedListener(object : CustomTextWatcher(
             ' ',
@@ -529,10 +534,11 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             cancelledChequeImage = notebookPrefs.cancelledChequeImage
             fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.GONE
             fragPrimeMerchantBinding.clImageShown.visibility = View.VISIBLE
-            Glide.with(mActivity).load(cancelledChequeImage).into(fragPrimeMerchantBinding.imgReportProblem)
+            Glide.with(mActivity).load(cancelledChequeImage)
+                .into(fragPrimeMerchantBinding.imgReportProblem)
         }
 
-        if(userData?.status == 1){
+        if (userData?.status == 1) {
             fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.VISIBLE
             fragPrimeMerchantBinding.clImageShown.visibility = View.GONE
             fragPrimeMerchantBinding.imgRemovePhoto.visibility = View.VISIBLE
@@ -540,25 +546,25 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             imageUri = null
         }
 
-        if(userData?.usertype == 1){
-            if (userData?.status == 0){
+        if (userData?.usertype == 1) {
+            if (userData?.status == 0) {
                 fragPrimeMerchantBinding.btnProceedToPay.text = "Renew Subsciption"
-            }else{
+            } else {
                 fragPrimeMerchantBinding.btnProceedToPay.text = "Update"
             }
-        }else{
+        } else {
             fragPrimeMerchantBinding.btnProceedToPay.visibility = View.VISIBLE
             fragPrimeMerchantBinding.btnProceedToPay.text = "Submit"
         }
 
 
-        if(!userData?.identity_image.isNullOrEmpty()){
-            if (userData?.status == 1){
+        if (!userData?.identity_image.isNullOrEmpty()) {
+            if (userData?.status == 1) {
                 identityImage = null
                 identityImage2 = null
                 pancardImage = null
                 cancelledChequeImage = null
-            }else{
+            } else {
                 identityImage = notebookPrefs.aadharFrontImage
                 identityImage2 = notebookPrefs.aadharBackImage
                 pancardImage = notebookPrefs.pancardImage
@@ -571,9 +577,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 Glide.with(mContext).load(notebookPrefs.aadharBackImage).into(
                     fragPrimeMerchantBinding.imgBackAadhar
                 )
-                Glide.with(mContext).load(notebookPrefs.pancardImage).into(fragPrimeMerchantBinding.imgPancard)
+                Glide.with(mContext).load(notebookPrefs.pancardImage)
+                    .into(fragPrimeMerchantBinding.imgPancard)
             }
-        }else{
+        } else {
             identityImage = null
             identityImage2 = null
             pancardImage = null
@@ -609,7 +616,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             fragPrimeMerchantBinding.clCancelChequeUploadPhoto.isEnabled = true
         }
 
-        if (notebookPrefs.primeUserUpgradeAvail == 1){
+        if (notebookPrefs.primeUserUpgradeAvail == 1) {
             fragPrimeMerchantBinding.edtSeletRegisterType.isFocusable = false
             fragPrimeMerchantBinding.edtSeletRegisterType.isEnabled = false
             fragPrimeMerchantBinding.edtSeletRegisterType.isCursorVisible = false
@@ -699,7 +706,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
 
     private fun fillPrimeMerchantData(userData: User?) {
 
-        if (!userData?.address.isNullOrEmpty()){
+        if (!userData?.address.isNullOrEmpty()) {
             try {
                 val arrayStr: List<String> = userData?.address!!.split("\\s*,\\s*")
                 val mJSONArray = JSONArray()
@@ -735,7 +742,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 // e.printStackTrace();
             }
 
-        }else{
+        } else {
             addressData?.street = ""
             addressData?.city = ""
             addressData?.state = ""
@@ -794,13 +801,13 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             }
         }
 
-        if(userData?.status == 1){
+        if (userData?.status == 1) {
             fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.VISIBLE
             fragPrimeMerchantBinding.clImageShown.visibility = View.GONE
             fragPrimeMerchantBinding.imgRemovePhoto.visibility = View.VISIBLE
             cancelledChequeImage = null
             imageUri = null
-        }else{
+        } else {
             if (userData?.cancled_cheque_image.isNullOrEmpty()) {
                 fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.VISIBLE
                 fragPrimeMerchantBinding.clImageShown.visibility = View.GONE
@@ -812,20 +819,23 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.GONE
                 fragPrimeMerchantBinding.imgRemovePhoto.visibility = View.GONE
                 fragPrimeMerchantBinding.clImageShown.visibility = View.VISIBLE
-                Glide.with(mActivity).load("${Constant.MERCHANT_BASE_IMAGE_PATH}${userData?.cancled_cheque_image}").into(
-                    fragPrimeMerchantBinding.imgReportProblem
-                )
+                Glide.with(mActivity)
+                    .load("${Constant.MERCHANT_BASE_IMAGE_PATH}${userData?.cancled_cheque_image}")
+                    .into(
+                        fragPrimeMerchantBinding.imgReportProblem
+                    )
                 cancelledChequeImage = userData?.cancled_cheque_image
-                notebookPrefs.cancelledChequeImage = "${Constant.MERCHANT_BASE_IMAGE_PATH}${userData?.cancled_cheque_image}"
+                notebookPrefs.cancelledChequeImage =
+                    "${Constant.MERCHANT_BASE_IMAGE_PATH}${userData?.cancled_cheque_image}"
             }
         }
 
         val identityImageFromServer = userData?.identity_image
-        if(!identityImageFromServer.isNullOrEmpty()){
+        if (!identityImageFromServer.isNullOrEmpty()) {
             val items = listOf(identityImageFromServer.split("\\s*,\\s*")).toString()
             val data = items.replace("[[", "[").replace("]]", "]")
 //            identityImage2 = userData.identity_image
-            try{
+            try {
                 val jsonArrayList = JSONArray(data)
                 identityImage = jsonArrayList[0].toString()
                 identityImage2 = jsonArrayList[1].toString()
@@ -833,32 +843,36 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 pancardImage = userData.pancardimage
 
             } catch (exception: JSONException) {
-            // how you handle the exception
-            // e.printStackTrace();
-        }
+                // how you handle the exception
+                // e.printStackTrace();
+            }
 
-            if (userData.status == 1){
+            if (userData.status == 1) {
                 identityImage = null
                 identityImage2 = null
                 pancardImage = null
                 cancelledChequeImage = null
-            }else{
-                notebookPrefs.aadharFrontImage = "${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage"
-                notebookPrefs.aadharBackImage = "${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage2"
+            } else {
+                notebookPrefs.aadharFrontImage =
+                    "${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage"
+                notebookPrefs.aadharBackImage =
+                    "${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage2"
                 notebookPrefs.pancardImage = "${Constant.MERCHANT_BASE_IMAGE_PATH}$pancardImage"
                 fragPrimeMerchantBinding.clPanImageShow.visibility = View.VISIBLE
                 fragPrimeMerchantBinding.clAadharImageShow.visibility = View.VISIBLE
-                Glide.with(mContext).load("${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage").into(
-                    fragPrimeMerchantBinding.imgFrontAadhar
-                )
-                Glide.with(mContext).load("${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage2").into(
-                    fragPrimeMerchantBinding.imgBackAadhar
-                )
+                Glide.with(mContext).load("${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage")
+                    .into(
+                        fragPrimeMerchantBinding.imgFrontAadhar
+                    )
+                Glide.with(mContext).load("${Constant.MERCHANT_BASE_IMAGE_PATH}$identityImage2")
+                    .into(
+                        fragPrimeMerchantBinding.imgBackAadhar
+                    )
                 Glide.with(mContext).load("${Constant.MERCHANT_BASE_IMAGE_PATH}$pancardImage").into(
                     fragPrimeMerchantBinding.imgPancard
                 )
             }
-        }else{
+        } else {
             fragPrimeMerchantBinding.clAadharImageShow.visibility = View.GONE
             fragPrimeMerchantBinding.clPanImageShow.visibility = View.GONE
             identityImage = null
@@ -866,13 +880,13 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             pancardImage = null
         }
 
-        if(userData?.usertype == 1){
-            if (userData.status == 0){
+        if (userData?.usertype == 1) {
+            if (userData.status == 0) {
                 fragPrimeMerchantBinding.btnProceedToPay.text = "Renew Subsciption"
-            }else{
+            } else {
                 fragPrimeMerchantBinding.btnProceedToPay.text = "Update"
             }
-        }else{
+        } else {
             fragPrimeMerchantBinding.btnProceedToPay.visibility = View.VISIBLE
             fragPrimeMerchantBinding.btnProceedToPay.text = "Submit"
         }
@@ -906,7 +920,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             fragPrimeMerchantBinding.imgRemovePhoto.visibility = View.VISIBLE
         }
 
-        if (notebookPrefs.primeUserUpgradeAvail == 1){
+        if (notebookPrefs.primeUserUpgradeAvail == 1) {
             fragPrimeMerchantBinding.edtSeletRegisterType.isFocusable = false
             fragPrimeMerchantBinding.edtSeletRegisterType.isEnabled = false
             fragPrimeMerchantBinding.edtSeletRegisterType.isCursorVisible = false
@@ -1035,9 +1049,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             }
         }
     }
+
     private val startFromTerms = 82
     private val endToTerms = 102
-    private fun setTermsLoginTextClickable(){
+    private fun setTermsLoginTextClickable() {
         val ssTermsText = SpannableString(resources.getString(R.string.strTermsCondition))
         ssTermsText.setSpan(
             ForegroundColorSpan(Color.parseColor("#ffffff")),
@@ -1049,7 +1064,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
             endToTerms,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        val spanTerms =  object : ClickableSpan() {
+        val spanTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val navController = Navigation.findNavController(widget)
                 val bundle = Bundle()
@@ -1069,7 +1084,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     }
 
     override fun onClick(view: View?) {
-        when(view){
+        when (view) {
 
             fragPrimeMerchantBinding.edtDOB -> {
                 DatePickerDialog(
@@ -1113,7 +1128,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         }
     }
 
-    private fun takePictureFromGallery(){
+    private fun takePictureFromGallery() {
         try {
             val galleryIntent = Intent(
                 Intent.ACTION_PICK,
@@ -1138,7 +1153,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         }
     }
 
-    private fun getPhotoSheet(){
+    private fun getPhotoSheet() {
         val photoDialogFragment = TakePhotoFromCamORGallerySheet()
         photoDialogFragment.setPhotoFromListener(this)
         photoDialogFragment.show(mActivity.supportFragmentManager, "Photo Sheet Dialog")
@@ -1181,10 +1196,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     ) or ActivityCompat.shouldShowRequestPermissionRationale(
                         mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )or ActivityCompat.shouldShowRequestPermissionRationale(
+                    ) or ActivityCompat.shouldShowRequestPermissionRationale(
                         mActivity,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        ) -> mContext.showPermissionExplaination(
+                    ) -> mContext.showPermissionExplaination(
                         getString(
                             R.string.camera_permission_explanation
                         )
@@ -1249,7 +1264,8 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         notebookPrefs.cancelledChequeImage = resultUri.toString()
                         fragPrimeMerchantBinding.clCancelChequeUploadPhoto.visibility = View.GONE
                         fragPrimeMerchantBinding.clImageShown.visibility = View.VISIBLE
-                        Glide.with(mActivity).load(imageUri).into(fragPrimeMerchantBinding.imgReportProblem)
+                        Glide.with(mActivity).load(imageUri)
+                            .into(fragPrimeMerchantBinding.imgReportProblem)
                         Log.e("imageUri", " :: $imageUri")
                         try {
                             imageFile = File(resultUri?.getAppFilePath(mContext).toString())
@@ -1296,7 +1312,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         val fname = "$username.jpg"
         val file = File(myDir, fname)
         if (file.exists()) {
-            file.delete ()
+            file.delete()
             Log.e("save bitmap ", " :: file exist")
         }
         Log.e("bitmap dir", " :: $myDir")
@@ -1364,10 +1380,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     override fun onPrimeMerchantOTPVerify(user: User) {
         loadingDialog.dialog?.dismiss()
 
-        if (!user.address.isNullOrEmpty()){
+        if (!user.address.isNullOrEmpty()) {
             notebookPrefs.defaultAddr = user.address
         }
-        notebookPrefs.isVerified = user.is_verified?:0
+        notebookPrefs.isVerified = user.is_verified ?: 0
         notebookPrefs.walletAmount = user.wallet_amounts
         notebookPrefs.userID = user.id
         notebookPrefs.userToken = user.token
@@ -1376,7 +1392,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         Log.e("addressArray", " :: $items")
         val data = items.replace("[[", "[").replace("]]", "]")
 //            identityImage2 = userData.identity_image
-        try{
+        try {
             val jsonArrayList = JSONArray(data)
             val address = Address(
                 0,
@@ -1456,10 +1472,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     override fun onUpdatedRegularMerchant(user: User) {
         loadingDialog.dialog?.dismiss()
 
-        if (!user.address.isNullOrEmpty()){
+        if (!user.address.isNullOrEmpty()) {
             notebookPrefs.defaultAddr = user.address
         }
-        notebookPrefs.isVerified = user.is_verified?:0
+        notebookPrefs.isVerified = user.is_verified ?: 0
         notebookPrefs.walletAmount = user.wallet_amounts
         notebookPrefs.userID = user.id
         notebookPrefs.userToken = user.token
@@ -1468,7 +1484,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         val data = items.replace("[[", "[").replace("]]", "]")
 //            identityImage2 = userData.identity_image
 
-        try{
+        try {
             val jsonArrayList = JSONArray(data)
             val address = Address(
                 0,
@@ -1553,10 +1569,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     }
 
     override fun resendOtpCall(resend: Boolean) {
-       callRegisterPrimeMerchantApi()
+        callRegisterPrimeMerchantApi()
     }
 
-    private fun showErrorView(msg: String){
+    private fun showErrorView(msg: String) {
         fragPrimeMerchantBinding.clErrorView.visibility = View.VISIBLE
         fragPrimeMerchantBinding.tvErrorText.text = msg
         fragPrimeMerchantBinding.clErrorView.startAnimation(
@@ -1577,7 +1593,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         }, 1500)
     }
 
-    private fun callRegisterPrimeMerchantApi(){
+    private fun callRegisterPrimeMerchantApi() {
         val fullname = fragPrimeMerchantBinding.edtName.text.toString()
         val dob = fragPrimeMerchantBinding.edtDOB.text.toString()
         val email = fragPrimeMerchantBinding.edtEmail.text.toString()
@@ -1593,89 +1609,97 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         val refferalID = fragPrimeMerchantBinding.edtReferralID.text.toString()
 
         val edtLocality = fragPrimeMerchantBinding.edtMerchantLocality.text.toString()
-        val edtCity:String = fragPrimeMerchantBinding.edtMerchantCity.text.toString()
-        val edtState:String = fragPrimeMerchantBinding.edtMerchantState.text.toString()
-        val edtPincode:String = fragPrimeMerchantBinding.edtMerchantPincode.text.toString()
-        val edtCountry:String = fragPrimeMerchantBinding.edtMerchantCountry.text.toString()
+        val edtCity: String = fragPrimeMerchantBinding.edtMerchantCity.text.toString()
+        val edtState: String = fragPrimeMerchantBinding.edtMerchantState.text.toString()
+        val edtPincode: String = fragPrimeMerchantBinding.edtMerchantPincode.text.toString()
+        val edtCountry: String = fragPrimeMerchantBinding.edtMerchantCountry.text.toString()
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
             Log.e("instance token", " :: $it")
             notebookPrefs.firebaseDeviceID = it
         }
 
-        if(userData != null){
-            if (userData!!.usertype == 0){
-                if (userData!!.status == 0){
-                    if(isRegisterType == 0){
+        if (userData != null) {
+            if (userData!!.usertype == 0) {
+                if (userData!!.status == 0) {
+                    if (isRegisterType == 0) {
                         showErrorView("Please Select Register for")
-                    }else if(TextUtils.isEmpty(fullname)){
+                    } else if (TextUtils.isEmpty(fullname)) {
                         showErrorView("Enter full name")
-                    }else if(TextUtils.isEmpty(dob)){
+                    } else if (TextUtils.isEmpty(dob)) {
                         showErrorView("Enter your date of birth")
-                    }else if(TextUtils.isEmpty(email)){
+                    } else if (TextUtils.isEmpty(email)) {
                         showErrorView("Enter your email address")
-                    }else if(!validateEmail(email)){
+                    } else if (!validateEmail(email)) {
                         showErrorView("Enter valid email address")
-                    }else if(TextUtils.isEmpty(phone)){
+                    } else if (TextUtils.isEmpty(phone)) {
                         showErrorView("Enter your 10 digit mobile number")
-                    }else if(phone.length < 10){
+                    } else if (phone.length < 10) {
                         showErrorView("Enter valid mobile number")
-                    }else if(TextUtils.isEmpty(aadharDetail)){
+                    } else if (TextUtils.isEmpty(aadharDetail)) {
                         showErrorView("Enter your aadhar number")
-                    }else if(aadharDetail.length < 12){
+                    } else if (aadharDetail.length < 12) {
                         showErrorView("Enter valid aadhar number")
-                    }else if(TextUtils.isEmpty(panCardDetail)){
+                    } else if (TextUtils.isEmpty(panCardDetail)) {
                         showErrorView("Enter your pancard detail")
-                    }else if(panCardDetail.length < 10){
+                    } else if (panCardDetail.length < 10) {
                         showErrorView("Enter valid pancard detail")
-                    }else if(TextUtils.isEmpty(address)){
+                    } else if (TextUtils.isEmpty(address)) {
                         showErrorView("Enter your address")
-                    }else if(TextUtils.isEmpty(edtLocality)){
+                    } else if (TextUtils.isEmpty(edtLocality)) {
                         showErrorView("Enter locality here")
-                    }else if(TextUtils.isEmpty(edtCity)){
+                    } else if (TextUtils.isEmpty(edtCity)) {
                         showErrorView("Enter city here")
-                    }else if(TextUtils.isEmpty(edtState)){
+                    } else if (TextUtils.isEmpty(edtState)) {
                         showErrorView("Enter state here")
-                    }else if(TextUtils.isEmpty(edtPincode)){
+                    } else if (TextUtils.isEmpty(edtPincode)) {
                         showErrorView("Enter pincode here")
-                    }else if(edtPincode.length<6){
+                    } else if (edtPincode.length < 6) {
                         onFailure("Enter 6 digit pincode here")
-                    }else if(TextUtils.isEmpty(edtCountry)){
+                    } else if (TextUtils.isEmpty(edtCountry)) {
                         showErrorView("Enter country here")
-                    }else if(cancelledChequeImage == null){
+                    } else if (cancelledChequeImage == null) {
                         showErrorView("Please upload cancel cheque")
-                    }else if(TextUtils.isEmpty(accountNumber)){
+                    } else if (TextUtils.isEmpty(accountNumber)) {
                         showErrorView("Enter your bank account number")
-                    }else if(TextUtils.isEmpty(bankName)){
+                    } else if (TextUtils.isEmpty(bankName)) {
                         showErrorView("Enter your bank name")
-                    }else if(TextUtils.isEmpty(ifscCode)){
+                    } else if (TextUtils.isEmpty(ifscCode)) {
                         showErrorView("Enter your IFSC Code")
-                    }else if(TextUtils.isEmpty(bankLocation)){
+                    } else if (TextUtils.isEmpty(bankLocation)) {
                         showErrorView("Enter your bank location")
-                    }else if(!isTermAccepted){
+                    } else if (!isTermAccepted) {
                         showErrorView("Please accept terms & condition of Notebook Store app")
-                    }else{
+                    } else {
                         Log.e("dob server", dateForServer!!)
                         val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                         val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
                         val dobPart: RequestBody = dateForServer!!.toRequestBody(MultipartBody.FORM)
                         val phonePart: RequestBody = phone.toRequestBody(MultipartBody.FORM)
-                        val aadharDetailPart: RequestBody = aadharDetail.toRequestBody(MultipartBody.FORM)
-                        val pancardDetailPart: RequestBody = panCardDetail.toRequestBody(MultipartBody.FORM)
+                        val aadharDetailPart: RequestBody =
+                            aadharDetail.toRequestBody(MultipartBody.FORM)
+                        val pancardDetailPart: RequestBody =
+                            panCardDetail.toRequestBody(MultipartBody.FORM)
                         val addressPart: RequestBody = address.toRequestBody(MultipartBody.FORM)
-                        val accoutNumbPart: RequestBody = accountNumber.toRequestBody(MultipartBody.FORM)
+                        val accoutNumbPart: RequestBody =
+                            accountNumber.toRequestBody(MultipartBody.FORM)
                         val bankNamePart: RequestBody = bankName.toRequestBody(MultipartBody.FORM)
                         val ifscCodePart: RequestBody = ifscCode.toRequestBody(MultipartBody.FORM)
-                        val bankLocPart: RequestBody = bankLocation.toRequestBody(MultipartBody.FORM)
+                        val bankLocPart: RequestBody =
+                            bankLocation.toRequestBody(MultipartBody.FORM)
                         val upiIDPart: RequestBody = upiID.toRequestBody(MultipartBody.FORM)
-                        val refferalIDPart: RequestBody = refferalID.toRequestBody(MultipartBody.FORM)
+                        val refferalIDPart: RequestBody =
+                            refferalID.toRequestBody(MultipartBody.FORM)
 
-                        val localityPart: RequestBody = edtLocality.toRequestBody(MultipartBody.FORM)
+                        val localityPart: RequestBody =
+                            edtLocality.toRequestBody(MultipartBody.FORM)
                         val cityPart: RequestBody = edtCity.toRequestBody(MultipartBody.FORM)
                         val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                         val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                         val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                        val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                        val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                        val fbDeviceID: RequestBody =
+                            notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                        val registerForPart: RequestBody =
+                            isRegisterType.toString().toRequestBody(MultipartBody.FORM)
                         val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
                         val requestFileCancelCheque = imgFileCancelCheque
                             .asRequestBody("image/*".toMediaTypeOrNull())
@@ -1685,30 +1709,39 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             requestFileCancelCheque
                         )
 
-                        val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                        if(isRegisterType == 2){
-                            if (TextUtils.isEmpty(instituteValue)){
+                        val instituteValue =
+                            fragPrimeMerchantBinding.edtInstituteName.text.toString()
+                        if (isRegisterType == 2) {
+                            if (TextUtils.isEmpty(instituteValue)) {
                                 showErrorView("Please enter institute name")
-                            }else{
-                                val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
+                            } else {
+                                val institutePart: RequestBody =
+                                    instituteValue.toRequestBody(MultipartBody.FORM)
 
-                                if(!userData?.cancled_cheque_image.isNullOrEmpty()){
-                                    if(!userData?.identity_image.isNullOrEmpty()){
-                                        val items = listOf(userData?.identity_image?.split("\\s*,\\s*")).toString()
+                                if (!userData?.cancled_cheque_image.isNullOrEmpty()) {
+                                    if (!userData?.identity_image.isNullOrEmpty()) {
+                                        val items =
+                                            listOf(userData?.identity_image?.split("\\s*,\\s*")).toString()
                                         val data = items.replace("[[", "[")
                                             .replace("]]", "]")
 
-                                        try{
+                                        try {
                                             val jsonArrayList = JSONArray(data)
                                             Log.e(
                                                 "aadharImages",
                                                 " :: $identityImage :: $identityImage2"
                                             )
-                                            val identityPartUpload = jsonArrayList[0].toString().toRequestBody(MultipartBody.FORM)
-                                            val identityPartUpload2 = jsonArrayList[1].toString().toRequestBody(MultipartBody.FORM)
+                                            val identityPartUpload = jsonArrayList[0].toString()
+                                                .toRequestBody(MultipartBody.FORM)
+                                            val identityPartUpload2 = jsonArrayList[1].toString()
+                                                .toRequestBody(MultipartBody.FORM)
 
-                                            val panCardPartUpload = userData?.pancardimage!!.toRequestBody(MultipartBody.FORM)
-                                            val cancelChequeUpload = userData?.cancled_cheque_image!!.toRequestBody(MultipartBody.FORM)
+                                            val panCardPartUpload =
+                                                userData?.pancardimage!!.toRequestBody(MultipartBody.FORM)
+                                            val cancelChequeUpload =
+                                                userData?.cancled_cheque_image!!.toRequestBody(
+                                                    MultipartBody.FORM
+                                                )
 
                                             //todo: crash on updating the merchant registration
 
@@ -1745,7 +1778,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                             // e.printStackTrace();
                                         }
 
-                                    }else{
+                                    } else {
                                         val identityPartUpload = "".toRequestBody(MultipartBody.FORM)
                                         val identityPartUpload2 = "".toRequestBody(MultipartBody.FORM)
                                         val panCardPartUpload = "".toRequestBody(MultipartBody.FORM)
@@ -1779,7 +1812,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                             institutePart
                                         )
                                     }
-                                }else{
+                                } else {
                                     val identityPartUpload = "".toRequestBody(MultipartBody.FORM)
                                     val identityPartUpload2 = "".toRequestBody(MultipartBody.FORM)
                                     val panCardPartUpload = "".toRequestBody(MultipartBody.FORM)
@@ -1814,16 +1847,17 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                 }
 
                             }
-                        }else{
+                        } else {
                             val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
 
-                            if (!userData?.cancled_cheque_image.isNullOrEmpty()){
-                                if(!userData?.identity_image.isNullOrEmpty()){
-                                    val items = listOf(userData?.identity_image?.split("\\s*,\\s*")).toString()
+                            if (!userData?.cancled_cheque_image.isNullOrEmpty()) {
+                                if (!userData?.identity_image.isNullOrEmpty()) {
+                                    val items =
+                                        listOf(userData?.identity_image?.split("\\s*,\\s*")).toString()
                                     val data = items.replace("[[", "[")
                                         .replace("]]", "]")
 
-                                    try{
+                                    try {
                                         val jsonArrayList = JSONArray(data)
                                         Log.e(
                                             "aadharImages",
@@ -1873,11 +1907,11 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                             registerForPart,
                                             institutePart
                                         )
-                                    }catch (exception: JSONException){
+                                    } catch (exception: JSONException) {
                                         Log.d("as", "asafdcddsc")
                                     }
 
-                                }else{
+                                } else {
                                     val identityPartUpload = "".toRequestBody(MultipartBody.FORM)
                                     val identityPartUpload2 = "".toRequestBody(MultipartBody.FORM)
                                     val panCardPartUpload = "".toRequestBody(MultipartBody.FORM)
@@ -1910,7 +1944,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                         institutePart
                                     )
                                 }
-                            }else{
+                            } else {
                                 val identityPartUpload = "".toRequestBody(MultipartBody.FORM)
                                 val identityPartUpload2 = "".toRequestBody(MultipartBody.FORM)
                                 val panCardPartUpload = "".toRequestBody(MultipartBody.FORM)
@@ -1945,90 +1979,102 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             }
                         }
                     }
-                }else if(userData!!.status == 1){
-                    if(isRegisterType == 0){
+                } else if (userData!!.status == 1) {
+                    if (isRegisterType == 0) {
                         showErrorView("Please Select Register for")
-                    }else if(TextUtils.isEmpty(fullname)){
+                    } else if (TextUtils.isEmpty(fullname)) {
                         showErrorView("Enter full name")
-                    }else if(TextUtils.isEmpty(dob)){
+                    } else if (TextUtils.isEmpty(dob)) {
                         showErrorView("Enter your date of birth")
-                    }else if(TextUtils.isEmpty(email)){
+                    } else if (TextUtils.isEmpty(email)) {
                         showErrorView("Enter your email address")
-                    }else if(!validateEmail(email)){
+                    } else if (!validateEmail(email)) {
                         showErrorView("Enter valid email address")
-                    }else if(TextUtils.isEmpty(phone)){
+                    } else if (TextUtils.isEmpty(phone)) {
                         showErrorView("Enter your 10 digit mobile number")
-                    }else if(phone.length < 10){
+                    } else if (phone.length < 10) {
                         showErrorView("Enter valid mobile number")
-                    }else if(TextUtils.isEmpty(aadharDetail)){
+                    } else if (TextUtils.isEmpty(aadharDetail)) {
                         showErrorView("Enter your aadhar number")
-                    }else if(aadharDetail.length < 12){
+                    } else if (aadharDetail.length < 12) {
                         showErrorView("Enter valid aadhar number")
-                    }else if(TextUtils.isEmpty(panCardDetail)){
+                    } else if (TextUtils.isEmpty(panCardDetail)) {
                         showErrorView("Enter your pancard detail")
-                    }else if(panCardDetail.length < 10){
+                    } else if (panCardDetail.length < 10) {
                         showErrorView("Enter valid pancard detail")
-                    }else if(TextUtils.isEmpty(address)){
+                    } else if (TextUtils.isEmpty(address)) {
                         showErrorView("Enter your address")
-                    }else if(TextUtils.isEmpty(edtLocality)){
+                    } else if (TextUtils.isEmpty(edtLocality)) {
                         showErrorView("Enter locality here")
-                    }else if(TextUtils.isEmpty(edtCity)){
+                    } else if (TextUtils.isEmpty(edtCity)) {
                         showErrorView("Enter city here")
-                    }else if(TextUtils.isEmpty(edtState)){
+                    } else if (TextUtils.isEmpty(edtState)) {
                         showErrorView("Enter state here")
-                    }else if(TextUtils.isEmpty(edtPincode)){
+                    } else if (TextUtils.isEmpty(edtPincode)) {
                         showErrorView("Enter pincode here")
-                    }else if(edtPincode.length<6){
+                    } else if (edtPincode.length < 6) {
                         onFailure("Enter 6 digit pincode here")
-                    }else if(TextUtils.isEmpty(edtCountry)){
+                    } else if (TextUtils.isEmpty(edtCountry)) {
                         showErrorView("Enter country here")
-                    }else if(cancelledChequeImage == null){
+                    } else if (cancelledChequeImage == null) {
                         showErrorView("Please upload cancel cheque")
-                    }else if(TextUtils.isEmpty(accountNumber)){
+                    } else if (TextUtils.isEmpty(accountNumber)) {
                         showErrorView("Enter your bank account number")
-                    }else if(TextUtils.isEmpty(bankName)){
+                    } else if (TextUtils.isEmpty(bankName)) {
                         showErrorView("Enter your bank name")
-                    }else if(TextUtils.isEmpty(ifscCode)){
+                    } else if (TextUtils.isEmpty(ifscCode)) {
                         showErrorView("Enter your IFSC Code")
-                    }else if(TextUtils.isEmpty(bankLocation)){
+                    } else if (TextUtils.isEmpty(bankLocation)) {
                         showErrorView("Enter your bank location")
-                    }else if(identityImage.isNullOrEmpty()){
+                    } else if (identityImage.isNullOrEmpty()) {
                         showErrorView("Please attach your aadhar card image")
-                    }else if(pancardImage.isNullOrEmpty()){
+                    } else if (pancardImage.isNullOrEmpty()) {
                         showErrorView("Please attach your pan card image")
-                    }else if(!isTermAccepted){
+                    } else if (!isTermAccepted) {
                         showErrorView("Please accept terms & condition of Notebook Store app")
-                    }else{
+                    } else {
                         Log.e("dob server", dateForServer!!)
                         val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                         val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
                         val dobPart: RequestBody = dateForServer!!.toRequestBody(MultipartBody.FORM)
                         val phonePart: RequestBody = phone.toRequestBody(MultipartBody.FORM)
-                        val aadharDetailPart: RequestBody = aadharDetail.toRequestBody(MultipartBody.FORM)
-                        val pancardDetailPart: RequestBody = panCardDetail.toRequestBody(MultipartBody.FORM)
+                        val aadharDetailPart: RequestBody =
+                            aadharDetail.toRequestBody(MultipartBody.FORM)
+                        val pancardDetailPart: RequestBody =
+                            panCardDetail.toRequestBody(MultipartBody.FORM)
                         val addressPart: RequestBody = address.toRequestBody(MultipartBody.FORM)
-                        val accoutNumbPart: RequestBody = accountNumber.toRequestBody(MultipartBody.FORM)
+                        val accoutNumbPart: RequestBody =
+                            accountNumber.toRequestBody(MultipartBody.FORM)
                         val bankNamePart: RequestBody = bankName.toRequestBody(MultipartBody.FORM)
                         val ifscCodePart: RequestBody = ifscCode.toRequestBody(MultipartBody.FORM)
-                        val bankLocPart: RequestBody = bankLocation.toRequestBody(MultipartBody.FORM)
+                        val bankLocPart: RequestBody =
+                            bankLocation.toRequestBody(MultipartBody.FORM)
                         val upiIDPart: RequestBody = upiID.toRequestBody(MultipartBody.FORM)
-                        val refferalIDPart: RequestBody = refferalID.toRequestBody(MultipartBody.FORM)
+                        val refferalIDPart: RequestBody =
+                            refferalID.toRequestBody(MultipartBody.FORM)
 
-                        val localityPart: RequestBody = edtLocality.toRequestBody(MultipartBody.FORM)
+                        val localityPart: RequestBody =
+                            edtLocality.toRequestBody(MultipartBody.FORM)
                         val cityPart: RequestBody = edtCity.toRequestBody(MultipartBody.FORM)
                         val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                         val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                         val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                        val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                        val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                        val fbDeviceID: RequestBody =
+                            notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                        val registerForPart: RequestBody =
+                            isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
                         val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
                         val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                        val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
+                        val imgFileAadhar2 =
+                            File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                        val requestFileAadhar =
+                            imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
+                        val requestFileAadhar2 =
+                            imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
                         val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                        val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                        val requestFileCancelCheque =
+                            imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                         val identityPart = MultipartBody.Part.createFormData(
                             "identity_image",
@@ -2051,12 +2097,14 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             requestFileCancelCheque
                         )
 
-                        val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                        if(isRegisterType == 2){
-                            if (TextUtils.isEmpty(instituteValue)){
+                        val instituteValue =
+                            fragPrimeMerchantBinding.edtInstituteName.text.toString()
+                        if (isRegisterType == 2) {
+                            if (TextUtils.isEmpty(instituteValue)) {
                                 showErrorView("Please enter institute name")
-                            }else{
-                                val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
+                            } else {
+                                val institutePart: RequestBody =
+                                    instituteValue.toRequestBody(MultipartBody.FORM)
                                 merchantVM.registerPrimeUsingDetails(
                                     namePart,
                                     emailPart,
@@ -2085,7 +2133,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                     institutePart
                                 )
                             }
-                        }else{
+                        } else {
                             val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
                             merchantVM.registerPrimeUsingDetails(
                                 namePart,
@@ -2117,91 +2165,103 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         }
                     }
                 }
-            }else if(userData!!.usertype == 1){
-                if(userData!!.status == 1){
-                    if(isRegisterType == 0){
+            } else if (userData!!.usertype == 1) {
+                if (userData!!.status == 1) {
+                    if (isRegisterType == 0) {
                         showErrorView("Please Select Register for")
-                    }else if(TextUtils.isEmpty(fullname)){
+                    } else if (TextUtils.isEmpty(fullname)) {
                         showErrorView("Enter full name")
-                    }else if(TextUtils.isEmpty(dob)){
+                    } else if (TextUtils.isEmpty(dob)) {
                         showErrorView("Enter your date of birth")
-                    }else if(TextUtils.isEmpty(email)){
+                    } else if (TextUtils.isEmpty(email)) {
                         showErrorView("Enter your email address")
-                    }else if(!validateEmail(email)){
+                    } else if (!validateEmail(email)) {
                         showErrorView("Enter valid email address")
-                    }else if(TextUtils.isEmpty(phone)){
+                    } else if (TextUtils.isEmpty(phone)) {
                         showErrorView("Enter your 10 digit mobile number")
-                    }else if(phone.length < 10){
+                    } else if (phone.length < 10) {
                         showErrorView("Enter valid mobile number")
-                    }else if(TextUtils.isEmpty(aadharDetail)){
+                    } else if (TextUtils.isEmpty(aadharDetail)) {
                         showErrorView("Enter your aadhar number")
-                    }else if(aadharDetail.length < 12){
+                    } else if (aadharDetail.length < 12) {
                         showErrorView("Enter valid aadhar number")
-                    }else if(TextUtils.isEmpty(panCardDetail)){
+                    } else if (TextUtils.isEmpty(panCardDetail)) {
                         showErrorView("Enter your pancard detail")
-                    }else if(panCardDetail.length < 10){
+                    } else if (panCardDetail.length < 10) {
                         showErrorView("Enter valid pancard detail")
-                    }else if(TextUtils.isEmpty(address)){
+                    } else if (TextUtils.isEmpty(address)) {
                         showErrorView("Enter your address")
-                    }else if(TextUtils.isEmpty(edtLocality)){
+                    } else if (TextUtils.isEmpty(edtLocality)) {
                         showErrorView("Enter locality here")
-                    }else if(TextUtils.isEmpty(edtCity)){
+                    } else if (TextUtils.isEmpty(edtCity)) {
                         showErrorView("Enter city here")
-                    }else if(TextUtils.isEmpty(edtState)){
+                    } else if (TextUtils.isEmpty(edtState)) {
                         showErrorView("Enter state here")
-                    }else if(TextUtils.isEmpty(edtPincode)){
+                    } else if (TextUtils.isEmpty(edtPincode)) {
                         showErrorView("Enter pincode here")
-                    }else if(edtPincode.length<6){
+                    } else if (edtPincode.length < 6) {
                         onFailure("Enter 6 digit pincode here")
-                    }else if(TextUtils.isEmpty(edtCountry)){
+                    } else if (TextUtils.isEmpty(edtCountry)) {
                         showErrorView("Enter country here")
-                    }else if(cancelledChequeImage == null){
+                    } else if (cancelledChequeImage == null) {
                         showErrorView("Please upload cancel cheque")
-                    }else if(TextUtils.isEmpty(accountNumber)){
+                    } else if (TextUtils.isEmpty(accountNumber)) {
                         showErrorView("Enter your bank account number")
-                    }else if(TextUtils.isEmpty(bankName)){
+                    } else if (TextUtils.isEmpty(bankName)) {
                         showErrorView("Enter your bank name")
-                    }else if(TextUtils.isEmpty(ifscCode)){
+                    } else if (TextUtils.isEmpty(ifscCode)) {
                         showErrorView("Enter your IFSC Code")
-                    }else if(TextUtils.isEmpty(bankLocation)){
+                    } else if (TextUtils.isEmpty(bankLocation)) {
                         showErrorView("Enter your bank location")
-                    }else if(identityImage.isNullOrEmpty()){
+                    } else if (identityImage.isNullOrEmpty()) {
                         showErrorView("Please attach your aadhar card image")
-                    }else if(pancardImage.isNullOrEmpty()){
+                    } else if (pancardImage.isNullOrEmpty()) {
                         showErrorView("Please attach your pan card image")
-                    }else if(!isTermAccepted){
+                    } else if (!isTermAccepted) {
                         showErrorView("Please accept terms & condition of Notebook Store app")
-                    }else{
+                    } else {
                         Log.e("dob server", dateForServer!!)
                         val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                         val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
                         val dobPart: RequestBody = dateForServer!!.toRequestBody(MultipartBody.FORM)
                         val phonePart: RequestBody = phone.toRequestBody(MultipartBody.FORM)
-                        val aadharDetailPart: RequestBody = aadharDetail.toRequestBody(MultipartBody.FORM)
-                        val pancardDetailPart: RequestBody = panCardDetail.toRequestBody(MultipartBody.FORM)
+                        val aadharDetailPart: RequestBody =
+                            aadharDetail.toRequestBody(MultipartBody.FORM)
+                        val pancardDetailPart: RequestBody =
+                            panCardDetail.toRequestBody(MultipartBody.FORM)
                         val addressPart: RequestBody = address.toRequestBody(MultipartBody.FORM)
-                        val accoutNumbPart: RequestBody = accountNumber.toRequestBody(MultipartBody.FORM)
+                        val accoutNumbPart: RequestBody =
+                            accountNumber.toRequestBody(MultipartBody.FORM)
                         val bankNamePart: RequestBody = bankName.toRequestBody(MultipartBody.FORM)
                         val ifscCodePart: RequestBody = ifscCode.toRequestBody(MultipartBody.FORM)
-                        val bankLocPart: RequestBody = bankLocation.toRequestBody(MultipartBody.FORM)
+                        val bankLocPart: RequestBody =
+                            bankLocation.toRequestBody(MultipartBody.FORM)
                         val upiIDPart: RequestBody = upiID.toRequestBody(MultipartBody.FORM)
-                        val refferalIDPart: RequestBody = refferalID.toRequestBody(MultipartBody.FORM)
+                        val refferalIDPart: RequestBody =
+                            refferalID.toRequestBody(MultipartBody.FORM)
 
-                        val localityPart: RequestBody = edtLocality.toRequestBody(MultipartBody.FORM)
+                        val localityPart: RequestBody =
+                            edtLocality.toRequestBody(MultipartBody.FORM)
                         val cityPart: RequestBody = edtCity.toRequestBody(MultipartBody.FORM)
                         val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                         val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                         val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                        val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                        val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                        val fbDeviceID: RequestBody =
+                            notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                        val registerForPart: RequestBody =
+                            isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
                         val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
                         val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                        val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
+                        val imgFileAadhar2 =
+                            File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                        val requestFileAadhar =
+                            imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
+                        val requestFileAadhar2 =
+                            imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
                         val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                        val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                        val requestFileCancelCheque =
+                            imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                         val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                         val identityPart = MultipartBody.Part.createFormData(
                             "identity_image",
@@ -2224,12 +2284,14 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             requestFileCancelCheque
                         )
 
-                        val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                        if(isRegisterType == 2){
-                            if (TextUtils.isEmpty(instituteValue)){
+                        val instituteValue =
+                            fragPrimeMerchantBinding.edtInstituteName.text.toString()
+                        if (isRegisterType == 2) {
+                            if (TextUtils.isEmpty(instituteValue)) {
                                 showErrorView("Please enter institute name")
-                            }else{
-                                val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
+                            } else {
+                                val institutePart: RequestBody =
+                                    instituteValue.toRequestBody(MultipartBody.FORM)
                                 merchantVM.registerPrimeUsingDetails(
                                     namePart,
                                     emailPart,
@@ -2258,7 +2320,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                     institutePart
                                 )
                             }
-                        }else{
+                        } else {
                             val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
                             merchantVM.registerPrimeUsingDetails(
                                 namePart,
@@ -2289,43 +2351,57 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             )
                         }
                     }
-                }else if(userData!!.status == 0){
-                    if (notebookPrefs.primeUserUpgradeAvail == 1){
+                } else if (userData!!.status == 0) {
+                    if (notebookPrefs.primeUserUpgradeAvail == 1) {
                         val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                         val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
                         val dobPart: RequestBody = dateForServer!!.toRequestBody(MultipartBody.FORM)
                         val phonePart: RequestBody = phone.toRequestBody(MultipartBody.FORM)
-                        val aadharDetailPart: RequestBody = aadharDetail.toRequestBody(MultipartBody.FORM)
-                        val pancardDetailPart: RequestBody = panCardDetail.toRequestBody(MultipartBody.FORM)
+                        val aadharDetailPart: RequestBody =
+                            aadharDetail.toRequestBody(MultipartBody.FORM)
+                        val pancardDetailPart: RequestBody =
+                            panCardDetail.toRequestBody(MultipartBody.FORM)
                         val addressPart: RequestBody = address.toRequestBody(MultipartBody.FORM)
-                        val accoutNumbPart: RequestBody = accountNumber.toRequestBody(MultipartBody.FORM)
+                        val accoutNumbPart: RequestBody =
+                            accountNumber.toRequestBody(MultipartBody.FORM)
                         val bankNamePart: RequestBody = bankName.toRequestBody(MultipartBody.FORM)
                         val ifscCodePart: RequestBody = ifscCode.toRequestBody(MultipartBody.FORM)
-                        val bankLocPart: RequestBody = bankLocation.toRequestBody(MultipartBody.FORM)
+                        val bankLocPart: RequestBody =
+                            bankLocation.toRequestBody(MultipartBody.FORM)
                         val upiIDPart: RequestBody = upiID.toRequestBody(MultipartBody.FORM)
-                        val refferalIDPart: RequestBody = refferalID.toRequestBody(MultipartBody.FORM)
+                        val refferalIDPart: RequestBody =
+                            refferalID.toRequestBody(MultipartBody.FORM)
 
-                        val localityPart: RequestBody = edtLocality.toRequestBody(MultipartBody.FORM)
+                        val localityPart: RequestBody =
+                            edtLocality.toRequestBody(MultipartBody.FORM)
                         val cityPart: RequestBody = edtCity.toRequestBody(MultipartBody.FORM)
                         val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                         val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                         val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                        val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                        val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                        val fbDeviceID: RequestBody =
+                            notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                        val registerForPart: RequestBody =
+                            isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                        if(!isTermAccepted){
+                        if (!isTermAccepted) {
                             showErrorView("Please accept terms & condition")
-                        }else{
-                            val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                            if(isRegisterType == 2){
-                                if (TextUtils.isEmpty(instituteValue)){
+                        } else {
+                            val instituteValue =
+                                fragPrimeMerchantBinding.edtInstituteName.text.toString()
+                            if (isRegisterType == 2) {
+                                if (TextUtils.isEmpty(instituteValue)) {
                                     showErrorView("Please enter institute name")
-                                }else{
-                                    val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
-                                    val identityUpdatePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                    val identityUpdate2Part: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                    val panUpdatePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                    val cancelChequeUpdate: RequestBody = "".toRequestBody(MultipartBody.FORM)
+                                } else {
+                                    val institutePart: RequestBody =
+                                        instituteValue.toRequestBody(MultipartBody.FORM)
+                                    val identityUpdatePart: RequestBody =
+                                        "".toRequestBody(MultipartBody.FORM)
+                                    val identityUpdate2Part: RequestBody =
+                                        "".toRequestBody(MultipartBody.FORM)
+                                    val panUpdatePart: RequestBody =
+                                        "".toRequestBody(MultipartBody.FORM)
+                                    val cancelChequeUpdate: RequestBody =
+                                        "".toRequestBody(MultipartBody.FORM)
                                     merchantVM.registerPrimeUpdateUsingDetails(
                                         namePart,
                                         emailPart,
@@ -2354,12 +2430,17 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                         institutePart
                                     )
                                 }
-                            }else{
-                                val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                val identityUpdatePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                val identityUpdate2Part: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                val panUpdatePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
-                                val cancelChequeUpdate: RequestBody = "".toRequestBody(MultipartBody.FORM)
+                            } else {
+                                val institutePart: RequestBody =
+                                    "".toRequestBody(MultipartBody.FORM)
+                                val identityUpdatePart: RequestBody =
+                                    "".toRequestBody(MultipartBody.FORM)
+                                val identityUpdate2Part: RequestBody =
+                                    "".toRequestBody(MultipartBody.FORM)
+                                val panUpdatePart: RequestBody =
+                                    "".toRequestBody(MultipartBody.FORM)
+                                val cancelChequeUpdate: RequestBody =
+                                    "".toRequestBody(MultipartBody.FORM)
 
                                 merchantVM.registerPrimeUpdateUsingDetails(
                                     namePart,
@@ -2392,69 +2473,72 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         }
                     }
                 }
-            }else{
-                if(isRegisterType == 0){
+            } else {
+                if (isRegisterType == 0) {
                     showErrorView("Please Select Register for")
-                }else if(TextUtils.isEmpty(fullname)){
+                } else if (TextUtils.isEmpty(fullname)) {
                     showErrorView("Enter full name")
-                }else if(TextUtils.isEmpty(dob)){
+                } else if (TextUtils.isEmpty(dob)) {
                     showErrorView("Enter your date of birth")
-                }else if(TextUtils.isEmpty(email)){
+                } else if (TextUtils.isEmpty(email)) {
                     showErrorView("Enter your email address")
-                }else if(!validateEmail(email)){
+                } else if (!validateEmail(email)) {
                     showErrorView("Enter valid email address")
-                }else if(TextUtils.isEmpty(phone)){
+                } else if (TextUtils.isEmpty(phone)) {
                     showErrorView("Enter your 10 digit mobile number")
-                }else if(phone.length < 10){
+                } else if (phone.length < 10) {
                     showErrorView("Enter valid mobile number")
-                }else if(TextUtils.isEmpty(aadharDetail)){
+                } else if (TextUtils.isEmpty(aadharDetail)) {
                     showErrorView("Enter your aadhar number")
-                }else if(aadharDetail.length < 12){
+                } else if (aadharDetail.length < 12) {
                     showErrorView("Enter valid aadhar number")
-                }else if(TextUtils.isEmpty(panCardDetail)){
+                } else if (TextUtils.isEmpty(panCardDetail)) {
                     showErrorView("Enter your pancard detail")
-                }else if(panCardDetail.length < 10){
+                } else if (panCardDetail.length < 10) {
                     showErrorView("Enter valid pancard detail")
-                }else if(TextUtils.isEmpty(address)){
+                } else if (TextUtils.isEmpty(address)) {
                     showErrorView("Enter your address")
-                }else if(TextUtils.isEmpty(edtLocality)){
+                } else if (TextUtils.isEmpty(edtLocality)) {
                     showErrorView("Enter locality here")
-                }else if(TextUtils.isEmpty(edtCity)){
+                } else if (TextUtils.isEmpty(edtCity)) {
                     showErrorView("Enter city here")
-                }else if(TextUtils.isEmpty(edtState)){
+                } else if (TextUtils.isEmpty(edtState)) {
                     showErrorView("Enter state here")
-                }else if(TextUtils.isEmpty(edtPincode)){
+                } else if (TextUtils.isEmpty(edtPincode)) {
                     showErrorView("Enter pincode here")
-                }else if(edtPincode.length<6){
+                } else if (edtPincode.length < 6) {
                     onFailure("Enter 6 digit pincode here")
-                }else if(TextUtils.isEmpty(edtCountry)){
+                } else if (TextUtils.isEmpty(edtCountry)) {
                     showErrorView("Enter country here")
-                }else if(cancelledChequeImage == null){
+                } else if (cancelledChequeImage == null) {
                     showErrorView("Please upload cancel cheque")
-                }else if(TextUtils.isEmpty(accountNumber)){
+                } else if (TextUtils.isEmpty(accountNumber)) {
                     showErrorView("Enter your bank account number")
-                }else if(TextUtils.isEmpty(bankName)){
+                } else if (TextUtils.isEmpty(bankName)) {
                     showErrorView("Enter your bank name")
-                }else if(TextUtils.isEmpty(ifscCode)){
+                } else if (TextUtils.isEmpty(ifscCode)) {
                     showErrorView("Enter your IFSC Code")
-                }else if(TextUtils.isEmpty(bankLocation)){
+                } else if (TextUtils.isEmpty(bankLocation)) {
                     showErrorView("Enter your bank location")
-                }else if(identityImage.isNullOrEmpty()){
+                } else if (identityImage.isNullOrEmpty()) {
                     showErrorView("Please attach your aadhar card image")
-                }else if(pancardImage.isNullOrEmpty()){
+                } else if (pancardImage.isNullOrEmpty()) {
                     showErrorView("Please attach your pan card image")
-                }else if(!isTermAccepted){
+                } else if (!isTermAccepted) {
                     showErrorView("Please accept terms & condition of Notebook Store app")
-                }else{
+                } else {
                     Log.e("dob server", dateForServer!!)
                     val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                     val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
                     val dobPart: RequestBody = dateForServer!!.toRequestBody(MultipartBody.FORM)
                     val phonePart: RequestBody = phone.toRequestBody(MultipartBody.FORM)
-                    val aadharDetailPart: RequestBody = aadharDetail.toRequestBody(MultipartBody.FORM)
-                    val pancardDetailPart: RequestBody = panCardDetail.toRequestBody(MultipartBody.FORM)
+                    val aadharDetailPart: RequestBody =
+                        aadharDetail.toRequestBody(MultipartBody.FORM)
+                    val pancardDetailPart: RequestBody =
+                        panCardDetail.toRequestBody(MultipartBody.FORM)
                     val addressPart: RequestBody = address.toRequestBody(MultipartBody.FORM)
-                    val accoutNumbPart: RequestBody = accountNumber.toRequestBody(MultipartBody.FORM)
+                    val accoutNumbPart: RequestBody =
+                        accountNumber.toRequestBody(MultipartBody.FORM)
                     val bankNamePart: RequestBody = bankName.toRequestBody(MultipartBody.FORM)
                     val ifscCodePart: RequestBody = ifscCode.toRequestBody(MultipartBody.FORM)
                     val bankLocPart: RequestBody = bankLocation.toRequestBody(MultipartBody.FORM)
@@ -2466,16 +2550,21 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                     val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                     val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                    val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                    val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                    val fbDeviceID: RequestBody =
+                        notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                    val registerForPart: RequestBody =
+                        isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
                     val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
                     val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
                     val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                    val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                    val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
+                    val requestFileAadhar =
+                        imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
+                    val requestFileAadhar2 =
+                        imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
                     val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                    val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                    val requestFileCancelCheque =
+                        imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                     val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                     val identityPart = MultipartBody.Part.createFormData(
                         "identity_image",
@@ -2499,11 +2588,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     )
 
                     val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                    if(isRegisterType == 2){
-                        if (TextUtils.isEmpty(instituteValue)){
+                    if (isRegisterType == 2) {
+                        if (TextUtils.isEmpty(instituteValue)) {
                             showErrorView("Please enter institute name")
-                        }else{
-                            val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
+                        } else {
+                            val institutePart: RequestBody =
+                                instituteValue.toRequestBody(MultipartBody.FORM)
                             merchantVM.registerPrimeUsingDetails(
                                 namePart,
                                 emailPart,
@@ -2532,7 +2622,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                                 institutePart
                             )
                         }
-                    }else{
+                    } else {
                         val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
                         merchantVM.registerPrimeUsingDetails(
                             namePart, emailPart, dobPart, phonePart,
@@ -2545,60 +2635,60 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     }
                 }
             }
-        }else{
-            if(isRegisterType == 0){
+        } else {
+            if (isRegisterType == 0) {
                 showErrorView("Please Select Register for")
-            }else if(TextUtils.isEmpty(fullname)){
+            } else if (TextUtils.isEmpty(fullname)) {
                 showErrorView("Enter full name")
-            }else if(TextUtils.isEmpty(dob)){
+            } else if (TextUtils.isEmpty(dob)) {
                 showErrorView("Enter your date of birth")
-            }else if(TextUtils.isEmpty(email)){
+            } else if (TextUtils.isEmpty(email)) {
                 showErrorView("Enter your email address")
-            }else if(!validateEmail(email)){
+            } else if (!validateEmail(email)) {
                 showErrorView("Enter valid email address")
-            }else if(TextUtils.isEmpty(phone)){
+            } else if (TextUtils.isEmpty(phone)) {
                 showErrorView("Enter your 10 digit mobile number")
-            }else if(phone.length < 10){
+            } else if (phone.length < 10) {
                 showErrorView("Enter valid mobile number")
-            }else if(TextUtils.isEmpty(aadharDetail)){
+            } else if (TextUtils.isEmpty(aadharDetail)) {
                 showErrorView("Enter your aadhar number")
-            }else if(aadharDetail.length < 12){
+            } else if (aadharDetail.length < 12) {
                 showErrorView("Enter valid aadhar number")
-            }else if(TextUtils.isEmpty(panCardDetail)){
+            } else if (TextUtils.isEmpty(panCardDetail)) {
                 showErrorView("Enter your pancard detail")
-            }else if(panCardDetail.length < 10){
+            } else if (panCardDetail.length < 10) {
                 showErrorView("Enter valid pancard detail")
-            }else if(TextUtils.isEmpty(address)){
+            } else if (TextUtils.isEmpty(address)) {
                 showErrorView("Enter your address")
-            }else if(TextUtils.isEmpty(edtLocality)){
+            } else if (TextUtils.isEmpty(edtLocality)) {
                 showErrorView("Enter locality here")
-            }else if(TextUtils.isEmpty(edtCity)){
+            } else if (TextUtils.isEmpty(edtCity)) {
                 showErrorView("Enter city here")
-            }else if(TextUtils.isEmpty(edtState)){
+            } else if (TextUtils.isEmpty(edtState)) {
                 showErrorView("Enter state here")
-            }else if(TextUtils.isEmpty(edtPincode)){
+            } else if (TextUtils.isEmpty(edtPincode)) {
                 showErrorView("Enter pincode here")
-            }else if(edtPincode.length<6){
+            } else if (edtPincode.length < 6) {
                 onFailure("Enter 6 digit pincode here")
-            }else if(TextUtils.isEmpty(edtCountry)){
+            } else if (TextUtils.isEmpty(edtCountry)) {
                 showErrorView("Enter country here")
-            }else if(cancelledChequeImage == null){
+            } else if (cancelledChequeImage == null) {
                 showErrorView("Please upload cancel cheque")
-            }else if(TextUtils.isEmpty(accountNumber)){
+            } else if (TextUtils.isEmpty(accountNumber)) {
                 showErrorView("Enter your bank account number")
-            }else if(TextUtils.isEmpty(bankName)){
+            } else if (TextUtils.isEmpty(bankName)) {
                 showErrorView("Enter your bank name")
-            }else if(TextUtils.isEmpty(ifscCode)){
+            } else if (TextUtils.isEmpty(ifscCode)) {
                 showErrorView("Enter your IFSC Code")
-            }else if(TextUtils.isEmpty(bankLocation)){
+            } else if (TextUtils.isEmpty(bankLocation)) {
                 showErrorView("Enter your bank location")
-            }else if(identityImage.isNullOrEmpty()){
+            } else if (identityImage.isNullOrEmpty()) {
                 showErrorView("Please attach your aadhar card image")
-            }else if(pancardImage.isNullOrEmpty()){
+            } else if (pancardImage.isNullOrEmpty()) {
                 showErrorView("Please attach your pan card image")
-            }else if(!isTermAccepted){
+            } else if (!isTermAccepted) {
                 showErrorView("Please accept terms & condition of Notebook Store app")
-            }else{
+            } else {
                 Log.e("dob server", dateForServer!!)
                 val namePart: RequestBody = fullname.toRequestBody(MultipartBody.FORM)
                 val emailPart: RequestBody = email.toRequestBody(MultipartBody.FORM)
@@ -2619,8 +2709,10 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 val statePart: RequestBody = edtState.toRequestBody(MultipartBody.FORM)
                 val pincodePart: RequestBody = edtPincode.toRequestBody(MultipartBody.FORM)
                 val countryPart: RequestBody = edtCountry.toRequestBody(MultipartBody.FORM)
-                val fbDeviceID: RequestBody = notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
-                val registerForPart:RequestBody = isRegisterType.toString().toRequestBody(MultipartBody.FORM)
+                val fbDeviceID: RequestBody =
+                    notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
+                val registerForPart: RequestBody =
+                    isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
                 val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
                 val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
@@ -2628,18 +2720,21 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
                 val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
                 val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                val requestFileCancelCheque = imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                val requestFileCancelCheque =
+                    imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
                 val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
                 val identityPart = MultipartBody.Part.createFormData(
                     "identity_image",
                     imgFileAadhar.name,
                     requestFileAadhar
                 )
+
                 val identityPart2 = MultipartBody.Part.createFormData(
                     "identity_image2",
                     imgFileAadhar2.name,
                     requestFileAadhar2
                 )
+
                 val panCardPart = MultipartBody.Part.createFormData(
                     "pancardimage",
                     imgFilePan.name,
@@ -2652,11 +2747,12 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 )
 
                 val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
-                if(isRegisterType == 2){
-                    if (TextUtils.isEmpty(instituteValue)){
+                if (isRegisterType == 2) {
+                    if (TextUtils.isEmpty(instituteValue)) {
                         showErrorView("Please enter institute name")
-                    }else{
-                        val institutePart: RequestBody = instituteValue.toRequestBody(MultipartBody.FORM)
+                    } else {
+                        val institutePart: RequestBody =
+                            instituteValue.toRequestBody(MultipartBody.FORM)
                         merchantVM.registerPrimeUsingDetails(
                             namePart, emailPart, dobPart, phonePart,
                             addressPart, localityPart, cityPart, statePart,
@@ -2666,7 +2762,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             upiIDPart, refferalIDPart, fbDeviceID, registerForPart, institutePart
                         )
                     }
-                }else{
+                } else {
                     val institutePart: RequestBody = "".toRequestBody(MultipartBody.FORM)
                     merchantVM.registerPrimeUsingDetails(
                         namePart, emailPart, dobPart, phonePart,
@@ -2686,9 +2782,9 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
         isRegisterType = type
         notebookPrefs.merchantRegisterFor = type
 
-        if(isRegisterType == 2){
+        if (isRegisterType == 2) {
             fragPrimeMerchantBinding.clInstituteName.visibility = View.VISIBLE
-        }else{
+        } else {
             fragPrimeMerchantBinding.clInstituteName.visibility = View.GONE
         }
     }
