@@ -302,7 +302,6 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     if (layoutManagerSimilarProducts.findLastVisibleItemPosition() == layoutManagerSimilarProducts.itemCount - 2) {
                         Log.d(TAG, "onScrolled: loading state:${isLoading}")
                         if (!isLoading) {
-
                             loadSimilarDiscountedPaginatedData()
                         }
                     }
@@ -584,6 +583,8 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             return@OnLongClickListener true
         })
         detailViewProductBinding.wvDataSheet.isLongClickable = false
+
+        loadSimilarDiscountedPaginatedData(true)
     }
 
     private fun stringToProductImageList(product: ProductDetailEntity): List<ProductDetailData.ProductImageData> {
