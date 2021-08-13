@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -34,6 +35,7 @@ import com.notebook.android.data.preferences.NotebookPrefs
 import com.notebook.android.databinding.FragmentBestSellerProductPageBinding
 import com.notebook.android.decoration.GridItemDecoration
 import com.notebook.android.model.filter.FilterRequestData
+import com.notebook.android.model.filter.PaginationData
 import com.notebook.android.ui.category.FilterCommonProductListener
 import com.notebook.android.ui.category.FilterCommonProductVM
 import com.notebook.android.ui.category.FilterCommonProductVMFactory
@@ -71,6 +73,7 @@ class BestSellerProductPage : Fragment(), KodeinAware,
     private var price1 = 0
     private var price2 = 100000
     private var filterRawData:FilterRequestData ?= null
+    private var pageData = PaginationData()
 
     private val loadingDialog: LoadingDialog by lazy{
         LoadingDialog()
@@ -93,7 +96,8 @@ class BestSellerProductPage : Fragment(), KodeinAware,
             discValueArray?:ArrayList(), colorIDArray?:ArrayList(),
             rateValueArray?:ArrayList(), couponIDArray?:ArrayList(),
             Constant.FILTER_BEST_PRODUCT_TYPE, 0, notebookPrefs.sortedValue)
-        filterCommonProductVM.getFilterData(Constant.FILTER_BEST_PRODUCT_TYPE, 0)
+
+        onRefresh()
 
         notebookPrefs.FilterCommonImageUrl = ""
     }
@@ -184,12 +188,24 @@ class BestSellerProductPage : Fragment(), KodeinAware,
                 filterRawData = Gson().fromJson(it, FilterRequestData::class.java)
                 filterRawData!!.para = 0
                 filterRawData!!.filter = Constant.FILTER_BEST_PRODUCT_TYPE
-                filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
+               onRefresh()
                 Log.e("rawDataSubCategory", " :: ${Gson().fromJson(it, FilterRequestData::class.java)}")
             })
 
+        filterCommonProductVM.getPageData.observe(viewLifecycleOwner,{
+            pageData = it
+        })
+
+        val filterProductList = ArrayList<FilterProduct>()
         filterCommonProductVM.getFilterCommonProdDataFromDB.observe(viewLifecycleOwner, Observer {
-            val bsProdAdapter = FilterCommonProductAdapter(mContext, it as ArrayList<FilterProduct>,
+
+            if (isRefreshing){
+                filterProductList.clear()
+            }
+
+            filterProductList.addAll(it)
+
+            val bsProdAdapter = FilterCommonProductAdapter(mContext, filterProductList,
                 object : FilterCommonProductAdapter.FilterCommonProductListener,
                     UserLogoutDialog.UserLoginPopupListener {
 
@@ -245,10 +261,40 @@ class BestSellerProductPage : Fragment(), KodeinAware,
             itemAnimator = DefaultItemAnimator()
             hasFixedSize()
         }
+
+        bestSellerProdBinding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (v.getChildAt(v.childCount - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight)) &&
+                    scrollY > oldScrollY
+                ) {
+                    Log.d(TAG, "NOW LOAD MORE")
+                    if (!isLoading)
+                        loadPaginatedData()
+                }
+            }
+        })
     }
+
+    private val TAG = "BestSellerProductPage"
+
+    private var isLoading = false
+    private var isRefreshing = false
+    private fun loadPaginatedData() {
+
+        isRefreshing = false
+
+        pageData.next_page_url?.let {
+            val nextPage = it.substringAfterLast("=").toInt()
+            filterCommonProductVM.getProductFilterByWise(filterRawData!!, nextPage)
+            isLoading = true
+        }
+
+    }
+
 
     override fun onApiCallStarted() {
         bestSellerProdBinding.srlBSProducts.isRefreshing = true
+        isLoading = true
     }
 
     override fun onApiCartCallStarted() {
@@ -257,6 +303,8 @@ class BestSellerProductPage : Fragment(), KodeinAware,
 
     override fun onSuccess(isListSizeGreater:Boolean) {
         bestSellerProdBinding.srlBSProducts.isRefreshing = false
+        isLoading = false
+
         if(isListSizeGreater){
             bestSellerProdBinding.imgNoProdFound.visibility = View.GONE
         }else{
@@ -274,6 +322,7 @@ class BestSellerProductPage : Fragment(), KodeinAware,
         bestSellerProdBinding.srlBSProducts.isRefreshing = false
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onApiFailure(msg: String) {
@@ -281,6 +330,7 @@ class BestSellerProductPage : Fragment(), KodeinAware,
         bestSellerProdBinding.srlBSProducts.isRefreshing = false
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onInvalidCredential() {
@@ -295,10 +345,13 @@ class BestSellerProductPage : Fragment(), KodeinAware,
         filterCommonProductVM.deleteUser()
         filterCommonProductVM.clearCartTableFromDB()
         navController.navigate(R.id.loginFrag)
+        isLoading = false
     }
 
     override fun onGetBannerImageData(imgUrl: String) {
         bestSellerProdBinding.srlBSProducts.isRefreshing = false
+        isLoading = false
+
         if(imgUrl.isEmpty()){
             bestSellerProdBinding.imgBSBanner.visibility = View.GONE
         }else{
@@ -316,9 +369,11 @@ class BestSellerProductPage : Fragment(), KodeinAware,
         bestSellerProdBinding.srlBSProducts.isRefreshing = false
         errorToastTextView.text = msg
         errorToast.show()
+        isLoading = false
     }
 
     override fun onRefresh() {
+        isRefreshing = true
         filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
     }
 
@@ -341,6 +396,7 @@ class BestSellerProductPage : Fragment(), KodeinAware,
         filterRawData!!.para = 0
         filterRawData!!.filter = Constant.FILTER_BEST_PRODUCT_TYPE
         filterRawData!!.filterType = value
-        filterCommonProductVM.getProductFilterByWise(filterRawData!!,0)
+        onRefresh()
+
     }
 }

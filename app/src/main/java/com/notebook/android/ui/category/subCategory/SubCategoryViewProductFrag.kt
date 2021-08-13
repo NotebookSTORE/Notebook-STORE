@@ -285,19 +285,19 @@ class SubCategoryViewProductFrag : Fragment(), KodeinAware,
 
     }
 
-    private var isLoading = false
-    private var isRefreshing = false
-    private fun loadPaginatedData() {
+        private var isLoading = false
+        private var isRefreshing = false
+        private fun loadPaginatedData() {
 
-        isRefreshing = false
+            isRefreshing = false
 
-        pageData.next_page_url?.let {
-            val nextPage = it.substringAfterLast("=").toInt()
-            filterCommonProductVM.getProductFilterByWise(filterRawData!!, nextPage)
-            isLoading = true
+            pageData.next_page_url?.let {
+                val nextPage = it.substringAfterLast("=").toInt()
+                filterCommonProductVM.getProductFilterByWise(filterRawData!!, nextPage)
+                isLoading = true
+            }
+
         }
-
-    }
 
     override fun onApiCallStarted() {
         subCategoryProductBinding.srlSubCategoryProducts.isRefreshing = true
