@@ -775,6 +775,10 @@
         <action
             android:id="@+id/action_orderSummaryPage_to_requestReturn"
             app:destination="@id/requestReturn" />
+        <action
+            android:id="@+id/action_orderSummaryPage_to_orderTrackWebView"
+            app:destination="@id/orderTrackWebView" />
+
     </fragment>
     <fragment
         android:id="@+id/merchantViewSummaryWebViewPage"

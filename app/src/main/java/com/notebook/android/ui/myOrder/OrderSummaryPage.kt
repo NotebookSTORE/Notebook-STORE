@@ -172,6 +172,7 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
             }
         }
         fragOrderSummaryBinding.tvRequestReturnCancel.setOnClickListener(this)
+        fragOrderSummaryBinding.tvTrackOrder.setOnClickListener(this)
     }
 
     override fun onClick(p0: View?) {
@@ -193,6 +194,12 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
                         )
                     navController.navigate(myOrderDetailDirections)
                 }
+            }
+
+            fragOrderSummaryBinding.tvTrackOrder->{
+                OrderTrackWebView.orderUrl = orderHistoryData.tracking_url
+                val ordertrackingDirections = OrderSummaryPageDirections.actionOrderSummaryPageToOrderTrackWebView()
+                navController.navigate(ordertrackingDirections)
             }
         }
     }

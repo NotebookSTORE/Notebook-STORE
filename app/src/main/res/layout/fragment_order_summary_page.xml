@@ -74,11 +74,11 @@
                     android:text="@{orderSummaryModel.title}"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/font_fourteen"
-                    app:layout_constraintWidth_default="wrap"
+                    app:layout_constraintEnd_toStartOf="@id/tvProdQty"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tvProdQty"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_default="wrap" />
 
                 <TextView
                     android:id="@+id/tvProdQty"
@@ -239,8 +239,8 @@
                             android:id="@+id/progress_view_2"
                             android:layout_width="wrap_content"
                             android:layout_height="100dp"
-                            android:visibility="gone"
                             android:src="@drawable/ic_order_detail_extended"
+                            android:visibility="gone"
                             app:layout_constraintRight_toLeftOf="@+id/gl15OrderDetail"
                             app:layout_constraintTop_toBottomOf="@id/progress_view_1" />
 
@@ -262,6 +262,20 @@
                             android:textSize="@dimen/font_fourteen"
                             app:layout_constraintLeft_toRightOf="@+id/gl15OrderDetail"
                             app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/tvTrackOrder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Track Order"
+                            android:textColor="@color/colorGreenOrderDelivered"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tvOrderedApporvedText"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tvOrderedApporvedText" />
+
 
                         <TextView
                             android:id="@+id/tvOrderedDate"
@@ -307,10 +321,10 @@
                             android:layout_marginStart="@dimen/_8dp"
                             android:layout_marginTop="24dp"
                             android:padding="@dimen/_4dp"
-                            android:visibility="gone"
                             android:text="Delivered on"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/font_fourteen"
+                            android:visibility="gone"
                             app:layout_constraintLeft_toRightOf="@+id/gl15OrderDetail"
                             app:layout_constraintTop_toBottomOf="@+id/tvDeliveredDate" />
 
