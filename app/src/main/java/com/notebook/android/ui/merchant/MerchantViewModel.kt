@@ -3,9 +3,7 @@ package com.notebook.android.ui.merchant
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.max.ecomaxgo.maxpe.view.flight.utility.Coroutines
-import com.notebook.android.data.db.entities.Address
 import com.notebook.android.data.db.entities.User
-import com.notebook.android.ui.merchant.responseListener.MerchantBannerListener
 import com.notebook.android.ui.merchant.responseListener.MerchantBenefitListener
 import com.notebook.android.ui.merchant.responseListener.PrimeRegisterRespListener
 import com.notebook.android.ui.merchant.responseListener.RegularRegisterRespListener
@@ -76,8 +74,8 @@ class MerchantViewModel(
     fun registerPrimeUsingDetails(fullName: RequestBody, email: RequestBody, dob: RequestBody, phone: RequestBody,
                                   address: RequestBody, locality: RequestBody, city: RequestBody,
                                   state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
-                                  identityImg: MultipartBody.Part, panCardImg: MultipartBody.Part, identityImg2: MultipartBody.Part,
-                                  cancelChequeImg: MultipartBody.Part,accountNum: RequestBody,
+                                  identityImg: MultipartBody.Part?, panCardImg: MultipartBody.Part?, identityImg2: MultipartBody.Part?,
+                                  cancelChequeImg: MultipartBody.Part?,accountNum: RequestBody,
                                   bankName: RequestBody, ifscCode: RequestBody, bankLocation: RequestBody,
                                   upi: RequestBody, refferalCode: RequestBody,
                                   deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody){
@@ -151,7 +149,7 @@ class MerchantViewModel(
         address: RequestBody, locality: RequestBody, city: RequestBody,
         state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody,
         panCardNo: RequestBody, identityImg: RequestBody, panCardImg: RequestBody,
-        identityImg2: RequestBody, cancelChequeImg: MultipartBody.Part, accountNum: RequestBody,
+        identityImg2: RequestBody, cancelChequeImg: MultipartBody.Part?, accountNum: RequestBody,
         bankName: RequestBody, ifscCode: RequestBody, bankLocation: RequestBody,
         upi: RequestBody, refferalCode: RequestBody,
         deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody){
@@ -183,12 +181,13 @@ class MerchantViewModel(
         }
     }
 
-    fun registerRegularUsingDetails(fullName: RequestBody, email: RequestBody, dob: RequestBody, phone: RequestBody,
-                                    address: RequestBody, locality: RequestBody, city: RequestBody,
-                                    state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
-                                  identityImg: MultipartBody.Part, panCardImg: MultipartBody.Part,
-                                    identityImg2: MultipartBody.Part, refferalCode: RequestBody ,
-                                    deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody){
+    fun registerRegularUsingDetails(
+        fullName: RequestBody, email: RequestBody, dob: RequestBody, phone: RequestBody,
+        address: RequestBody, locality: RequestBody, city: RequestBody,
+        state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
+        identityImg: MultipartBody.Part?, panCardImg: MultipartBody.Part?,
+        identityImg2: MultipartBody.Part?, refferalCode: RequestBody,
+        deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody){
 
         Coroutines.main {
             try {

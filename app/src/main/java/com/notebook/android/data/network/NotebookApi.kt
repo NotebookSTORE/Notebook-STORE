@@ -457,10 +457,10 @@ interface NotebookApi {
         @Part("country") country: RequestBody,
         @Part("identity_detail") aadharDetail: RequestBody,
         @Part("pancardno") panCardNumber: RequestBody,
-        @Part identity_image: MultipartBody.Part,
-        @Part pancardimage: MultipartBody.Part,
-        @Part identity_image2: MultipartBody.Part,
-        @Part cancel_cheque: MultipartBody.Part,
+        @Part identity_image: MultipartBody.Part?,
+        @Part pancardimage: MultipartBody.Part?,
+        @Part identity_image2: MultipartBody.Part?,
+        @Part cancel_cheque: MultipartBody.Part?,
         @Part("accountno") accountno: RequestBody,
         @Part("bankname") bankname: RequestBody,
         @Part("ifsccode") ifsccode: RequestBody,
@@ -474,7 +474,7 @@ interface NotebookApi {
 
     @Multipart
     @POST("primeregistermerchant")
-    suspend fun registerPrimeMerchantUpdate(
+    suspend fun     registerPrimeMerchantUpdate(
         @Part("name") fullName: RequestBody,
         @Part("email") email: RequestBody,
         @Part("dob") dob: RequestBody,
@@ -521,7 +521,7 @@ interface NotebookApi {
         @Part("identity_image") identity_image: RequestBody,
         @Part("pancardimage") identity_image2: RequestBody,
         @Part("identity_image2") pancardimage: RequestBody,
-        @Part cancel_cheque: MultipartBody.Part,
+        @Part cancel_cheque: MultipartBody.Part?,
         @Part("accountno") accountno: RequestBody,
         @Part("bankname") bankname: RequestBody,
         @Part("ifsccode") ifsccode: RequestBody,
@@ -548,9 +548,9 @@ interface NotebookApi {
         @Part("country") country: RequestBody,
         @Part("identity_detail") aadharDetail: RequestBody,
         @Part("pancardno") panCardNumber: RequestBody,
-        @Part identity_image: MultipartBody.Part,
-        @Part pancardimage: MultipartBody.Part,
-        @Part identity_image2: MultipartBody.Part,
+        @Part identity_image: MultipartBody.Part?,
+        @Part pancardimage: MultipartBody.Part?,
+        @Part identity_image2: MultipartBody.Part?,
         @Part("referralcode") referralcode: RequestBody,
         @Part("device_id") deviceID: RequestBody,
         @Part("registerfor") registerfor: RequestBody,

@@ -26,8 +26,8 @@ class MerchantRepo(
         fullName: RequestBody, email: RequestBody, dob: RequestBody, phone: RequestBody,
         address: RequestBody, locality: RequestBody, city: RequestBody,
         state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
-        identityImg: MultipartBody.Part, panCardImg: MultipartBody.Part,
-        identityImg2: MultipartBody.Part, cancelChequeImg: MultipartBody.Part, accountNum: RequestBody,
+        identityImg: MultipartBody.Part?, panCardImg: MultipartBody.Part?,
+        identityImg2: MultipartBody.Part?, cancelChequeImg: MultipartBody.Part?, accountNum: RequestBody,
         bankName: RequestBody, ifscCode: RequestBody, bankLocation: RequestBody,
         upi: RequestBody, refferalCode: RequestBody,
         deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody
@@ -65,7 +65,7 @@ class MerchantRepo(
         address: RequestBody, locality: RequestBody, city: RequestBody,
         state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
         identityImg: RequestBody, panCardImg: RequestBody,
-        identityImg2: RequestBody, cancelChequeImg: MultipartBody.Part, accountNum: RequestBody,
+        identityImg2: RequestBody, cancelChequeImg: MultipartBody.Part?, accountNum: RequestBody,
         bankName: RequestBody, ifscCode: RequestBody, bankLocation: RequestBody,
         upi: RequestBody, refferalCode: RequestBody,
         deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody
@@ -87,8 +87,8 @@ class MerchantRepo(
         fullName: RequestBody, email: RequestBody, dob: RequestBody, phone: RequestBody,
         address: RequestBody, locality: RequestBody, city: RequestBody,
         state: RequestBody, pincode: RequestBody, country: RequestBody, identityDetail: RequestBody, panCardNo: RequestBody,
-        identityImg: MultipartBody.Part, panCardImg: MultipartBody.Part,
-        identityImg2: MultipartBody.Part, refferalCode: RequestBody,
+        identityImg: MultipartBody.Part?, panCardImg: MultipartBody.Part?,
+        identityImg2: MultipartBody.Part?, refferalCode: RequestBody,
         deviceID: RequestBody, registerForPart:RequestBody, instituteValue:RequestBody): RegularMerchantResponse {
 
         return apiRequest {

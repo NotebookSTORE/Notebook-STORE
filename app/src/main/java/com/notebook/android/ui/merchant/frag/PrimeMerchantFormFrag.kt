@@ -1378,6 +1378,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
     }
 
     override fun onPrimeMerchantOTPVerify(user: User) {
+        notebookPrefs.primeUserUpgradeAvail = 1
         loadingDialog.dialog?.dismiss()
 
         if (!user.address.isNullOrEmpty()) {
@@ -1505,7 +1506,7 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
 
         } catch (exception: JSONException) {
             // how you handle the exception
-            // e.printStackTrace();
+            exception.printStackTrace();
         }
 
         val orderPaymentJsonObj = OrderPaymentDetail(
@@ -1552,6 +1553,9 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 }
             }
             0 -> {
+                navController.navigate(primeMerchantPaymentDirections)
+            }
+            9 -> {
                 navController.navigate(primeMerchantPaymentDirections)
             }
             else -> {
@@ -1700,14 +1704,20 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                             notebookPrefs.firebaseDeviceID!!.toRequestBody(MultipartBody.FORM)
                         val registerForPart: RequestBody =
                             isRegisterType.toString().toRequestBody(MultipartBody.FORM)
-                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                        val requestFileCancelCheque = imgFileCancelCheque
-                            .asRequestBody("image/*".toMediaTypeOrNull())
-                        val cancelCheque = MultipartBody.Part.createFormData(
-                            "cancled_cheque_image",
-                            imgFileCancelCheque.name,
-                            requestFileCancelCheque
-                        )
+
+                        var cancelCheque: MultipartBody.Part? = null
+                        if (imageUri != notebookPrefs.cancelledChequeImage?.toUri() && imageUri!=userData?.cancled_cheque_image?.toUri()) {
+
+                            val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
+                            val requestFileCancelCheque =
+                                imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                            cancelCheque = MultipartBody.Part.createFormData(
+                                "cancled_cheque_image",
+                                imgFileCancelCheque.name,
+                                requestFileCancelCheque
+                            )
+                        }
+
 
                         val instituteValue =
                             fragPrimeMerchantBinding.edtInstituteName.text.toString()
@@ -2064,38 +2074,59 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         val registerForPart: RequestBody =
                             isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                        val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar2 =
-                            File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                        val requestFileAadhar =
-                            imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFileAadhar2 =
-                            imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                        val requestFileCancelCheque =
-                            imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
-                        val identityPart = MultipartBody.Part.createFormData(
-                            "identity_image",
-                            imgFileAadhar.name,
-                            requestFileAadhar
-                        )
-                        val identityPart2 = MultipartBody.Part.createFormData(
-                            "identity_image2",
-                            imgFileAadhar2.name,
-                            requestFileAadhar2
-                        )
-                        val panCardPart = MultipartBody.Part.createFormData(
-                            "pancardimage",
-                            imgFilePan.name,
-                            requestFilePan
-                        )
-                        val cancelCheque = MultipartBody.Part.createFormData(
-                            "cancled_cheque_image",
-                            imgFileCancelCheque.name,
-                            requestFileCancelCheque
-                        )
+                        var panCardPart: MultipartBody.Part? = null
+                        var identityPart: MultipartBody.Part? = null
+                        var identityPart2: MultipartBody.Part? = null
+                        var cancelCheque: MultipartBody.Part? = null
+
+                        if (pancardImage != userData?.pancardimage) {
+                            val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFilePan =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFilePan)
+                            panCardPart = MultipartBody.Part.createFormData(
+                                "pancardimage",
+                                imgFilePan.name,
+                                requestFilePan
+                            )
+                        }
+
+                        if (identityImage != getIdentityImageFromServer(0)) {
+                            val imgFileAadhar =
+                                File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFileAadhar =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
+                            identityPart = MultipartBody.Part.createFormData(
+                                "identity_image",
+                                imgFileAadhar.name,
+                                requestFileAadhar
+                            )
+                        }
+
+                        if (identityImage2 != getIdentityImageFromServer(1)) {
+                            val imgFileAadhar2 =
+                                File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFileAadhar2 =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar2)
+                            identityPart2 = MultipartBody.Part.createFormData(
+                                "identity_image2",
+                                imgFileAadhar2.name,
+                                requestFileAadhar2
+                            )
+                        }
+
+
+                        if (imageUri != notebookPrefs.cancelledChequeImage?.toUri() && imageUri!=userData?.cancled_cheque_image?.toUri()) {
+
+                            val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
+                            val requestFileCancelCheque =
+                                imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                            cancelCheque = MultipartBody.Part.createFormData(
+                                "cancled_cheque_image",
+                                imgFileCancelCheque.name,
+                                requestFileCancelCheque
+                            )
+                        }
+
 
                         val instituteValue =
                             fragPrimeMerchantBinding.edtInstituteName.text.toString()
@@ -2251,38 +2282,58 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                         val registerForPart: RequestBody =
                             isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                        val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                        val imgFileAadhar2 =
-                            File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                        val requestFileAadhar =
-                            imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFileAadhar2 =
-                            imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                        val requestFileCancelCheque =
-                            imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
-                        val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
-                        val identityPart = MultipartBody.Part.createFormData(
-                            "identity_image",
-                            imgFileAadhar.name,
-                            requestFileAadhar
-                        )
-                        val identityPart2 = MultipartBody.Part.createFormData(
-                            "identity_image2",
-                            imgFileAadhar2.name,
-                            requestFileAadhar2
-                        )
-                        val panCardPart = MultipartBody.Part.createFormData(
-                            "pancardimage",
-                            imgFilePan.name,
-                            requestFilePan
-                        )
-                        val cancelCheque = MultipartBody.Part.createFormData(
-                            "cancled_cheque_image",
-                            imgFileCancelCheque.name,
-                            requestFileCancelCheque
-                        )
+                        var panCardPart: MultipartBody.Part? = null
+                        var identityPart: MultipartBody.Part? = null
+                        var identityPart2: MultipartBody.Part? = null
+                        var cancelCheque: MultipartBody.Part? = null
+
+                        if (pancardImage != userData?.pancardimage) {
+                            val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFilePan =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFilePan)
+                            panCardPart = MultipartBody.Part.createFormData(
+                                "pancardimage",
+                                imgFilePan.name,
+                                requestFilePan
+                            )
+                        }
+
+                        if (identityImage != getIdentityImageFromServer(0)) {
+                            val imgFileAadhar =
+                                File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFileAadhar =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
+                            identityPart = MultipartBody.Part.createFormData(
+                                "identity_image",
+                                imgFileAadhar.name,
+                                requestFileAadhar
+                            )
+                        }
+
+                        if (identityImage2 != getIdentityImageFromServer(1)) {
+                            val imgFileAadhar2 =
+                                File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                            val requestFileAadhar2 =
+                                RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar2)
+                            identityPart2 = MultipartBody.Part.createFormData(
+                                "identity_image2",
+                                imgFileAadhar2.name,
+                                requestFileAadhar2
+                            )
+                        }
+
+
+                        if (imageUri != notebookPrefs.cancelledChequeImage?.toUri() && imageUri!=userData?.cancled_cheque_image?.toUri()) {
+
+                            val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
+                            val requestFileCancelCheque =
+                                imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                            cancelCheque = MultipartBody.Part.createFormData(
+                                "cancled_cheque_image",
+                                imgFileCancelCheque.name,
+                                requestFileCancelCheque
+                            )
+                        }
 
                         val instituteValue =
                             fragPrimeMerchantBinding.edtInstituteName.text.toString()
@@ -2555,37 +2606,61 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                     val registerForPart: RequestBody =
                         isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                    val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
-                    val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                    val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                    val requestFileAadhar =
-                        imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                    val requestFileAadhar2 =
-                        imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                    val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                    val requestFileCancelCheque =
-                        imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
-                    val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
-                    val identityPart = MultipartBody.Part.createFormData(
-                        "identity_image",
-                        imgFileAadhar.name,
-                        requestFileAadhar
-                    )
-                    val identityPart2 = MultipartBody.Part.createFormData(
-                        "identity_image2",
-                        imgFileAadhar2.name,
-                        requestFileAadhar2
-                    )
-                    val panCardPart = MultipartBody.Part.createFormData(
-                        "pancardimage",
-                        imgFilePan.name,
-                        requestFilePan
-                    )
-                    val cancelCheque = MultipartBody.Part.createFormData(
-                        "cancled_cheque_image",
-                        imgFileCancelCheque.name,
-                        requestFileCancelCheque
-                    )
+
+                    var panCardPart: MultipartBody.Part? = null
+                    var identityPart: MultipartBody.Part? = null
+                    var identityPart2: MultipartBody.Part? = null
+                    var cancelCheque: MultipartBody.Part? = null
+
+                    if (pancardImage != userData?.pancardimage) {
+                        val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                        val requestFilePan =
+                            RequestBody.create("image/*".toMediaTypeOrNull(), imgFilePan)
+                        panCardPart = MultipartBody.Part.createFormData(
+                            "pancardimage",
+                            imgFilePan.name,
+                            requestFilePan
+                        )
+                    }
+
+                    if (identityImage != getIdentityImageFromServer(0)) {
+                        val imgFileAadhar =
+                            File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                        val requestFileAadhar =
+                            RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
+                        identityPart = MultipartBody.Part.createFormData(
+                            "identity_image",
+                            imgFileAadhar.name,
+                            requestFileAadhar
+                        )
+                    }
+
+                    if (identityImage2 != getIdentityImageFromServer(1)) {
+                        val imgFileAadhar2 =
+                            File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                        val requestFileAadhar2 =
+                            RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar2)
+                        identityPart2 = MultipartBody.Part.createFormData(
+                            "identity_image2",
+                            imgFileAadhar2.name,
+                            requestFileAadhar2
+                        )
+                    }
+
+
+                    if (imageUri != notebookPrefs.cancelledChequeImage?.toUri() && imageUri!=userData?.cancled_cheque_image?.toUri()) {
+
+                        val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
+                        val requestFileCancelCheque =
+                            imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                       cancelCheque = MultipartBody.Part.createFormData(
+                            "cancled_cheque_image",
+                            imgFileCancelCheque.name,
+                            requestFileCancelCheque
+                        )
+                    }
+
+
 
                     val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
                     if (isRegisterType == 2) {
@@ -2714,37 +2789,58 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 val registerForPart: RequestBody =
                     isRegisterType.toString().toRequestBody(MultipartBody.FORM)
 
-                val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
-                val imgFileAadhar = File(identityImage!!.toUri().getAppFilePath(mContext)!!)
-                val imgFileAadhar2 = File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
-                val requestFileAadhar = imgFileAadhar.asRequestBody("image/*".toMediaTypeOrNull())
-                val requestFileAadhar2 = imgFileAadhar2.asRequestBody("image/*".toMediaTypeOrNull())
-                val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
-                val requestFileCancelCheque =
-                    imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
-                val requestFilePan = imgFilePan.asRequestBody("image/*".toMediaTypeOrNull())
-                val identityPart = MultipartBody.Part.createFormData(
-                    "identity_image",
-                    imgFileAadhar.name,
-                    requestFileAadhar
-                )
+                var panCardPart: MultipartBody.Part? = null
+                var identityPart: MultipartBody.Part? = null
+                var identityPart2: MultipartBody.Part? = null
+                var cancelCheque: MultipartBody.Part? = null
 
-                val identityPart2 = MultipartBody.Part.createFormData(
-                    "identity_image2",
-                    imgFileAadhar2.name,
-                    requestFileAadhar2
-                )
+                if (pancardImage != userData?.pancardimage) {
+                    val imgFilePan = File(pancardImage!!.toUri().getAppFilePath(mContext)!!)
+                    val requestFilePan =
+                        RequestBody.create("image/*".toMediaTypeOrNull(), imgFilePan)
+                    panCardPart = MultipartBody.Part.createFormData(
+                        "pancardimage",
+                        imgFilePan.name,
+                        requestFilePan
+                    )
+                }
 
-                val panCardPart = MultipartBody.Part.createFormData(
-                    "pancardimage",
-                    imgFilePan.name,
-                    requestFilePan
-                )
-                val cancelCheque = MultipartBody.Part.createFormData(
-                    "cancled_cheque_image",
-                    imgFileCancelCheque.name,
-                    requestFileCancelCheque
-                )
+                if (identityImage != getIdentityImageFromServer(0)) {
+                    val imgFileAadhar =
+                        File(identityImage!!.toUri().getAppFilePath(mContext)!!)
+                    val requestFileAadhar =
+                        RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar)
+                    identityPart = MultipartBody.Part.createFormData(
+                        "identity_image",
+                        imgFileAadhar.name,
+                        requestFileAadhar
+                    )
+                }
+
+                if (identityImage2 != getIdentityImageFromServer(1)) {
+                    val imgFileAadhar2 =
+                        File(identityImage2!!.toUri().getAppFilePath(mContext)!!)
+                    val requestFileAadhar2 =
+                        RequestBody.create("image/*".toMediaTypeOrNull(), imgFileAadhar2)
+                    identityPart2 = MultipartBody.Part.createFormData(
+                        "identity_image2",
+                        imgFileAadhar2.name,
+                        requestFileAadhar2
+                    )
+                }
+
+
+                if (imageUri != notebookPrefs.cancelledChequeImage?.toUri() && imageUri!=userData?.cancled_cheque_image?.toUri()) {
+
+                    val imgFileCancelCheque = File(imageUri?.getAppFilePath(mContext)!!)
+                    val requestFileCancelCheque =
+                        imgFileCancelCheque.asRequestBody("image/*".toMediaTypeOrNull())
+                    cancelCheque = MultipartBody.Part.createFormData(
+                        "cancled_cheque_image",
+                        imgFileCancelCheque.name,
+                        requestFileCancelCheque
+                    )
+                }
 
                 val instituteValue = fragPrimeMerchantBinding.edtInstituteName.text.toString()
                 if (isRegisterType == 2) {
@@ -2775,6 +2871,21 @@ class PrimeMerchantFormFrag : Fragment(), View.OnClickListener, KodeinAware,
                 }
             }
         }
+    }
+
+    fun getIdentityImageFromServer(index: Int): String? {
+        val identityImageFromServer = userData?.identity_image
+        if (!identityImageFromServer.isNullOrEmpty()) {
+            val items = Arrays.asList(identityImageFromServer.split("\\s*,\\s*")).toString()
+            val data = items.replace("[[", "[").replace("]]", "]")
+            try {
+                val jsonArrayList = JSONArray(data)
+                return jsonArrayList[index].toString()
+            } catch (exception: JSONException) {
+                return null
+            }
+        }
+        return null
     }
 
     override fun getRegisterType(data: String, type: Int) {
