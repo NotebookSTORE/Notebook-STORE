@@ -15,6 +15,7 @@ import com.notebook.android.databinding.FragmentZoomableViewBinding
 
 class ZoomableViewFrag : Fragment() {
 
+    private var position: Int = 0
     private lateinit var fragmentZoomableViewBinding: FragmentZoomableViewBinding
 
     private lateinit var mContext: Context
@@ -33,6 +34,7 @@ class ZoomableViewFrag : Fragment() {
 
         val args = ZoomableViewFragArgs.fromBundle(requireArguments())
         imgUrl = args.imgUrl
+        position = args.imgPosition
     }
 
     override fun onCreateView(
@@ -55,6 +57,7 @@ class ZoomableViewFrag : Fragment() {
         imgUrl?.let {
             fragmentZoomableViewBinding.rvPhotos.adapter = ZoomImageAdapter(requireContext(), it)
             LinearSnapHelper().attachToRecyclerView(fragmentZoomableViewBinding.rvPhotos)
+            fragmentZoomableViewBinding.rvPhotos.scrollToPosition(position)
         }
     }
 }
