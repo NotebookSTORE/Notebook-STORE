@@ -3,6 +3,7 @@ package com.notebook.android.adapter.order
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -45,20 +46,8 @@ class OrderHistoryAdapter(
             orderItemBinding.setVariable(BR.orderDataModel, orderData)
             orderItemBinding.executePendingBindings()
 
-//            if(orderData.type.equals("Delivery", true)){
-//                orderItemBinding.tvReturnPolicy.visibility = View.GONE
-//                orderItemBinding.tvOrderDeliveryData.text = orderData.returnPolicy
-//                orderItemBinding.imgCancelledDot.setImageResource(R.drawable.order_delivery_expected_bg)
-//            }else if(orderData.type.equals("Delivered", true)){
-//                orderItemBinding.tvReturnPolicy.visibility = View.VISIBLE
-//                orderItemBinding.tvReturnPolicy.text = orderData.returnTill
-//                orderItemBinding.tvOrderDeliveryData.text = orderData.returnPolicy
-//                orderItemBinding.imgCancelledDot.setImageResource(R.drawable.order_green_dot)
-//            }else{
-//                orderItemBinding.tvReturnPolicy.visibility = View.GONE
-//                orderItemBinding.tvOrderDeliveryData.text = orderData.returnPolicy
-//                orderItemBinding.imgCancelledDot.setImageResource(R.drawable.order_red_dot_bg)
-//            }
+            if (orderData.tracking_url.isNullOrBlank())
+                orderItemBinding.tvTrackOrder.visibility = View.GONE
 
 
             orderItemBinding.tvWriteReview.setOnClickListener {

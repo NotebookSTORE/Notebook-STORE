@@ -232,7 +232,7 @@ fun orderDeliveryDate(textview:TextView, date:String?,deliveredDate:String?){
         val convertedDate = formatter.format(dateParse!!)
         textview.text = "Delivered on ${convertedDate}"
     }else if (!date.isNullOrBlank()){
-        val dateParse = dateFormat.parse(deliveredDate)//You will get date object relative to server/client timezone wherever it is parsed
+        val dateParse = dateFormat.parse(date)//You will get date object relative to server/client timezone wherever it is parsed
         val convertedDate = formatter.format(dateParse!!)
         textview.text = "Delivery on ${convertedDate}"
     }else{

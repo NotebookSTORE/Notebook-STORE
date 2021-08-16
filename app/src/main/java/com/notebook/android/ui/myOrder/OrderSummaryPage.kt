@@ -157,6 +157,11 @@ class OrderSummaryPage : Fragment(), KodeinAware, OrderHistoryListener, View.OnC
 
                 orderExpectedDate(fragOrderSummaryBinding.tvDeliveredSuccessDate, orderHistoryData.delivered_date)
             }
+
+            if (orderHistoryData.tracking_url.isNullOrBlank()) {
+                fragOrderSummaryBinding.tvTrackOrder.visibility = View.GONE
+            }
+
         }
 
         if (!orderHistoryData.return_date.isNullOrEmpty()) {
