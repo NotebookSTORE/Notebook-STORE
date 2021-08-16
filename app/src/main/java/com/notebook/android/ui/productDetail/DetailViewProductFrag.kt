@@ -434,31 +434,34 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                 val prodimageArray = stringToProductImageList(prodModel)
 
                 Log.e("prodImageArray", " :: $prodimageArray")
-                if (prodimageArray.isNullOrEmpty()) {
-                    detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
-                    detailViewProductBinding.imgProduct.visibility = View.VISIBLE
-                } else {
-                    detailViewProductBinding.clImageSliderContainer.visibility = View.VISIBLE
-                    detailViewProductBinding.imgProduct.visibility = View.GONE
+               Handler().postDelayed({
+                   if (prodimageArray.isNullOrEmpty()) {
+                       detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
+                       detailViewProductBinding.imgProduct.visibility = View.VISIBLE
+                   } else {
+                       detailViewProductBinding.clImageSliderContainer.visibility = View.VISIBLE
+                       detailViewProductBinding.imgProduct.visibility = View.GONE
 
-                    val sliderAdapter = ProductImageSliderAdapter(mContext,
-                        prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
-                        object : ProductImageSliderAdapter.ProductImageSliderListener {
-                            override fun onSliderClick(offerUrl: Array<String>,position: Int) {
-                                val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
-                                    DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(
-                                        offerUrl,position
-                                    )
-                                Log.e("offer web link", " :: $offerUrl")
-                                navController.navigate(detailViewProductFragDirections)
-                            }
-                        })
-                    detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
-                    detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(
-                        detailViewProductBinding.vpProductImageSlider
-                    )
-                }
-                detailViewProductBinding.nsvProductDetail.scrollTo(0, 0)
+                       val sliderAdapter = ProductImageSliderAdapter(mContext,
+                           prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
+                           object : ProductImageSliderAdapter.ProductImageSliderListener {
+                               override fun onSliderClick(offerUrl: Array<String>,position: Int) {
+                                   val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
+                                       DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(
+                                           offerUrl,position
+                                       )
+                                   Log.e("offer web link", " :: $offerUrl")
+                                   navController.navigate(detailViewProductFragDirections)
+                               }
+                           })
+                       detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
+                       detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(
+                           detailViewProductBinding.vpProductImageSlider
+                       )
+                   }
+                   detailViewProductBinding.nsvProductDetail.scrollTo(0, 0)
+               },200)
+
             }
         })
 
