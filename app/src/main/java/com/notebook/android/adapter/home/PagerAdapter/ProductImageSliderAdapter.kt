@@ -1,6 +1,7 @@
 package com.notebook.android.adapter.home.PagerAdapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,15 +19,19 @@ import com.notebook.android.utility.Constant.PRODUCT_IMAGE_PATH
 class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<ProductDetailData.ProductImageData>,
                                 private val prodImageSliderListener: ProductImageSliderListener) : PagerAdapter() {
 
+    private val TAG = "ProductImageSliderAdapt"
+
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
 
     override fun getCount(): Int {
+        Log.d(TAG, "getCount() returned: $imgList.size")
         return imgList.size
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        Log.d(TAG, "instantiateItem() called with: container = $container, position = $position")
         val inflater = mCtx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.product_detail_item_slider_layout, null)
 
