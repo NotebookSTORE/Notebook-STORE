@@ -322,7 +322,26 @@ class MerchantMainFrag : Fragment(), View.OnClickListener, KodeinAware, Merchant
                             )
                         }
                     } else {
-                        navController.navigate(R.id.action_merchantMainFrag_to_primeMerchantFormFrag)
+                        if (userData!!.status == 0) {
+                            navController.navigate(R.id.action_merchantMainFrag_to_primeMerchantFormFrag)
+                        } else if (userData!!.status == 1) {
+                            navController.navigate(R.id.action_merchantMainFrag_to_primeMerchantFormFrag)
+                        } else {
+//                            navController.navigate(R.id.action_merchantMainFrag_to_primeMerchantFormFrag)
+                            val userLoginRequestPopup = CouponAlertDialog()
+                            userLoginRequestPopup.isCancelable = true
+                            val bundle = Bundle()
+                            bundle.putString(
+                                "displayTitle",
+                                "Your Regular Merchant KYC is Successfully Submitted.\n\n" +
+                                        "Pending for KYC Approval"
+                            )
+                            userLoginRequestPopup.arguments = bundle
+                            userLoginRequestPopup.show(
+                                mActivity.supportFragmentManager,
+                                "User login request popup !!"
+                            )
+                        }
                     }
                 } else {
                     navController.navigate(R.id.action_merchantMainFrag_to_primeMerchantFormFrag)
