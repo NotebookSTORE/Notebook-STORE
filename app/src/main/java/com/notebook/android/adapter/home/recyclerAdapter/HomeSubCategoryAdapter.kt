@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -37,9 +38,26 @@ class HomeSubCategoryAdapter(val mCtx: Context, val subCategList:ArrayList<SubCa
             subCategoryBinding.executePendingBindings()
             subCategoryBinding.clSubCategoryView.setBackgroundColor(getRandomColorCode())
 
-            subCategoryBinding.clCategoryLayout.setOnClickListener {
+            /*subCategoryBinding.clCategoryLayout.setOnClickListener {
                 subCategoryListener.subCategoryId(subCategory.id!!, subCategory.title!!)
+            }*/
+
+            subCategoryBinding.clCategoryLayout.setOnTouchListener { view, motionEvent ->
+                when (motionEvent.action){
+                    MotionEvent.ACTION_DOWN->{
+                        return@setOnTouchListener true
+                    }
+                    MotionEvent.ACTION_UP->{
+                        subCategoryListener.subCategoryId(subCategory.id!!, subCategory.title!!)
+                        return@setOnTouchListener true
+                    }
+
+                    else -> {
+                        return@setOnTouchListener true
+                    }
+                }
             }
+
         }
     }
 

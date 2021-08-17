@@ -167,7 +167,7 @@ class SearchProductFrag : Fragment(), KodeinAware, SearchProdResponseListener,
                             searcgProd.status, searcgProd.short_description, searcgProd.description, searcgProd.data_sheet,
                             searcgProd.quantity, searcgProd.price, searcgProd.offer_price,
                             searcgProd.product_code, searcgProd.product_condition,
-                            searcgProd.discount, searcgProd.latest, searcgProd.best, searcgProd.brandtitle, searcgProd.colortitle)
+                            searcgProd.discount, searcgProd.latest, searcgProd.best, searcgProd.brandtitle, searcgProd.colortitle,searcgProd.customerRating,searcgProd.reviewCount)
                         val searchToDetailViewFrag:SearchProductFragDirections.ActionSearchProductFragToDetailViewProductFrag = SearchProductFragDirections.actionSearchProductFragToDetailViewProductFrag(searchprod)
                         navController.navigate(searchToDetailViewFrag)
                     }

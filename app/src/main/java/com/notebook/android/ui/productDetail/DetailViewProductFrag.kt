@@ -75,9 +75,9 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
     UserLogoutDialog.UserLoginPopupListener, ConfirmationDialog.ConfirmDialogDismiss {
 
     override val kodein by kodein()
-    private val viewModelFactory: DetailProductVMFactory by instance()
-    private lateinit var detailViewProductBinding: FragmentDetailViewProductBinding
-    private val detailVM: DetailProductVM by lazy {
+    private val viewModelFactory : DetailProductVMFactory by instance()
+    private lateinit var detailViewProductBinding:FragmentDetailViewProductBinding
+    private val detailVM:DetailProductVM by lazy {
         ViewModelProvider(mActivity, viewModelFactory).get(DetailProductVM::class.java)
     }
 
@@ -121,10 +121,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         prodID = args.productHome.id!!.toString()
         productDiscount = args.productHome.discount!!
         detailVM.clearProductTable()
-        detailVM.getProductDetailData(prodID.toString())
-        loadSimilarDiscountedPaginatedData(true)
-        detailVM.getRatingSingleData(prodID!!)
-        detailVM.getProductCouponData(prodID!!)
+
     }
 
     companion object {
@@ -139,20 +136,16 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
     ): View? {
         onRestoreInstanceState(savedInstanceState)
         // Inflate the layout for this fragment
-        detailViewProductBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_detail_view_product, container, false
-        )
+        detailViewProductBinding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_detail_view_product, container, false)
         detailViewProductBinding.lifecycleOwner = this
         detailVM.discProdListener = this
         isFavouriteAdded = true
 
         checkDelivery(0, "")
         //custom toast initialize view here....
-        val layouttoast = inflater.inflate(
-            R.layout.custom_toast_layout,
-            detailViewProductBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
-        )
+        val layouttoast = inflater.inflate(R.layout.custom_toast_layout,
+            detailViewProductBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup)
         (layouttoast.findViewById(R.id.custom_toast_message) as TextView).setText("Item added successfully !!")
 
 //        layouttoast.findViewById(R.id.imagetoast)).setBackgroundResource(R.drawable.icon);
@@ -164,24 +157,18 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         myToast.setGravity(GRAVITY_BOTTOM, 0, 0)
 
         //success toast layout initialization here....
-        val successToastLayout: View = inflater.inflate(
-            R.layout.custom_toast_layout,
-            detailViewProductBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup
-        )
-        successToastTextView =
-            (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
+        val successToastLayout:View = inflater.inflate(R.layout.custom_toast_layout,
+            detailViewProductBinding.root.findViewById(R.id.custom_toast_layout) as? ViewGroup)
+        successToastTextView= (successToastLayout.findViewById(R.id.custom_toast_message) as TextView)
         successToast = Toast(mContext)
         successToast.setView(successToastLayout)
         successToast.setDuration(Toast.LENGTH_SHORT)
         successToast.setGravity(GRAVITY_BOTTOM, 0, 80)
 
         //error toast layout here....
-        val errorToastLayout: View = inflater.inflate(
-            R.layout.error_custom_toast_layout,
-            detailViewProductBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup
-        )
-        errorToastTextView =
-            (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
+        val errorToastLayout:View = inflater.inflate(R.layout.error_custom_toast_layout,
+            detailViewProductBinding.root.findViewById(R.id.custom_toast_error_layout) as? ViewGroup)
+        errorToastTextView = (errorToastLayout.findViewById(R.id.custom__error_toast_message) as TextView)
         errorToast = Toast(mContext)
         errorToast.setView(errorToastLayout)
         errorToast.setDuration(Toast.LENGTH_SHORT)
@@ -190,19 +177,18 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         setTextClickable()
         setupRecyclerView()
 
-        sharedElementEnterTransition =
-            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
         Log.e("prodID", " :: $prodID")
         return detailViewProductBinding.root
     }
 
     private var notDeliverable = false
-    private fun checkDelivery(i: Int, date: String) {
+    private fun checkDelivery(i: Int, date:String) {
         notDeliverable = false
         if (i == 0) {
             detailViewProductBinding.tvDeliveryBy.text = "Please Check Pincode"
             detailViewProductBinding.tvDeliveryByDate.visibility = View.GONE
-        } else if (i == 1) {
+        } else if (i ==1){
             detailViewProductBinding.tvDeliveryBy.text = getString(R.string.strDeliveryBy)
             detailViewProductBinding.tvDeliveryByDate.visibility = View.VISIBLE
             detailViewProductBinding.tvDeliveryByDate.text = date
@@ -213,28 +199,21 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         }
     }
 
-    private fun setQuantityList(qty: Int): ArrayList<Int> {
+    private fun setQuantityList(qty:Int) : ArrayList<Int>{
         val qtyArray = ArrayList<Int>()
-        for (i in 0 until qty) {
-            qtyArray.add(i + 1)
+        for(i in 0 until qty){
+            qtyArray.add(i+1)
         }
         return qtyArray
     }
 
     private val spanStartFrom = 31
-    private fun setTextClickable() {
+    private fun setTextClickable(){
         val ssText = SpannableString(resources.getString(R.string.strBulkQueryText))
-        ssText.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimary)),
-            spanStartFrom, ssText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        ssText.setSpan(
-            StyleSpan(Typeface.BOLD),
-            spanStartFrom,
-            ssText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        val spanRegNow = object : ClickableSpan() {
+        ssText.setSpan(ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimary)),
+            spanStartFrom, ssText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        ssText.setSpan(StyleSpan(Typeface.BOLD), spanStartFrom, ssText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val spanRegNow =  object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val navController = Navigation.findNavController(widget)
                 navController.navigate(R.id.action_detailViewProductFrag_to_bulkOrderQuery)
@@ -251,17 +230,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
 
         //See more text underlines with clickable  tvSeeMore
         val ssMoreText = SpannableString(resources.getString(R.string.strSeeMore))
-        ssMoreText.setSpan(
-            ForegroundColorSpan(resources.getColor(R.color.colorPrimary)),
-            0, ssMoreText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        ssMoreText.setSpan(
-            StyleSpan(Typeface.BOLD),
-            0,
-            ssMoreText.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        val spanSeeMore = object : ClickableSpan() {
+        ssMoreText.setSpan(ForegroundColorSpan(resources.getColor(R.color.colorPrimary)),
+            0, ssMoreText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        ssMoreText.setSpan(StyleSpan(Typeface.BOLD), 0, ssMoreText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val spanSeeMore =  object : ClickableSpan() {
             override fun onClick(widget: View) {
 //                val navController = Navigation.findNavController(widget)
 //                navController.navigate(R.id.action_detailViewProductFrag_to_bulkOrderQuery)
@@ -277,9 +249,8 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailViewProductBinding.tvSeeMore.text = ssMoreText
     }
 
-    private fun setupRecyclerView() {
-        val layoutManagerSimilarProducts =
-            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+    private fun setupRecyclerView(){
+        val layoutManagerSimilarProducts = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         detailViewProductBinding.recViewSimilarDiscntProds.apply {
             layoutManager = layoutManagerSimilarProducts
             itemAnimator = DefaultItemAnimator()
@@ -348,8 +319,13 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
+        detailVM.getProductDetailData(prodID.toString())
+        loadSimilarDiscountedPaginatedData(true)
+        detailVM.getRatingSingleData(prodID!!)
+        detailVM.getProductCouponData(prodID!!)
+
         detailVM.getProductDetailLiveData().observe(viewLifecycleOwner, Observer {
-            if (it != null) {
+            if (it != null){
                 prodModel = it
                 detailViewProductBinding.setVariable(BR.productModel, it)
                 detailViewProductBinding.executePendingBindings()
@@ -363,23 +339,22 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     View2.visibility = View.VISIBLE
                 }
 
-                if (prodModel.reviewCount == 0) {
+                if(prodModel.reviewCount == 0){
                     detailViewProductBinding.tvRatingStarText.text = "${4.0}"
                     detailViewProductBinding.tvRatingAmount.text = "(1 Review)"
-                } else if (prodModel.reviewCount != null) {
+                }else if(prodModel.reviewCount != null){
                     detailViewProductBinding.tvRatingStarText.text = "${prodModel.customerRating}"
-                    detailViewProductBinding.tvRatingAmount.text =
-                        "(${prodModel.reviewCount} Reviews)"
+                    detailViewProductBinding.tvRatingAmount.text = "(${prodModel.reviewCount} Reviews)"
                 }
 
-                if (prodModel.quantity <= 0) {
+                if(prodModel.quantity <= 0){
                     prodQty = 0
                     detailViewProductBinding.clProductQty.visibility = View.GONE
                     detailViewProductBinding.tvInStock.text = "Out of Stock"
                     detailViewProductBinding.tvInStock.setTextColor(mContext.resources.getColor(R.color.colorAccent))
                     val result = ((prodModel.price).times(prodModel.discount)).div(100f)
                     productPrice = (prodModel.price.minus(result)).times(prodQty!!)
-                } else {
+                }else{
                     prodQty = 1
                     detailViewProductBinding.clProductQty.visibility = View.VISIBLE
                     detailViewProductBinding.tvInStock.text = "Stock Available"
@@ -387,18 +362,17 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                     qtyList = setQuantityList(prodModel.quantity)
                     val qtyAdapter = CustomSpinnerAdpater(mContext, qtyList!!)
                     detailViewProductBinding.spProductQuantity.adapter = qtyAdapter
-                    detailViewProductBinding.spProductQuantity.onItemSelectedListener =
-                        this@DetailViewProductFrag
+                    detailViewProductBinding.spProductQuantity.onItemSelectedListener = this@DetailViewProductFrag
                     val result = ((prodModel.price).times(prodModel.discount)).div(100f)
                     productPrice = (prodModel.price.minus(result)).times(prodQty!!)
                 }
 
 
-                if (prodQty == 0) {
+                if(prodQty == 0){
                     detailViewProductBinding.btnAddToCard.isEnabled = false
                     detailViewProductBinding.btnBuyNow.isEnabled = false
                     detailViewProductBinding.btnCheckPincodeNow.isEnabled = false
-                } else {
+                }else{
                     detailViewProductBinding.btnAddToCard.isEnabled = true
                     detailViewProductBinding.btnBuyNow.isEnabled = true
                     detailViewProductBinding.btnCheckPincodeNow.isEnabled = true
@@ -434,11 +408,13 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                 val prodimageArray = stringToProductImageList(prodModel)
 
                 Log.e("prodImageArray", " :: $prodimageArray")
-               Handler().postDelayed({
+
                    if (prodimageArray.isNullOrEmpty()) {
+                       Log.d(TAG, "onViewCreated: prodimageArray.isNullOrEmpty(): "+prodimageArray.isNullOrEmpty())
                        detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
                        detailViewProductBinding.imgProduct.visibility = View.VISIBLE
                    } else {
+                       Log.d(TAG, "onViewCreated: ")
                        detailViewProductBinding.clImageSliderContainer.visibility = View.VISIBLE
                        detailViewProductBinding.imgProduct.visibility = View.GONE
 
@@ -460,7 +436,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                        )
                    }
                    detailViewProductBinding.nsvProductDetail.scrollTo(0, 0)
-               },200)
+
 
             }
         })

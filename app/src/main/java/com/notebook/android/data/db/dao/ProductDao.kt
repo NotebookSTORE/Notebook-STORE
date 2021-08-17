@@ -52,7 +52,7 @@ interface ProductDao {
     @Query("SELECT * FROM productdetailentity")
     fun getProductDetailData(): LiveData<ProductDetailEntity>
 
-    @Insert/*(onConflict = OnConflictStrategy.REPLACE)*/
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProductDetailData(prodData : ProductDetailEntity)
 
     @Query("DELETE FROM productdetailentity")

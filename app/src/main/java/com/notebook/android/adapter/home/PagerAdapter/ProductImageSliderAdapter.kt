@@ -26,7 +26,7 @@ class ProductImageSliderAdapter(val mCtx: Context, val imgList:ArrayList<Product
     }
 
     override fun getCount(): Int {
-        Log.d(TAG, "getCount() returned: $imgList.size")
+        Log.d(TAG, "getCount() returned: ${imgList.size}")
         return imgList.size
     }
 

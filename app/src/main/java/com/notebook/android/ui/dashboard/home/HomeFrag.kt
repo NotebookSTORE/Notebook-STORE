@@ -308,9 +308,9 @@ class HomeFrag : Fragment(), KodeinAware, View.OnClickListener,
         homeFragBinding.recViewSubCategory.apply {
             layoutManager = layoutManagerSubCategory
             hasFixedSize()
-            setItemViewCacheSize(1024)
+            /*setItemViewCacheSize(1024)
             isDrawingCacheEnabled = true
-            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH*/
         }
 
         //Recycler view
