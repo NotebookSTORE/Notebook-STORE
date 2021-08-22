@@ -299,7 +299,7 @@ interface NotebookApi {
     @POST("productdiscount_v2")
     suspend fun productDiscountData(
         @Field("discount") discountValue: Int,
-        @Query("page") pageNumber: Int
+//        @Query("page") pageNumber: Int
     ): Response<DiscountedProdData>
 
     @GET("pinAvailable")

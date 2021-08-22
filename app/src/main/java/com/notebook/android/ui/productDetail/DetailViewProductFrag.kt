@@ -64,6 +64,7 @@ import kotlinx.android.synthetic.main.fragment_detail_view_product.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.lang.Exception
 import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.ArrayList
@@ -78,7 +79,7 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
     private val viewModelFactory : DetailProductVMFactory by instance()
     private lateinit var detailViewProductBinding:FragmentDetailViewProductBinding
     private val detailVM:DetailProductVM by lazy {
-        ViewModelProvider(mActivity, viewModelFactory).get(DetailProductVM::class.java)
+        ViewModelProvider(this, viewModelFactory).get(DetailProductVM::class.java)
     }
 
     private lateinit var navController: NavController
@@ -260,21 +261,11 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    Log.d(
-                        this@DetailViewProductFrag.tag,
-                        "onScrolled() called with: recyclerView = $recyclerView, dx = $dx, dy = $dy"
-                    )
-                    Log.d(
-                        TAG,
-                        "onScrolled: last visible item: ${layoutManagerSimilarProducts.findLastVisibleItemPosition()}"
-                    )
-                    Log.d(TAG, "onScrolled: item count: ${layoutManagerSimilarProducts.itemCount}")
-
                     if (layoutManagerSimilarProducts.findLastVisibleItemPosition() == layoutManagerSimilarProducts.itemCount - 2) {
-                        Log.d(TAG, "onScrolled: loading state:${isLoading}")
-                        if (!isLoading) {
+//                        Log.d(TAG, "onScrolled: loading state:${isLoading}")
+                       /* if (!isLoading) {
                             loadSimilarDiscountedPaginatedData()
-                        }
+                        }*/
                     }
 
                 }
@@ -297,22 +288,9 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         }
     }
 
-
-    private var isLoading: Boolean = false
     private fun loadSimilarDiscountedPaginatedData(refresh: Boolean = false) {
         Log.d(TAG, "loadSimilarDiscountedPaginatedData() called")
-
-        isLoading = true
-        if (refresh) {
-            detailVM.getDiscProductUsingDiscontValue(productDiscount, 1)
-        } else {
-            pageData.next_page_url?.let {
-                detailVM.getDiscProductUsingDiscontValue(
-                    productDiscount,
-                    it.substringAfterLast("=").toInt()
-                )
-            }
-        }
+        detailVM.getDiscProductUsingDiscontValue(productDiscount, 1)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -324,135 +302,149 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
         detailVM.getRatingSingleData(prodID!!)
         detailVM.getProductCouponData(prodID!!)
 
-        detailVM.getProductDetailLiveData().observe(viewLifecycleOwner, Observer {
-            if (it != null){
-                prodModel = it
-                detailViewProductBinding.setVariable(BR.productModel, it)
-                detailViewProductBinding.executePendingBindings()
+        detailVM.getProductDetailLiveData.observe(viewLifecycleOwner, Observer {
+           try {
+                if (it != null) {
+                    prodModel = it
 
-                val dataSheet = it.data_sheet
-                if (dataSheet == null) {
-                    clDataSheet.visibility = View.GONE
-                    View2.visibility = View.GONE
-                } else {
-                    clDataSheet.visibility = View.VISIBLE
-                    View2.visibility = View.VISIBLE
-                }
-
-                if(prodModel.reviewCount == 0){
-                    detailViewProductBinding.tvRatingStarText.text = "${4.0}"
-                    detailViewProductBinding.tvRatingAmount.text = "(1 Review)"
-                }else if(prodModel.reviewCount != null){
-                    detailViewProductBinding.tvRatingStarText.text = "${prodModel.customerRating}"
-                    detailViewProductBinding.tvRatingAmount.text = "(${prodModel.reviewCount} Reviews)"
-                }
-
-                if(prodModel.quantity <= 0){
-                    prodQty = 0
-                    detailViewProductBinding.clProductQty.visibility = View.GONE
-                    detailViewProductBinding.tvInStock.text = "Out of Stock"
-                    detailViewProductBinding.tvInStock.setTextColor(mContext.resources.getColor(R.color.colorAccent))
-                    val result = ((prodModel.price).times(prodModel.discount)).div(100f)
-                    productPrice = (prodModel.price.minus(result)).times(prodQty!!)
-                }else{
-                    prodQty = 1
-                    detailViewProductBinding.clProductQty.visibility = View.VISIBLE
-                    detailViewProductBinding.tvInStock.text = "Stock Available"
-                    detailViewProductBinding.tvInStock.setTextColor(Color.parseColor("#259D31"))
-                    qtyList = setQuantityList(prodModel.quantity)
-                    val qtyAdapter = CustomSpinnerAdpater(mContext, qtyList!!)
-                    detailViewProductBinding.spProductQuantity.adapter = qtyAdapter
-                    detailViewProductBinding.spProductQuantity.onItemSelectedListener = this@DetailViewProductFrag
-                    val result = ((prodModel.price).times(prodModel.discount)).div(100f)
-                    productPrice = (prodModel.price.minus(result)).times(prodQty!!)
-                }
-
-
-                if(prodQty == 0){
-                    detailViewProductBinding.btnAddToCard.isEnabled = false
-                    detailViewProductBinding.btnBuyNow.isEnabled = false
-                    detailViewProductBinding.btnCheckPincodeNow.isEnabled = false
-                }else{
-                    detailViewProductBinding.btnAddToCard.isEnabled = true
-                    detailViewProductBinding.btnBuyNow.isEnabled = true
-                    detailViewProductBinding.btnCheckPincodeNow.isEnabled = true
-                }
-                prodID = prodModel.id!!.toString()
-                /* detailVM.getRatingSingleData(prodID!!)
-                 detailVM.getProductCouponData(prodID!!)
-                 detailVM.getDiscProductUsingDiscontValue(prodModel.discount)
- */
-                if (prodModel.can_cashon?.toInt() == 1) {
-                    detailViewProductBinding.tvCOD.text = "Cash\non delivery"
-                } else {
-                    detailViewProductBinding.tvCOD.text = "COD\nnot available"
-                }
-
-                if (prodModel.can_free_delivery?.toInt() == 1) {
-                    detailVM.getFreeDeliveryData()
-                    detailViewProductBinding.recViewProdBenefits.visibility = View.VISIBLE
-                } else {
-                    sharedVM.setFreeDeliveryData(0)
-                    prodModel.delivery_charges?.let {
-                        showDeliverCharges(it)
+                    val dataSheet = it.data_sheet
+                    if (dataSheet == null) {
+                        clDataSheet.visibility = View.GONE
+                        View2.visibility = View.GONE
+                    } else {
+                        clDataSheet.visibility = View.VISIBLE
+                        View2.visibility = View.VISIBLE
                     }
+
+                    if (prodModel.reviewCount == 0) {
+                        detailViewProductBinding.tvRatingStarText.text = "${4.0}"
+                        detailViewProductBinding.tvRatingAmount.text = "(1 Review)"
+                    } else if (prodModel.reviewCount != null) {
+                        detailViewProductBinding.tvRatingStarText.text =
+                            "${prodModel.customerRating}"
+                        detailViewProductBinding.tvRatingAmount.text =
+                            "(${prodModel.reviewCount} Reviews)"
+                    }
+
+                    if (prodModel.quantity <= 0) {
+                        prodQty = 0
+                        detailViewProductBinding.clProductQty.visibility = View.GONE
+                        detailViewProductBinding.tvInStock.text = "Out of Stock"
+                        detailViewProductBinding.tvInStock.setTextColor(
+                            mContext.resources.getColor(
+                                R.color.colorAccent
+                            )
+                        )
+                        val result = ((prodModel.price).times(prodModel.discount)).div(100f)
+                        productPrice = (prodModel.price.minus(result)).times(prodQty!!)
+                    } else {
+                        prodQty = 1
+                        detailViewProductBinding.clProductQty.visibility = View.VISIBLE
+                        detailViewProductBinding.tvInStock.text = "Stock Available"
+                        detailViewProductBinding.tvInStock.setTextColor(Color.parseColor("#259D31"))
+                        qtyList = setQuantityList(prodModel.quantity)
+                        val qtyAdapter = CustomSpinnerAdpater(mContext, qtyList!!)
+                        detailViewProductBinding.spProductQuantity.adapter = qtyAdapter
+                        detailViewProductBinding.spProductQuantity.onItemSelectedListener =
+                            this@DetailViewProductFrag
+                        val result = ((prodModel.price).times(prodModel.discount)).div(100f)
+                        productPrice = (prodModel.price.minus(result)).times(prodQty!!)
+                    }
+
+
+                    if (prodQty == 0) {
+                        detailViewProductBinding.btnAddToCard.isEnabled = false
+                        detailViewProductBinding.btnBuyNow.isEnabled = false
+                        detailViewProductBinding.btnCheckPincodeNow.isEnabled = false
+                    } else {
+                        detailViewProductBinding.btnAddToCard.isEnabled = true
+                        detailViewProductBinding.btnBuyNow.isEnabled = true
+                        detailViewProductBinding.btnCheckPincodeNow.isEnabled = true
+                    }
+                    prodID = prodModel.id!!.toString()
+                    /* detailVM.getRatingSingleData(prodID!!)
+                     detailVM.getProductCouponData(prodID!!)
+                     detailVM.getDiscProductUsingDiscontValue(prodModel.discount)
+     */
+                    if (prodModel.can_cashon?.toInt() == 1) {
+                        detailViewProductBinding.tvCOD.text = "Cash\non delivery"
+                    } else {
+                        detailViewProductBinding.tvCOD.text = "COD\nnot available"
+                    }
+
+                    if (prodModel.can_free_delivery?.toInt() == 1) {
+                        detailVM.getFreeDeliveryData()
+                        detailViewProductBinding.recViewProdBenefits.visibility = View.VISIBLE
+                    } else {
+                        sharedVM.setFreeDeliveryData(0)
+                        prodModel.delivery_charges?.let {
+                            showDeliverCharges(it)
+                        }
+                    }
+
+                    if (prodModel.can_return?.toInt() == 1) {
+                        detailViewProductBinding.tvReplacement.text =
+                            "${prodModel.return_days ?: 0} days\nreplacement"
+                    } else {
+                        detailViewProductBinding.tvReplacement.text = "Non\nreturnable"
+                    }
+
+                    val prodimageArray = stringToProductImageList(prodModel)
+
+                    Log.e("prodImageArray", " :: $prodimageArray")
+
+                    if (prodimageArray.isNullOrEmpty()) {
+                        Log.d(
+                            TAG,
+                            "onViewCreated: prodimageArray.isNullOrEmpty(): " + prodimageArray.isNullOrEmpty()
+                        )
+                        detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
+                        detailViewProductBinding.imgProduct.visibility = View.VISIBLE
+                    } else {
+                        Log.d(TAG, "onViewCreated: ")
+                        detailViewProductBinding.clImageSliderContainer.visibility = View.VISIBLE
+                        detailViewProductBinding.imgProduct.visibility = View.GONE
+
+                        val sliderAdapter = ProductImageSliderAdapter(mContext,
+                            prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
+                            object : ProductImageSliderAdapter.ProductImageSliderListener {
+                                override fun onSliderClick(offerUrl: Array<String>, position: Int) {
+                                    val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
+                                        DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(
+                                            offerUrl, position
+                                        )
+                                    Log.e("offer web link", " :: $offerUrl")
+                                    navController.navigate(detailViewProductFragDirections)
+                                }
+                            })
+                        detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
+                        detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(
+                            detailViewProductBinding.vpProductImageSlider
+                        )
+                    }
+
+                    detailViewProductBinding.nsvProductDetail.scrollTo(0, 0)
+                    detailViewProductBinding.setVariable(BR.productModel, it)
+                    detailViewProductBinding.executePendingBindings()
+
                 }
-
-                if (prodModel.can_return?.toInt() == 1) {
-                    detailViewProductBinding.tvReplacement.text =
-                        "${prodModel.return_days ?: 0} days\nreplacement"
-                } else {
-                    detailViewProductBinding.tvReplacement.text = "Non\nreturnable"
-                }
-
-                val prodimageArray = stringToProductImageList(prodModel)
-
-                Log.e("prodImageArray", " :: $prodimageArray")
-
-                   if (prodimageArray.isNullOrEmpty()) {
-                       Log.d(TAG, "onViewCreated: prodimageArray.isNullOrEmpty(): "+prodimageArray.isNullOrEmpty())
-                       detailViewProductBinding.clImageSliderContainer.visibility = View.GONE
-                       detailViewProductBinding.imgProduct.visibility = View.VISIBLE
-                   } else {
-                       Log.d(TAG, "onViewCreated: ")
-                       detailViewProductBinding.clImageSliderContainer.visibility = View.VISIBLE
-                       detailViewProductBinding.imgProduct.visibility = View.GONE
-
-                       val sliderAdapter = ProductImageSliderAdapter(mContext,
-                           prodimageArray as ArrayList<ProductDetailData.ProductImageData>,
-                           object : ProductImageSliderAdapter.ProductImageSliderListener {
-                               override fun onSliderClick(offerUrl: Array<String>,position: Int) {
-                                   val detailViewProductFragDirections: DetailViewProductFragDirections.ActionDetailViewProductFragToZoomableViewFrag =
-                                       DetailViewProductFragDirections.actionDetailViewProductFragToZoomableViewFrag(
-                                           offerUrl,position
-                                       )
-                                   Log.e("offer web link", " :: $offerUrl")
-                                   navController.navigate(detailViewProductFragDirections)
-                               }
-                           })
-                       detailViewProductBinding.vpProductImageSlider.adapter = sliderAdapter
-                       detailViewProductBinding.tlProductImageSliderIndicator.setupWithViewPager(
-                           detailViewProductBinding.vpProductImageSlider
-                       )
-                   }
-                   detailViewProductBinding.nsvProductDetail.scrollTo(0, 0)
-
-
+            }catch (e:Exception){
+               Log.e(TAG, "onViewCreated: ", e)
             }
         })
 
 
-        val discountedProductList = ArrayList<DiscountedProduct>()
         detailVM.getPageData.observe(viewLifecycleOwner, {
             pageData = it
         })
 
-        detailVM.getAllDiscountProdFromDB().observe(viewLifecycleOwner, {
-
-            if (!isLoading) {
+        val discountedProductList = ArrayList<DiscountedProduct>()
+        detailVM.getAllDiscountProdFromDB.observe(viewLifecycleOwner, {
+            Log.d(TAG, "onViewCreated: getAllDiscountProdFromDB.observed")
+           /* if (!isLoading) {
                 return@observe
             }
-            isLoading = false
+            isLoading = false*/
 
             if (it != null && it.isNotEmpty()) {
 
@@ -521,7 +513,10 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                         override fun showProdDetailOnClickDiscountedProd(discProd: DiscountedProduct) {
                             prodID = discProd.id!!.toString()
                             detailVM.clearProductTable()
-                            detailVM.getProductDetailData(prodID!!)
+                            detailVM.getProductDetailData(prodID.toString())
+                            loadSimilarDiscountedPaginatedData(true)
+                            detailVM.getRatingSingleData(prodID!!)
+                            detailVM.getProductCouponData(prodID!!)
                         }
                     })
                 detailViewProductBinding.recViewSimilarDiscntProds.adapter = discProductAdapter
@@ -983,6 +978,12 @@ class DetailViewProductFrag : Fragment(), KodeinAware,
                 detailViewProductBinding.nsvProductDetail.scrollY
             )
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        detailVM.getProductDetailData(prodID.toString())
+        loadSimilarDiscountedPaginatedData()
     }
 
     private fun onRestoreInstanceState(savedInstanceState: Bundle?) {

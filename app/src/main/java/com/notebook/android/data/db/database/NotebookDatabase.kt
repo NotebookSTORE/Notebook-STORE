@@ -17,7 +17,7 @@ import com.notebook.android.data.db.typeConverter.Converters
         SubSubCategory::class, DrawerCategory::class, DrawerSubCategory::class, DrawerSubSubCategory::class, CategoryProduct::class,
         HomeSubSubCategoryProduct::class, CouponApply::class, FaqExpandable::class, Wishlist::class, RatingReviews::class,
         Country::class, Address::class, OrderHistory::class, ProductDetailEntity::class, MerchantBenefit::class],
-    version = 6, exportSchema = false)
+    version = 7, exportSchema = false)
 
 @TypeConverters(Converters::class)
 abstract class NotebookDatabase : RoomDatabase() {

@@ -26,7 +26,7 @@ class ProdDetailRepo(
 ) : SafeApiRequest() {
 
     suspend fun getSimilarDiscountedProducts(discountValue: Int, pageNumber: Int) : DiscountedProdData{
-        return apiRequest { notebookApi.productDiscountData(discountValue,pageNumber) }
+        return apiRequest { notebookApi.productDiscountData(discountValue) }
     }
 
     suspend fun checkPincodeAvailabilit(pincode:String) : PincodeData{

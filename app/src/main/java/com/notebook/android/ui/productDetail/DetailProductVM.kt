@@ -32,10 +32,10 @@ class DetailProductVM(
     lateinit var pinCheckListener:PinCheckListener
 
     fun getAllCouponDataFromDB() = prodDetailRepo.getAllCouponDataFromDB()
-    fun getAllDiscountProdFromDB() = prodDetailRepo.getAllDiscountProducts()
+    val getAllDiscountProdFromDB = MutableLiveData<List<DiscountedProduct>>()
     fun getUserData() = prodDetailRepo.getUserData()
     fun getCartData() = prodDetailRepo.getCartData()
-    fun getProductDetailLiveData() = prodDetailRepo.getProductDetailData()
+    val getProductDetailLiveData = MutableLiveData<ProductDetailEntity>()
     val getPageData = MutableLiveData<PaginationData>()
 
     var couponCanApplyData:MutableLiveData<List<CouponData.CouponCanApply>> = MutableLiveData()
@@ -87,7 +87,8 @@ class DetailProductVM(
                 prodResponse.let {
                     if(it.status == 1){
                         discProdListener.onSuccess(it.product?.data)
-                        prodDetailRepo.insertAllDiscProducts(it.product?.data?:ArrayList())
+                        getAllDiscountProdFromDB.postValue(it.product?.data?:ArrayList())
+//                        prodDetailRepo.insertAllDiscProducts(it.product?.data?:ArrayList())
                         getPageData.postValue(PaginationData.create(it.product))
                     }else{
                         discProdListener.onFailure(it.msg?:"")
@@ -251,7 +252,8 @@ class DetailProductVM(
                         Log.e("returnDaysProduct", " :: ${it.return_days}")
                         val prodImageListToString = Gson().toJson(it.productImg)
                         prodEntityObj.prodImageListString  = prodImageListToString
-                        prodDetailRepo.insertProductDataIntoDB(prodEntityObj)
+                        getProductDetailLiveData.postValue(it.product)
+//                        prodDetailRepo.insertProductDataIntoDB(prodEntityObj)
                     }else{
                         discProdListener.onProductDetailFailure(it.msg)
                     }
